@@ -37,10 +37,10 @@ entrada popTS(){
  * 
  */
 void borrarHastaMarcaTS(){
+    topeTS--;
     while(TS[topeTS].tipoEntrada != marca){
         topeTS--;
     }
-    topeTS--;
 }
 
 /**
@@ -85,7 +85,24 @@ int existeEntradaLocal(char * nombre){
  */
 void imprimirTS(){
     int i;
+    
+    printf("INICIO TABLA\n");
+    
     for(i = 0; i < topeTS; i++){
         printf("NOMBRE:%s -- TIPOENT: %d -- TIPODAT: %d -- NUMPARAM: %d \n",TS[i].nombre,TS[i].tipoEntrada,TS[i].tipoDato,TS[i].parametros);
     }
+    printf("\nFIN TABLA\n\n");
+}
+
+/**
+ * 
+ */
+entrada rellenaEntrada(unsigned int linea, char* nombre, tDato tipoDato, tEntrada tipoEntrda, unsigned int numParam){
+    entrada e;
+    e.linea = linea;
+    strcpy(e.nombre,nombre);
+    e.tipoDato = tipoDato;
+    e.tipoEntrada = tipoEntrda;
+    e.parametros = numParam;
+    return e;
 }

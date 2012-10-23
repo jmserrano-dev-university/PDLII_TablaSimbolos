@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Tabla de Simbolos
+PROJECTNAME=PDLII_TablaSimbolos
 
 # Active Configuration
 DEFAULTCONF=Debug

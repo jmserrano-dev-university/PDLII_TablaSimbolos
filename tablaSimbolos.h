@@ -12,11 +12,13 @@
 #define TAM_TABLA_SIMBOLOS 1000
 
 //Campo ENTRADA en TS
+typedef enum  { marca = 1, proc, func, var, paramForm, rangoArray } tEntrada;
+typedef enum { entero = 1, real, booleano, caracter, cadena, conjunto, desconocido, sinTipo} tDato ;
 
 typedef struct{
-    enum  { marca = 1, proc, func, var, paramForm, rangoArray } tipoEntrada;
+    tDato tipoDato;
     char nombre[100];
-    enum { entero = 1, real, booleano, caracter, cadena, conjunto, desconocido } tipoDato ;
+    tEntrada tipoEntrada;
     unsigned int parametros;
     unsigned int linea;
 }entrada;
@@ -33,6 +35,7 @@ void borrarHastaMarcaTS();
 int existeEntrada(char * nombre);
 int existeEntradaLocal(char * nombre);
 void imprimirTS();
+entrada rellenaEntrada(unsigned int linea, char* nombre, tDato tipoDato, tEntrada tipoEntrda, unsigned int numParam);
 
 
 
