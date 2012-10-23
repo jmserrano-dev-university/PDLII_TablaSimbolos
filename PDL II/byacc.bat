@@ -1,2 +1,2 @@
-Byacc -v -t lexico.y
+win_bison -v -t lexico.y
 pause
