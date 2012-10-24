@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     createTS();
     //imprimirTS();
     
-    entrada marca1 = rellenaEntrada(0,"",sinTipo,marca,0);
+    entrada marca1 = rellenaEntrada(0,"",sinTipo,marca,0); //MARCA
     pushTS(marca1);
     //imprimirTS();
     
@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
     pushTS(marca6);
     //imprimirTS();
     
-    entrada marca7 = rellenaEntrada(0,"",sinTipo,marca,0);
+    entrada marca7 = rellenaEntrada(0,"",sinTipo,marca,0); //MARCA
     pushTS(marca7);
     
     entrada marca8 = rellenaEntrada(0,"varC",real,var,0);
@@ -42,12 +42,19 @@ int main(int argc, char** argv) {
     
     imprimirTS();
     
-    borrarHastaMarcaTS();
+    //Comprobamos entrada LOCAL
+    if(existeEntrada("varR")){
+        printf("Existe la entrada\n");
+    }else{
+        printf("NO existe la entrada\n");
+    }
+    
+    /*borrarHastaMarcaTS();
     imprimirTS();
     
     borrarHastaMarcaTS();
     imprimirTS();
-    
+    */
     
     return (EXIT_SUCCESS);
 }

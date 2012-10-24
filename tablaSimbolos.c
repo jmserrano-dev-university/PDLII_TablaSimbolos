@@ -48,9 +48,9 @@ void borrarHastaMarcaTS(){
  * @param nombre
  */
 int existeEntrada(char * nombre){
-    int tope = topeTS;
+    int tope = topeTS - 1;
     
-    while(strcmp(TS[tope].nombre,nombre) != 0 && topeTS != 0){
+    while(strcmp(TS[tope].nombre,nombre) != 0 && tope != 0){
         tope--;
     }
     
@@ -66,7 +66,7 @@ int existeEntrada(char * nombre){
  * @param nombre
  */
 int existeEntradaLocal(char * nombre){
-    int tope = topeTS;
+    int tope = topeTS - 1;
     
     while(strcmp(TS[tope].nombre,nombre) != 0 && TS[tope].tipoEntrada != marca){
         tope--;
