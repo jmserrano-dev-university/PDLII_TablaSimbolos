@@ -2,6 +2,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "tablaSimbolos.h" //Añadimos la tabla de simbolos
+
+/*Declaración de para usar yylval*/
+typedef struct{
+	int entero;
+	char *cadena;
+	tDato tipo;
+}atributos;
+
+#define YYSTYPE atributos;
+
+/*Fin Declaración*/
+
+
 
 int linea_actual = 1;
 

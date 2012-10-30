@@ -6,6 +6,20 @@ static char yysccsid[] = "@(#)yaccpar     1.7 (Berkeley) 09/09/90";
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "tablaSimbolos.h" /*Añadimos la tabla de simbolos*/
+
+/*Declaración de para usar yylval*/
+typedef struct{
+	int entero;
+	char *cadena;
+	tDato tipo;
+}atributos;
+
+#define YYSTYPE atributos;
+
+/*Fin Declaración*/
+
+
 
 int linea_actual = 1;
 
@@ -18,7 +32,7 @@ void yyerror (char *msg){
 }
 
 
-#line 22 "y_tab.c"
+#line 36 "y_tab.c"
 #define CAB1 257
 #define CAB2 258
 #define CASE 259
@@ -695,10 +709,10 @@ YYSTYPE yylval;
 short yyss[YYSTACKSIZE];
 YYSTYPE yyvs[YYSTACKSIZE];
 #define yystacksize YYSTACKSIZE
-#line 191 "lexico.y"
+#line 205 "lexico.y"
 /* Aquí incluimos el fichero generado por el Flex, que implementa la función yylex() */
 #include "lexyy.c"
-#line 702 "y_tab.c"
+#line 716 "y_tab.c"
 #define YYABORT goto yyabort
 #define YYACCEPT goto yyaccept
 #define YYERROR goto yyerrlab
