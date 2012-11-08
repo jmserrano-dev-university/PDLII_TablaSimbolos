@@ -10,16 +10,13 @@ static char yysccsid[] = "@(#)yaccpar     1.7 (Berkeley) 09/09/90";
 
 /*Declaración de para usar yylval*/
 typedef struct{
-	int entero;
-	char *cadena;
-	tDato tipo;
+	int token; 		/*Código del token*/
+	char *cadena; 	/*Nombre del token*/
+	tDato tipo; 	/*Tipo del token*/
 }atributos;
 
-#define YYSTYPE atributos;
-
+#define YYSTYPE atributos
 /*Fin Declaración*/
-
-
 
 int linea_actual = 1;
 
@@ -31,8 +28,9 @@ void yyerror (char *msg){
 	fprintf(stderr,buffer);
 }
 
+tDato tipoAux;
 
-#line 36 "y_tab.c"
+#line 34 "y_tab.c"
 #define CAB1 257
 #define CAB2 258
 #define CASE 259
@@ -709,10 +707,10 @@ YYSTYPE yylval;
 short yyss[YYSTACKSIZE];
 YYSTYPE yyvs[YYSTACKSIZE];
 #define yystacksize YYSTACKSIZE
-#line 205 "lexico.y"
+#line 304 "lexico.y"
 /* Aquí incluimos el fichero generado por el Flex, que implementa la función yylex() */
 #include "lexyy.c"
-#line 716 "y_tab.c"
+#line 714 "y_tab.c"
 #define YYABORT goto yyabort
 #define YYACCEPT goto yyaccept
 #define YYERROR goto yyerrlab
@@ -852,6 +850,188 @@ yyreduce:
     yyval = yyvsp[1-yym];
     switch (yyn)
     {
+case 2:
+#line 63 "lexico.y"
+{createTS();}
+break;
+case 28:
+#line 99 "lexico.y"
+{yyval.tipo = entero;}
+break;
+case 29:
+#line 100 "lexico.y"
+{yyval.tipo = real;}
+break;
+case 30:
+#line 101 "lexico.y"
+{yyval.tipo = caracter;}
+break;
+case 31:
+#line 102 "lexico.y"
+{yyval.tipo = conjunto;}
+break;
+case 33:
+#line 104 "lexico.y"
+{yyval.tipo = booleano;}
+break;
+case 34:
+#line 105 "lexico.y"
+{yyval.tipo = cadena;}
+break;
+case 35:
+#line 108 "lexico.y"
+{tipoAux = yyvsp[-2].tipo;}
+break;
+case 40:
+#line 118 "lexico.y"
+{printf("TIPO AUX es: %d", tipoAux);}
+break;
+case 74:
+#line 150 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo){
+										yyval.tipo = yyvsp[-2].tipo;
+									  }else{
+										printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+									  }
+									}
+break;
+case 75:
+#line 156 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo){
+								yyval.tipo = yyvsp[-2].tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+break;
+case 76:
+#line 162 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo){
+								yyval.tipo = yyvsp[-2].tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+break;
+case 77:
+#line 168 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo){
+								yyval.tipo = yyvsp[-2].tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+break;
+case 78:
+#line 174 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo && yyvsp[-2].tipo == booleano){
+								yyval.tipo = yyvsp[-2].tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+break;
+case 79:
+#line 180 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo && yyvsp[-2].tipo == booleano){
+									yyval.tipo = yyvsp[-2].tipo;
+							   }else{
+									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							   }
+							}
+break;
+case 80:
+#line 186 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
+									yyval.tipo = yyvsp[-2].tipo;
+								  }else{
+									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+								  }
+								}
+break;
+case 81:
+#line 192 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
+									yyval.tipo = yyvsp[-2].tipo;
+								  }else{
+									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+								  }
+								}
+break;
+case 82:
+#line 198 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
+									yyval.tipo = yyvsp[-2].tipo;
+								  }else{
+									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+								  }
+								}
+break;
+case 83:
+#line 204 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
+									yyval.tipo = yyvsp[-2].tipo;
+								  }else{
+									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+								  }
+								}
+break;
+case 84:
+#line 210 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == booleano)){
+								yyval.tipo = yyvsp[-2].tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+break;
+case 85:
+#line 216 "lexico.y"
+{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == booleano)){
+								yyval.tipo = yyvsp[-2].tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+break;
+case 86:
+#line 222 "lexico.y"
+{printf("\nENTERO: %s con TIPO: %d\n", yyvsp[0].cadena, yyvsp[0].tipo);}
+break;
+case 88:
+#line 224 "lexico.y"
+{ if(yyvsp[0].tipo == booleano){
+							yyval.tipo = yyvsp[-1].tipo;
+					   }else{
+							printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+					   }
+					}
+break;
+case 89:
+#line 230 "lexico.y"
+{printf("\nID: %s con TIPO: %d\n",yyvsp[0].cadena, yyvsp[0].tipo);}
+break;
+case 90:
+#line 231 "lexico.y"
+{printf("\nREAL: %s con TIPO: %d\n", yyvsp[0].cadena, yyvsp[0].tipo);}
+break;
+case 91:
+#line 232 "lexico.y"
+{printf("\nBOOL: %s con TIPO: %d\n", yyvsp[0].cadena, yyvsp[0].tipo);}
+break;
+case 92:
+#line 233 "lexico.y"
+{printf("\nBOOL: %s con TIPO: %d\n", yyvsp[0].cadena, yyvsp[0].tipo);}
+break;
+case 93:
+#line 234 "lexico.y"
+{printf("\nCHAR: %s con TIPO: %d\n", yyvsp[0].cadena, yyvsp[0].tipo);}
+break;
+case 99:
+#line 240 "lexico.y"
+{printf("\nASIG: %s con TIPO: %d\n",yyvsp[-2].cadena, yyvsp[0].tipo);}
+break;
+#line 1035 "y_tab.c"
     }
     yyssp -= yym;
     yystate = *yyssp;

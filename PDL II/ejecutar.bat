@@ -1,2 +1,2 @@
-sintactico.exe ejemploS.sc
+sintactico.exe ejemplos\ejemploSemantico.sc
 pause

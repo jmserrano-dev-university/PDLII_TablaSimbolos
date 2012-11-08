@@ -170,11 +170,11 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 /* Analizador de léxico */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #ifndef __STDC__
 #define __STDC__
 #endif
-
 #define comentario 1
 # line 19 "lexico.l"
 
@@ -729,7 +729,7 @@ return CASE;
 	YY_BREAK
 case 27:
 # line 51 "lexico.l"
-return NUM;
+{yylval.cadena = strdup(yytext); yylval.tipo = entero;  return NUM;}
 	YY_BREAK
 case 28:
 # line 52 "lexico.l"
@@ -757,11 +757,11 @@ return BOOL;
 	YY_BREAK
 case 34:
 # line 59 "lexico.l"
-return TRUE;
+{yylval.cadena = strdup(yytext); yylval.tipo = booleano; return TRUE;}
 	YY_BREAK
 case 35:
 # line 60 "lexico.l"
-return FALSE;
+{yylval.cadena = strdup(yytext); yylval.tipo = booleano; return FALSE;}
 	YY_BREAK
 case 36:
 # line 61 "lexico.l"
@@ -769,7 +769,7 @@ return STRING;
 	YY_BREAK
 case 37:
 # line 62 "lexico.l"
-return CARACTER;
+{yylval.cadena = strdup(yytext); yylval.tipo = caracter; return CARACTER;}
 	YY_BREAK
 case 38:
 # line 64 "lexico.l"
@@ -789,7 +789,7 @@ return TYPEDEF;
 	YY_BREAK
 case 42:
 # line 72 "lexico.l"
-return REAL;
+{yylval.cadena = strdup(yytext); yylval.tipo = real;  return REAL;}
 	YY_BREAK
 case 43:
 # line 73 "lexico.l"
@@ -917,14 +917,16 @@ case 73:
 	YY_BREAK
 case 74:
 # line 106 "lexico.l"
-return ID;
+{ yylval.cadena = strdup(yytext); 
+			         return ID;
+				   }
 	YY_BREAK
 case 75:
-# line 108 "lexico.l"
+# line 110 "lexico.l"
 yyerror("Error en la línea: ");
 	YY_BREAK
 case 76:
-# line 110 "lexico.l"
+# line 112 "lexico.l"
 ECHO;
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
@@ -1451,5 +1453,5 @@ FILE *file;
 
     b->yy_eof_status = EOF_NOT_SEEN;
     }
-# line 110 "lexico.l"
+# line 112 "lexico.l"
 

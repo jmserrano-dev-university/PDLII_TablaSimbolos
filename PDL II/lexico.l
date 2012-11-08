@@ -2,11 +2,11 @@
 /* Analizador de léxico */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #ifndef __STDC__
 #define __STDC__
 #endif
-
 %}
 
 letra [a-zA-Z]
@@ -48,7 +48,7 @@ todos .
 "!" return NEGEXP;
 
 "case" return CASE;
-{digito}+ return NUM;
+{digito}+ {yylval.cadena = strdup(yytext); yylval.tipo = entero;  return NUM;}
 "break" return BREAK;
 "int"	return INT;
 "float" return FLOAT;
@@ -56,10 +56,10 @@ todos .
 "set" return SET;
 
 "bool" return BOOL;
-"true" return TRUE;
-"false" return FALSE;
+"true" {yylval.cadena = strdup(yytext); yylval.tipo = booleano; return TRUE;}
+"false" {yylval.cadena = strdup(yytext); yylval.tipo = booleano; return FALSE;}
 "string" return STRING;
-"'"{letra}"'" return CARACTER;
+"'"{letra}"'" {yylval.cadena = strdup(yytext); yylval.tipo = caracter; return CARACTER;}
 
 "<--" return ADDC;
 "-->" return MINC;
@@ -69,7 +69,7 @@ todos .
 
 
 "typedef" return TYPEDEF;
-{digito}+"."{digito}* return REAL;
+{digito}+"."{digito}* {yylval.cadena = strdup(yytext); yylval.tipo = real;  return REAL;}
 \""%"[dfcso]\" return OP_INOUT;
 \"([^"\n]|\\\")*\" return TEXTO_OUT;
 "empty" return EMPTY;
@@ -103,7 +103,9 @@ todos .
 <comentario>\n {++linea_actual;}
 <comentario>"*"+"/" {BEGIN(INITIAL);}
 
-{letra}{alphanum}* return ID;
+{letra}{alphanum}* { yylval.cadena = strdup(yytext); 
+			         return ID;
+				   }
 
 . yyerror("Error en la línea: ");
 

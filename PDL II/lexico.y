@@ -6,16 +6,13 @@
 
 /*Declaración de para usar yylval*/
 typedef struct{
-	int entero;
-	char *cadena;
-	tDato tipo;
+	int token; 		/*Código del token*/
+	char *cadena; 	/*Nombre del token*/
+	tDato tipo; 	/*Tipo del token*/
 }atributos;
 
-#define YYSTYPE atributos;
-
+#define YYSTYPE atributos
 /*Fin Declaración*/
-
-
 
 int linea_actual = 1;
 
@@ -27,8 +24,10 @@ void yyerror (char *msg){
 	fprintf(stderr,buffer);
 }
 
+tDato tipoAux;
 
 %}
+
 /* A continuación declaramos los nombres simbólicos de los tokens, así como el símbolo inicial de la gramática (axioma). Byacc se encarga de asociar a cada uno un código */
 %start prog
 
@@ -61,7 +60,7 @@ void yyerror (char *msg){
 
 %%
 /* Sección de producciones que definen la gramática */
-prog : dec1 dec2 | dec2
+prog : dec1 dec2 | dec2 {createTS();}
 ;
 dec1 : incs_s defs_s tipos_s
 | defs_s tipos_s 
@@ -94,16 +93,33 @@ defs : DEFINE ID NUM
 ;
 tipos : TYPEDEF tipo ID
 ;
-tipo : INT | FLOAT | CHAR | SET | ID | BOOL | STRING
+
+
+
+tipo : INT {$$.tipo = entero;}
+| FLOAT {$$.tipo = real;}
+| CHAR {$$.tipo = caracter;}
+| SET {$$.tipo = conjunto;}
+| ID 
+| BOOL {$$.tipo = booleano;}
+| STRING {$$.tipo = cadena;}
 ;
-vars : tipo variables PYC
+
+vars : tipo variables PYC {tipoAux = $1.tipo;}
 ;
-variables : variables COMA variables_s | variables_s
+
+variables : variables COMA variables_s
+| variables_s 
 ;
-variables_s : variable | variable ASI expresion
+
+variables_s : variable
+| variable ASI expresion 
 ;
-variable : ID | ID CORI NUM CORD
+variable : ID {printf("TIPO AUX es: %d", tipoAux);}
+| ID CORI NUM CORD 
 ;
+
+
 proc : VOID ID PIZ params PDE cuerpo
 | VOID ID PIZ PDE cuerpo
 ;
@@ -131,16 +147,99 @@ bloque : LLIZ sentencias LLDE | sentencia | LLIZ LLDE
 if : IF expresion bloque ELSE bloque
 | IF expresion bloque
 ;
-expresion : expresion SUM expresion | expresion RES expresion
-| expresion MUL expresion | expresion DIV expresion | expresion AND expresion
-| expresion OR expresion | expresion MAYORIQ expresion
-| expresion MENORIQ expresion | expresion MAYORQ expresion
-| expresion MENORQ expresion | expresion DIST expresion 
-| expresion II expresion | NUM | PIZ expresion PDE 
-| NEGEXP expresion | ID | REAL| TRUE | FALSE | CARACTER | TEXTO_OUT | crea_conjunto 
+expresion : expresion SUM expresion { if($1.tipo == $3.tipo){
+										$$.tipo = $1.tipo;
+									  }else{
+										printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+									  }
+									}
+| expresion RES expresion{ if($1.tipo == $3.tipo){
+								$$.tipo = $1.tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+| expresion MUL expresion { if($1.tipo == $3.tipo){
+								$$.tipo = $1.tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+| expresion DIV expresion { if($1.tipo == $3.tipo){
+								$$.tipo = $1.tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+| expresion AND expresion 	{ if($1.tipo == $3.tipo && $1.tipo == booleano){
+								$$.tipo = $1.tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+| expresion OR expresion 	{ if($1.tipo == $3.tipo && $1.tipo == booleano){
+									$$.tipo = $1.tipo;
+							   }else{
+									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							   }
+							}
+| expresion MAYORIQ expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
+									$$.tipo = $1.tipo;
+								  }else{
+									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+								  }
+								}
+| expresion MENORIQ expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
+									$$.tipo = $1.tipo;
+								  }else{
+									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+								  }
+								}
+| expresion MAYORQ expresion	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
+									$$.tipo = $1.tipo;
+								  }else{
+									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+								  }
+								}
+| expresion MENORQ expresion	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
+									$$.tipo = $1.tipo;
+								  }else{
+									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+								  }
+								}
+| expresion DIST expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == booleano)){
+								$$.tipo = $1.tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+| expresion II expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == booleano)){
+								$$.tipo = $1.tipo;
+							  }else{
+								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							  }
+							}
+| NUM {printf("\nENTERO: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| PIZ expresion PDE 
+| NEGEXP expresion	{ if($2.tipo == booleano){
+							$$.tipo = $1.tipo;
+					   }else{
+							printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+					   }
+					}
+| ID {printf("\nID: %s con TIPO: %d\n",$1.cadena, $1.tipo);}
+| REAL {printf("\nREAL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| TRUE {printf("\nBOOL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| FALSE {printf("\nBOOL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| CARACTER {printf("\nCHAR: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| TEXTO_OUT 
+| crea_conjunto 
 | llamada_complementario 
-| llamada_sivacio | llamada_length | ID ASI expresion
+| llamada_sivacio 
+| llamada_length 
+| ID ASI expresion {printf("\nASIG: %s con TIPO: %d\n",$1.cadena, $3.tipo);}
 ;
+
 while : WHILE PIZ expresion PDE bloque
 | WHILE PIZ expresion PDE PYC
 ;

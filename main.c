@@ -1,5 +1,6 @@
 /* 
  * File:   main.c
+ * 
  * Author: José Manuel Serrano Mármol
  * Author: Raúl Salazar de Torres
  */

@@ -1,5 +1,7 @@
 /* 
  * File:   tablaSimbolos.c
+ * Define la estructura de la TABLA de SIMBOLOS y sus operaciones
+ * 
  * Author: José Manuel Serrano Mármol
  * Author: Raúl Salazar de Torres
  */

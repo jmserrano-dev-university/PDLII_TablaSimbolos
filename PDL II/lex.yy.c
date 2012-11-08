@@ -555,11 +555,11 @@ char *yytext;
 /* Analizador de léxico */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #ifndef __STDC__
 #define __STDC__
 #endif
-
 
 #line 565 "lex.yy.c"
 
@@ -1040,7 +1040,7 @@ return CASE;
 case 27:
 YY_RULE_SETUP
 #line 51 "lexico.l"
-return NUM;
+{yylval.cadena = strdup(yytext); yylval.tipo = entero;  return NUM;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
@@ -1075,12 +1075,12 @@ return BOOL;
 case 34:
 YY_RULE_SETUP
 #line 59 "lexico.l"
-return TRUE;
+{yylval.cadena = strdup(yytext); yylval.tipo = booleano; return TRUE;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 60 "lexico.l"
-return FALSE;
+{yylval.cadena = strdup(yytext); yylval.tipo = booleano; return FALSE;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
@@ -1090,7 +1090,7 @@ return STRING;
 case 37:
 YY_RULE_SETUP
 #line 62 "lexico.l"
-return CARACTER;
+{yylval.cadena = strdup(yytext); yylval.tipo = caracter; return CARACTER;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
@@ -1115,7 +1115,7 @@ return TYPEDEF;
 case 42:
 YY_RULE_SETUP
 #line 72 "lexico.l"
-return REAL;
+{yylval.cadena = strdup(yytext); yylval.tipo = real;  return REAL;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
@@ -1277,19 +1277,21 @@ YY_RULE_SETUP
 case 74:
 YY_RULE_SETUP
 #line 106 "lexico.l"
-return ID;
+{ yylval.cadena = strdup(yytext); 
+			         return ID;
+				   }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 108 "lexico.l"
+#line 110 "lexico.l"
 yyerror("Error en la línea: ");
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 110 "lexico.l"
+#line 112 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 1293 "lex.yy.c"
+#line 1295 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(comentario):
 	yyterminate();
@@ -1569,7 +1571,7 @@ FILE *file;
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 	yy_is_jam = (yy_current_state == 225);
-#line 110 "lexico.l"
+#line 112 "lexico.l"
 
 
 
