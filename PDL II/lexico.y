@@ -24,7 +24,7 @@ void yyerror (char *msg){
 	fprintf(stderr,buffer);
 }
 
-tDato tipoAux;
+tDato tipoAux; //Almacenamos el tipo para las declaraciones de VARIABLES
 
 %}
 
@@ -105,7 +105,7 @@ tipo : INT {$$.tipo = entero;}
 | STRING {$$.tipo = cadena;}
 ;
 
-vars : tipo variables PYC {tipoAux = $1.tipo;}
+vars : tipo {tipoAux = $1.tipo;} variables PYC 
 ;
 
 variables : variables COMA variables_s
@@ -115,7 +115,7 @@ variables : variables COMA variables_s
 variables_s : variable
 | variable ASI expresion 
 ;
-variable : ID {printf("TIPO AUX es: %d", tipoAux);}
+variable : ID {pushTS(rellenaEntrada(linea_actual,$1.cadena,tipoAux,var,0)); imprimirTS();}
 | ID CORI NUM CORD 
 ;
 
@@ -125,6 +125,7 @@ proc : VOID ID PIZ params PDE cuerpo
 ;
 params : params COMA tipo ID | tipo ID
 ;
+
 sentencia : switch | if | while | in | out | proc |llamada_proc | llamada_conjunto PYC | expresion PYC
 ;
 switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE
@@ -256,7 +257,7 @@ llamada_proc : ID PIZ params_llamada PDE PYC
 params_llamada : params_llamada COMA expresion
 | expresion
 ;
-main : VOID MAIN PIZ PDE cuerpo
+main : VOID MAIN {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); imprimirTS();}  PIZ PDE cuerpo
 ;
 cuerpo : LLIZ vars_s sentencias LLDE
 | LLIZ sentencias LLDE

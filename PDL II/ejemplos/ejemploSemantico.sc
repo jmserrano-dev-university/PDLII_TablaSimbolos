@@ -2,5 +2,6 @@
 #include "miLibreria.h"
 
 void main(){
-	int a;
+	int a=2,b,c;
+	bool d,f;
 }
