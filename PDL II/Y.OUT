@@ -87,91 +87,90 @@
   63          | CASE literal PUNTOS BREAK PYC
 
   64  literal : NUM
-  65          | TEXTO_OUT
 
-  66  sentencias : sentencias sentencia
-  67             | sentencia
+  65  sentencias : sentencias sentencia
+  66             | sentencia
 
-  68  caso_defecto : DEFAULT PUNTOS sentencias
-  69               | DEFAULT PUNTOS
+  67  caso_defecto : DEFAULT PUNTOS sentencias
+  68               | DEFAULT PUNTOS
 
-  70  bloque : LLIZ sentencias LLDE
-  71         | sentencia
-  72         | LLIZ LLDE
+  69  bloque : LLIZ sentencias LLDE
+  70         | sentencia
+  71         | LLIZ LLDE
 
-  73  if : IF expresion bloque ELSE bloque
-  74     | IF expresion bloque
+  72  if : IF expresion bloque ELSE bloque
+  73     | IF expresion bloque
 
-  75  expresion : expresion SUM expresion
-  76            | expresion RES expresion
-  77            | expresion MUL expresion
-  78            | expresion DIV expresion
-  79            | expresion AND expresion
-  80            | expresion OR expresion
-  81            | expresion MAYORIQ expresion
-  82            | expresion MENORIQ expresion
-  83            | expresion MAYORQ expresion
-  84            | expresion MENORQ expresion
-  85            | expresion DIST expresion
-  86            | expresion II expresion
-  87            | NUM
-  88            | PIZ expresion PDE
-  89            | NEGEXP expresion
-  90            | ID
-  91            | REAL
-  92            | TRUE
-  93            | FALSE
-  94            | CARACTER
-  95            | TEXTO_OUT
-  96            | crea_conjunto
-  97            | llamada_complementario
-  98            | llamada_sivacio
-  99            | llamada_length
- 100            | ID ASI expresion
+  74  expresion : expresion SUM expresion
+  75            | expresion RES expresion
+  76            | expresion MUL expresion
+  77            | expresion DIV expresion
+  78            | expresion AND expresion
+  79            | expresion OR expresion
+  80            | expresion MAYORIQ expresion
+  81            | expresion MENORIQ expresion
+  82            | expresion MAYORQ expresion
+  83            | expresion MENORQ expresion
+  84            | expresion DIST expresion
+  85            | expresion II expresion
+  86            | NUM
+  87            | PIZ expresion PDE
+  88            | NEGEXP expresion
+  89            | ID
+  90            | REAL
+  91            | TRUE
+  92            | FALSE
+  93            | CARACTER
+  94            | TEXTO_OUT
+  95            | crea_conjunto
+  96            | llamada_complementario
+  97            | llamada_sivacio
+  98            | llamada_length
+  99            | ID ASI expresion
 
- 101  while : WHILE PIZ expresion PDE bloque
- 102        | WHILE PIZ expresion PDE PYC
+ 100  while : WHILE PIZ expresion PDE bloque
+ 101        | WHILE PIZ expresion PDE PYC
 
- 103  out : OUT PIZ TEXTO_OUT COMA ids PDE PYC
- 104      | OUT PIZ TEXTO_OUT PDE PYC
+ 102  out : OUT PIZ TEXTO_OUT COMA ids PDE PYC
+ 103      | OUT PIZ TEXTO_OUT PDE PYC
 
- 105  ids : ids COMA ID
- 106      | ID
+ 104  ids : ids COMA ID
+ 105      | ID
 
- 107  in : IN PIZ OP_INOUT COMA ID PDE PYC
+ 106  in : IN PIZ OP_INOUT COMA ID PDE PYC
 
- 108  llamada_proc : ID PIZ params_llamada PDE PYC
- 109               | ID PIZ PDE PYC
+ 107  llamada_proc : ID PIZ params_llamada PDE PYC
+ 108               | ID PIZ PDE PYC
 
- 110  params_llamada : params_llamada COMA expresion
- 111                 | expresion
+ 109  params_llamada : params_llamada COMA expresion
+ 110                 | expresion
 
- 112  $$2 :
+ 111  $$2 :
 
- 113  main : VOID MAIN $$2 PIZ PDE cuerpo
+ 112  main : VOID MAIN $$2 PIZ PDE cuerpo
 
- 114  cuerpo : LLIZ vars_s sentencias LLDE
- 115         | LLIZ sentencias LLDE
- 116         | LLIZ vars_s LLDE
- 117         | LLIZ LLDE
+ 113  cuerpo : LLIZ vars_s sentencias LLDE
+ 114         | LLIZ sentencias LLDE
+ 115         | LLIZ vars_s LLDE
+ 116         | LLIZ LLDE
 
- 118  llamada_conjunto : inserta_conjunto
- 119                   | saca_conjunto
- 120                   | destruye_conjunto
+ 117  llamada_conjunto : inserta_conjunto
+ 118                   | saca_conjunto
+ 119                   | destruye_conjunto
 
- 121  crea_conjunto : CREATE PIZ PDE
+ 120  crea_conjunto : CREATE PIZ PDE
 
- 122  destruye_conjunto : DELETE PIZ ID PDE
+ 121  destruye_conjunto : DELETE PIZ ID PDE
 
- 123  llamada_sivacio : EMPTY PIZ ID PDE
+ 122  llamada_sivacio : EMPTY PIZ ID PDE
 
- 124  llamada_length : LENGTH PIZ ID PDE
+ 123  llamada_length : LENGTH PIZ ID PDE
 
- 125  inserta_conjunto : expresion ADDC ID
+ 124  inserta_conjunto : expresion ADDC ID
 
- 126  saca_conjunto : expresion MINC ID
+ 125  saca_conjunto : expresion MINC ID
 
- 127  llamada_complementario : COMPC expresion
+ 126  llamada_complementario : COMPC expresion
 
 state 0
 	$accept : . prog $end  (0)
@@ -264,7 +263,7 @@ state 8
 state 9
 	proc : VOID . ID PIZ params PDE cuerpo  (43)
 	proc : VOID . ID PIZ PDE cuerpo  (44)
-	main : VOID . MAIN $$2 PIZ PDE cuerpo  (113)
+	main : VOID . MAIN $$2 PIZ PDE cuerpo  (112)
 
 	ID  shift 26
 	MAIN  shift 27
@@ -466,10 +465,10 @@ state 26
 
 
 state 27
-	main : VOID MAIN . $$2 PIZ PDE cuerpo  (113)
-	$$2 : .  (112)
+	main : VOID MAIN . $$2 PIZ PDE cuerpo  (112)
+	$$2 : .  (111)
 
-	.  reduce 112
+	.  reduce 111
 
 	$$2  goto 48
 
@@ -658,7 +657,7 @@ state 47
 
 
 state 48
-	main : VOID MAIN $$2 . PIZ PDE cuerpo  (113)
+	main : VOID MAIN $$2 . PIZ PDE cuerpo  (112)
 
 	PIZ  shift 60
 	.  error
@@ -760,7 +759,7 @@ state 59
 
 
 state 60
-	main : VOID MAIN $$2 PIZ . PDE cuerpo  (113)
+	main : VOID MAIN $$2 PIZ . PDE cuerpo  (112)
 
 	PDE  shift 71
 	.  error
@@ -821,10 +820,10 @@ state 65
 
 
 state 66
-	cuerpo : LLIZ . vars_s sentencias LLDE  (114)
-	cuerpo : LLIZ . sentencias LLDE  (115)
-	cuerpo : LLIZ . vars_s LLDE  (116)
-	cuerpo : LLIZ . LLDE  (117)
+	cuerpo : LLIZ . vars_s sentencias LLDE  (113)
+	cuerpo : LLIZ . sentencias LLDE  (114)
+	cuerpo : LLIZ . vars_s LLDE  (115)
+	cuerpo : LLIZ . LLDE  (116)
 
 	ID  shift 92
 	NUM  shift 75
@@ -915,7 +914,7 @@ state 70
 
 
 state 71
-	main : VOID MAIN $$2 PIZ PDE . cuerpo  (113)
+	main : VOID MAIN $$2 PIZ PDE . cuerpo  (112)
 
 	LLIZ  shift 66
 	.  error
@@ -937,109 +936,109 @@ state 73
 
 
 state 74
-	expresion : ID .  (90)
-	expresion : ID . ASI expresion  (100)
+	expresion : ID .  (89)
+	expresion : ID . ASI expresion  (99)
 
 	ASI  shift 120
-	ID  reduce 90
-	NUM  reduce 90
-	REAL  reduce 90
-	TRUE  reduce 90
-	FALSE  reduce 90
-	CARACTER  reduce 90
-	TEXTO_OUT  reduce 90
-	EMPTY  reduce 90
-	LENGTH  reduce 90
-	VOID  reduce 90
-	SWITCH  reduce 90
-	WHILE  reduce 90
-	IF  reduce 90
-	IN  reduce 90
-	OUT  reduce 90
-	CREATE  reduce 90
-	DELETE  reduce 90
-	PIZ  reduce 90
-	PDE  reduce 90
-	LLIZ  reduce 90
-	PYC  reduce 90
-	COMA  reduce 90
-	MAYORIQ  reduce 90
-	MENORIQ  reduce 90
-	MAYORQ  reduce 90
-	MENORQ  reduce 90
-	DIST  reduce 90
-	II  reduce 90
-	SUM  reduce 90
-	RES  reduce 90
-	MUL  reduce 90
-	DIV  reduce 90
-	AND  reduce 90
-	OR  reduce 90
-	ADDC  reduce 90
-	MINC  reduce 90
-	COMPC  reduce 90
-	NEGEXP  reduce 90
+	ID  reduce 89
+	NUM  reduce 89
+	REAL  reduce 89
+	TRUE  reduce 89
+	FALSE  reduce 89
+	CARACTER  reduce 89
+	TEXTO_OUT  reduce 89
+	EMPTY  reduce 89
+	LENGTH  reduce 89
+	VOID  reduce 89
+	SWITCH  reduce 89
+	WHILE  reduce 89
+	IF  reduce 89
+	IN  reduce 89
+	OUT  reduce 89
+	CREATE  reduce 89
+	DELETE  reduce 89
+	PIZ  reduce 89
+	PDE  reduce 89
+	LLIZ  reduce 89
+	PYC  reduce 89
+	COMA  reduce 89
+	MAYORIQ  reduce 89
+	MENORIQ  reduce 89
+	MAYORQ  reduce 89
+	MENORQ  reduce 89
+	DIST  reduce 89
+	II  reduce 89
+	SUM  reduce 89
+	RES  reduce 89
+	MUL  reduce 89
+	DIV  reduce 89
+	AND  reduce 89
+	OR  reduce 89
+	ADDC  reduce 89
+	MINC  reduce 89
+	COMPC  reduce 89
+	NEGEXP  reduce 89
 
 
 state 75
-	expresion : NUM .  (87)
+	expresion : NUM .  (86)
 
-	.  reduce 87
+	.  reduce 86
 
 
 state 76
-	expresion : REAL .  (91)
+	expresion : REAL .  (90)
+
+	.  reduce 90
+
+
+state 77
+	expresion : TRUE .  (91)
 
 	.  reduce 91
 
 
-state 77
-	expresion : TRUE .  (92)
+state 78
+	expresion : FALSE .  (92)
 
 	.  reduce 92
 
 
-state 78
-	expresion : FALSE .  (93)
+state 79
+	expresion : CARACTER .  (93)
 
 	.  reduce 93
 
 
-state 79
-	expresion : CARACTER .  (94)
+state 80
+	expresion : TEXTO_OUT .  (94)
 
 	.  reduce 94
 
 
-state 80
-	expresion : TEXTO_OUT .  (95)
-
-	.  reduce 95
-
-
 state 81
-	llamada_sivacio : EMPTY . PIZ ID PDE  (123)
+	llamada_sivacio : EMPTY . PIZ ID PDE  (122)
 
 	PIZ  shift 121
 	.  error
 
 
 state 82
-	llamada_length : LENGTH . PIZ ID PDE  (124)
+	llamada_length : LENGTH . PIZ ID PDE  (123)
 
 	PIZ  shift 122
 	.  error
 
 
 state 83
-	crea_conjunto : CREATE . PIZ PDE  (121)
+	crea_conjunto : CREATE . PIZ PDE  (120)
 
 	PIZ  shift 123
 	.  error
 
 
 state 84
-	expresion : PIZ . expresion PDE  (88)
+	expresion : PIZ . expresion PDE  (87)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1064,7 +1063,7 @@ state 84
 
 
 state 85
-	llamada_complementario : COMPC . expresion  (127)
+	llamada_complementario : COMPC . expresion  (126)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1089,7 +1088,7 @@ state 85
 
 
 state 86
-	expresion : NEGEXP . expresion  (89)
+	expresion : NEGEXP . expresion  (88)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1115,18 +1114,18 @@ state 86
 
 state 87
 	variables_s : variable ASI expresion .  (40)
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
 
 	MAYORIQ  shift 127
 	MENORIQ  shift 128
@@ -1145,54 +1144,54 @@ state 87
 
 
 state 88
-	expresion : crea_conjunto .  (96)
+	expresion : crea_conjunto .  (95)
+
+	.  reduce 95
+
+
+state 89
+	expresion : llamada_complementario .  (96)
 
 	.  reduce 96
 
 
-state 89
-	expresion : llamada_complementario .  (97)
+state 90
+	expresion : llamada_sivacio .  (97)
 
 	.  reduce 97
 
 
-state 90
-	expresion : llamada_sivacio .  (98)
+state 91
+	expresion : llamada_length .  (98)
 
 	.  reduce 98
 
 
-state 91
-	expresion : llamada_length .  (99)
-
-	.  reduce 99
-
-
 state 92
 	tipo : ID .  (32)
-	expresion : ID .  (90)
-	expresion : ID . ASI expresion  (100)
-	llamada_proc : ID . PIZ params_llamada PDE PYC  (108)
-	llamada_proc : ID . PIZ PDE PYC  (109)
+	expresion : ID .  (89)
+	expresion : ID . ASI expresion  (99)
+	llamada_proc : ID . PIZ params_llamada PDE PYC  (107)
+	llamada_proc : ID . PIZ PDE PYC  (108)
 
 	PIZ  shift 139
 	ASI  shift 120
 	ID  reduce 32
-	PYC  reduce 90
-	MAYORIQ  reduce 90
-	MENORIQ  reduce 90
-	MAYORQ  reduce 90
-	MENORQ  reduce 90
-	DIST  reduce 90
-	II  reduce 90
-	SUM  reduce 90
-	RES  reduce 90
-	MUL  reduce 90
-	DIV  reduce 90
-	AND  reduce 90
-	OR  reduce 90
-	ADDC  reduce 90
-	MINC  reduce 90
+	PYC  reduce 89
+	MAYORIQ  reduce 89
+	MENORIQ  reduce 89
+	MAYORQ  reduce 89
+	MENORQ  reduce 89
+	DIST  reduce 89
+	II  reduce 89
+	SUM  reduce 89
+	RES  reduce 89
+	MUL  reduce 89
+	DIV  reduce 89
+	AND  reduce 89
+	OR  reduce 89
+	ADDC  reduce 89
+	MINC  reduce 89
 
 
 state 93
@@ -1214,16 +1213,16 @@ state 94
 
 
 state 95
-	while : WHILE . PIZ expresion PDE bloque  (101)
-	while : WHILE . PIZ expresion PDE PYC  (102)
+	while : WHILE . PIZ expresion PDE bloque  (100)
+	while : WHILE . PIZ expresion PDE PYC  (101)
 
 	PIZ  shift 141
 	.  error
 
 
 state 96
-	if : IF . expresion bloque ELSE bloque  (73)
-	if : IF . expresion bloque  (74)
+	if : IF . expresion bloque ELSE bloque  (72)
+	if : IF . expresion bloque  (73)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1248,37 +1247,37 @@ state 96
 
 
 state 97
-	in : IN . PIZ OP_INOUT COMA ID PDE PYC  (107)
+	in : IN . PIZ OP_INOUT COMA ID PDE PYC  (106)
 
 	PIZ  shift 143
 	.  error
 
 
 state 98
-	out : OUT . PIZ TEXTO_OUT COMA ids PDE PYC  (103)
-	out : OUT . PIZ TEXTO_OUT PDE PYC  (104)
+	out : OUT . PIZ TEXTO_OUT COMA ids PDE PYC  (102)
+	out : OUT . PIZ TEXTO_OUT PDE PYC  (103)
 
 	PIZ  shift 144
 	.  error
 
 
 state 99
-	destruye_conjunto : DELETE . PIZ ID PDE  (122)
+	destruye_conjunto : DELETE . PIZ ID PDE  (121)
 
 	PIZ  shift 145
 	.  error
 
 
 state 100
-	cuerpo : LLIZ LLDE .  (117)
+	cuerpo : LLIZ LLDE .  (116)
 
-	.  reduce 117
+	.  reduce 116
 
 
 state 101
 	vars_s : vars_s . vars  (19)
-	cuerpo : LLIZ vars_s . sentencias LLDE  (114)
-	cuerpo : LLIZ vars_s . LLDE  (116)
+	cuerpo : LLIZ vars_s . sentencias LLDE  (113)
+	cuerpo : LLIZ vars_s . LLDE  (115)
 
 	ID  shift 92
 	NUM  shift 75
@@ -1339,20 +1338,20 @@ state 102
 
 state 103
 	sentencia : expresion . PYC  (55)
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-	inserta_conjunto : expresion . ADDC ID  (125)
-	saca_conjunto : expresion . MINC ID  (126)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+	inserta_conjunto : expresion . ADDC ID  (124)
+	saca_conjunto : expresion . MINC ID  (125)
 
 	PYC  shift 148
 	MAYORIQ  shift 127
@@ -1373,9 +1372,9 @@ state 103
 
 
 state 104
-	sentencias : sentencia .  (67)
+	sentencias : sentencia .  (66)
 
-	.  reduce 67
+	.  reduce 66
 
 
 state 105
@@ -1422,8 +1421,8 @@ state 111
 
 
 state 112
-	sentencias : sentencias . sentencia  (66)
-	cuerpo : LLIZ sentencias . LLDE  (115)
+	sentencias : sentencias . sentencia  (65)
+	cuerpo : LLIZ sentencias . LLDE  (114)
 
 	ID  shift 152
 	NUM  shift 75
@@ -1468,21 +1467,21 @@ state 112
 
 
 state 113
-	llamada_conjunto : inserta_conjunto .  (118)
+	llamada_conjunto : inserta_conjunto .  (117)
+
+	.  reduce 117
+
+
+state 114
+	llamada_conjunto : saca_conjunto .  (118)
 
 	.  reduce 118
 
 
-state 114
-	llamada_conjunto : saca_conjunto .  (119)
+state 115
+	llamada_conjunto : destruye_conjunto .  (119)
 
 	.  reduce 119
-
-
-state 115
-	llamada_conjunto : destruye_conjunto .  (120)
-
-	.  reduce 120
 
 
 state 116
@@ -1499,9 +1498,9 @@ state 117
 
 
 state 118
-	main : VOID MAIN $$2 PIZ PDE cuerpo .  (113)
+	main : VOID MAIN $$2 PIZ PDE cuerpo .  (112)
 
-	.  reduce 113
+	.  reduce 112
 
 
 state 119
@@ -1511,7 +1510,7 @@ state 119
 
 
 state 120
-	expresion : ID ASI . expresion  (100)
+	expresion : ID ASI . expresion  (99)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1536,40 +1535,40 @@ state 120
 
 
 state 121
-	llamada_sivacio : EMPTY PIZ . ID PDE  (123)
+	llamada_sivacio : EMPTY PIZ . ID PDE  (122)
 
 	ID  shift 157
 	.  error
 
 
 state 122
-	llamada_length : LENGTH PIZ . ID PDE  (124)
+	llamada_length : LENGTH PIZ . ID PDE  (123)
 
 	ID  shift 158
 	.  error
 
 
 state 123
-	crea_conjunto : CREATE PIZ . PDE  (121)
+	crea_conjunto : CREATE PIZ . PDE  (120)
 
 	PDE  shift 159
 	.  error
 
 
 state 124
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-	expresion : PIZ expresion . PDE  (88)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+	expresion : PIZ expresion . PDE  (87)
 
 	PDE  shift 160
 	MAYORIQ  shift 127
@@ -1588,43 +1587,43 @@ state 124
 
 
 state 125
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-	llamada_complementario : COMPC expresion .  (127)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+	llamada_complementario : COMPC expresion .  (126)
 
-	.  reduce 127
+	.  reduce 126
 
 
 state 126
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-	expresion : NEGEXP expresion .  (89)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+	expresion : NEGEXP expresion .  (88)
 
-	.  reduce 89
+	.  reduce 88
 
 
 state 127
-	expresion : expresion MAYORIQ . expresion  (81)
+	expresion : expresion MAYORIQ . expresion  (80)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1649,7 +1648,7 @@ state 127
 
 
 state 128
-	expresion : expresion MENORIQ . expresion  (82)
+	expresion : expresion MENORIQ . expresion  (81)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1674,7 +1673,7 @@ state 128
 
 
 state 129
-	expresion : expresion MAYORQ . expresion  (83)
+	expresion : expresion MAYORQ . expresion  (82)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1699,7 +1698,7 @@ state 129
 
 
 state 130
-	expresion : expresion MENORQ . expresion  (84)
+	expresion : expresion MENORQ . expresion  (83)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1724,7 +1723,7 @@ state 130
 
 
 state 131
-	expresion : expresion DIST . expresion  (85)
+	expresion : expresion DIST . expresion  (84)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1749,7 +1748,7 @@ state 131
 
 
 state 132
-	expresion : expresion II . expresion  (86)
+	expresion : expresion II . expresion  (85)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1774,7 +1773,7 @@ state 132
 
 
 state 133
-	expresion : expresion SUM . expresion  (75)
+	expresion : expresion SUM . expresion  (74)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1799,7 +1798,7 @@ state 133
 
 
 state 134
-	expresion : expresion RES . expresion  (76)
+	expresion : expresion RES . expresion  (75)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1824,7 +1823,7 @@ state 134
 
 
 state 135
-	expresion : expresion MUL . expresion  (77)
+	expresion : expresion MUL . expresion  (76)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1849,7 +1848,7 @@ state 135
 
 
 state 136
-	expresion : expresion DIV . expresion  (78)
+	expresion : expresion DIV . expresion  (77)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1874,7 +1873,7 @@ state 136
 
 
 state 137
-	expresion : expresion AND . expresion  (79)
+	expresion : expresion AND . expresion  (78)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1899,7 +1898,7 @@ state 137
 
 
 state 138
-	expresion : expresion OR . expresion  (80)
+	expresion : expresion OR . expresion  (79)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1924,8 +1923,8 @@ state 138
 
 
 state 139
-	llamada_proc : ID PIZ . params_llamada PDE PYC  (108)
-	llamada_proc : ID PIZ . PDE PYC  (109)
+	llamada_proc : ID PIZ . params_llamada PDE PYC  (107)
+	llamada_proc : ID PIZ . PDE PYC  (108)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1962,8 +1961,8 @@ state 140
 
 
 state 141
-	while : WHILE PIZ . expresion PDE bloque  (101)
-	while : WHILE PIZ . expresion PDE PYC  (102)
+	while : WHILE PIZ . expresion PDE bloque  (100)
+	while : WHILE PIZ . expresion PDE PYC  (101)
 
 	ID  shift 74
 	NUM  shift 75
@@ -1988,20 +1987,20 @@ state 141
 
 
 state 142
-	if : IF expresion . bloque ELSE bloque  (73)
-	if : IF expresion . bloque  (74)
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
+	if : IF expresion . bloque ELSE bloque  (72)
+	if : IF expresion . bloque  (73)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
 
 	ID  shift 152
 	NUM  shift 75
@@ -2059,36 +2058,36 @@ state 142
 
 
 state 143
-	in : IN PIZ . OP_INOUT COMA ID PDE PYC  (107)
+	in : IN PIZ . OP_INOUT COMA ID PDE PYC  (106)
 
 	OP_INOUT  shift 181
 	.  error
 
 
 state 144
-	out : OUT PIZ . TEXTO_OUT COMA ids PDE PYC  (103)
-	out : OUT PIZ . TEXTO_OUT PDE PYC  (104)
+	out : OUT PIZ . TEXTO_OUT COMA ids PDE PYC  (102)
+	out : OUT PIZ . TEXTO_OUT PDE PYC  (103)
 
 	TEXTO_OUT  shift 182
 	.  error
 
 
 state 145
-	destruye_conjunto : DELETE PIZ . ID PDE  (122)
+	destruye_conjunto : DELETE PIZ . ID PDE  (121)
 
 	ID  shift 183
 	.  error
 
 
 state 146
-	cuerpo : LLIZ vars_s LLDE .  (116)
+	cuerpo : LLIZ vars_s LLDE .  (115)
 
-	.  reduce 116
+	.  reduce 115
 
 
 state 147
-	sentencias : sentencias . sentencia  (66)
-	cuerpo : LLIZ vars_s sentencias . LLDE  (114)
+	sentencias : sentencias . sentencia  (65)
+	cuerpo : LLIZ vars_s sentencias . LLDE  (113)
 
 	ID  shift 152
 	NUM  shift 75
@@ -2139,14 +2138,14 @@ state 148
 
 
 state 149
-	inserta_conjunto : expresion ADDC . ID  (125)
+	inserta_conjunto : expresion ADDC . ID  (124)
 
 	ID  shift 185
 	.  error
 
 
 state 150
-	saca_conjunto : expresion MINC . ID  (126)
+	saca_conjunto : expresion MINC . ID  (125)
 
 	ID  shift 186
 	.  error
@@ -2159,40 +2158,40 @@ state 151
 
 
 state 152
-	expresion : ID .  (90)
-	expresion : ID . ASI expresion  (100)
-	llamada_proc : ID . PIZ params_llamada PDE PYC  (108)
-	llamada_proc : ID . PIZ PDE PYC  (109)
+	expresion : ID .  (89)
+	expresion : ID . ASI expresion  (99)
+	llamada_proc : ID . PIZ params_llamada PDE PYC  (107)
+	llamada_proc : ID . PIZ PDE PYC  (108)
 
 	PIZ  shift 139
 	ASI  shift 120
-	PYC  reduce 90
-	MAYORIQ  reduce 90
-	MENORIQ  reduce 90
-	MAYORQ  reduce 90
-	MENORQ  reduce 90
-	DIST  reduce 90
-	II  reduce 90
-	SUM  reduce 90
-	RES  reduce 90
-	MUL  reduce 90
-	DIV  reduce 90
-	AND  reduce 90
-	OR  reduce 90
-	ADDC  reduce 90
-	MINC  reduce 90
+	PYC  reduce 89
+	MAYORIQ  reduce 89
+	MENORIQ  reduce 89
+	MAYORQ  reduce 89
+	MENORQ  reduce 89
+	DIST  reduce 89
+	II  reduce 89
+	SUM  reduce 89
+	RES  reduce 89
+	MUL  reduce 89
+	DIV  reduce 89
+	AND  reduce 89
+	OR  reduce 89
+	ADDC  reduce 89
+	MINC  reduce 89
 
 
 state 153
-	cuerpo : LLIZ sentencias LLDE .  (115)
+	cuerpo : LLIZ sentencias LLDE .  (114)
 
-	.  reduce 115
+	.  reduce 114
 
 
 state 154
-	sentencias : sentencias sentencia .  (66)
+	sentencias : sentencias sentencia .  (65)
 
-	.  reduce 66
+	.  reduce 65
 
 
 state 155
@@ -2202,19 +2201,19 @@ state 155
 
 
 state 156
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-	expresion : ID ASI expresion .  (100)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+	expresion : ID ASI expresion .  (99)
 
 	MAYORIQ  shift 127
 	MENORIQ  shift 128
@@ -2228,74 +2227,129 @@ state 156
 	DIV  shift 136
 	AND  shift 137
 	OR  shift 138
-	ID  reduce 100
-	NUM  reduce 100
-	REAL  reduce 100
-	TRUE  reduce 100
-	FALSE  reduce 100
-	CARACTER  reduce 100
-	TEXTO_OUT  reduce 100
-	EMPTY  reduce 100
-	LENGTH  reduce 100
-	VOID  reduce 100
-	SWITCH  reduce 100
-	WHILE  reduce 100
-	IF  reduce 100
-	IN  reduce 100
-	OUT  reduce 100
-	CREATE  reduce 100
-	DELETE  reduce 100
-	PIZ  reduce 100
-	PDE  reduce 100
-	LLIZ  reduce 100
-	PYC  reduce 100
-	COMA  reduce 100
-	ADDC  reduce 100
-	MINC  reduce 100
-	COMPC  reduce 100
-	NEGEXP  reduce 100
+	ID  reduce 99
+	NUM  reduce 99
+	REAL  reduce 99
+	TRUE  reduce 99
+	FALSE  reduce 99
+	CARACTER  reduce 99
+	TEXTO_OUT  reduce 99
+	EMPTY  reduce 99
+	LENGTH  reduce 99
+	VOID  reduce 99
+	SWITCH  reduce 99
+	WHILE  reduce 99
+	IF  reduce 99
+	IN  reduce 99
+	OUT  reduce 99
+	CREATE  reduce 99
+	DELETE  reduce 99
+	PIZ  reduce 99
+	PDE  reduce 99
+	LLIZ  reduce 99
+	PYC  reduce 99
+	COMA  reduce 99
+	ADDC  reduce 99
+	MINC  reduce 99
+	COMPC  reduce 99
+	NEGEXP  reduce 99
 
 
 state 157
-	llamada_sivacio : EMPTY PIZ ID . PDE  (123)
+	llamada_sivacio : EMPTY PIZ ID . PDE  (122)
 
 	PDE  shift 187
 	.  error
 
 
 state 158
-	llamada_length : LENGTH PIZ ID . PDE  (124)
+	llamada_length : LENGTH PIZ ID . PDE  (123)
 
 	PDE  shift 188
 	.  error
 
 
 state 159
-	crea_conjunto : CREATE PIZ PDE .  (121)
+	crea_conjunto : CREATE PIZ PDE .  (120)
 
-	.  reduce 121
+	.  reduce 120
 
 
 state 160
-	expresion : PIZ expresion PDE .  (88)
+	expresion : PIZ expresion PDE .  (87)
 
-	.  reduce 88
+	.  reduce 87
 
 
 state 161
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion MAYORIQ expresion .  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion MAYORIQ expresion .  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+
+	SUM  shift 133
+	RES  shift 134
+	MUL  shift 135
+	DIV  shift 136
+	AND  shift 137
+	OR  shift 138
+	ID  reduce 80
+	NUM  reduce 80
+	REAL  reduce 80
+	TRUE  reduce 80
+	FALSE  reduce 80
+	CARACTER  reduce 80
+	TEXTO_OUT  reduce 80
+	EMPTY  reduce 80
+	LENGTH  reduce 80
+	VOID  reduce 80
+	SWITCH  reduce 80
+	WHILE  reduce 80
+	IF  reduce 80
+	IN  reduce 80
+	OUT  reduce 80
+	CREATE  reduce 80
+	DELETE  reduce 80
+	PIZ  reduce 80
+	PDE  reduce 80
+	LLIZ  reduce 80
+	PYC  reduce 80
+	COMA  reduce 80
+	MAYORIQ  reduce 80
+	MENORIQ  reduce 80
+	MAYORQ  reduce 80
+	MENORQ  reduce 80
+	DIST  reduce 80
+	II  reduce 80
+	ADDC  reduce 80
+	MINC  reduce 80
+	COMPC  reduce 80
+	NEGEXP  reduce 80
+
+
+state 162
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion MENORIQ expresion .  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
 
 	SUM  shift 133
 	RES  shift 134
@@ -2337,20 +2391,20 @@ state 161
 	NEGEXP  reduce 81
 
 
-state 162
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion MENORIQ expresion .  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
+state 163
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion MAYORQ expresion .  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
 
 	SUM  shift 133
 	RES  shift 134
@@ -2392,20 +2446,20 @@ state 162
 	NEGEXP  reduce 82
 
 
-state 163
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion MAYORQ expresion .  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
+state 164
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion MENORQ expresion .  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
 
 	SUM  shift 133
 	RES  shift 134
@@ -2447,20 +2501,20 @@ state 163
 	NEGEXP  reduce 83
 
 
-state 164
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion MENORQ expresion .  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
+state 165
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion DIST expresion .  (84)
+	expresion : expresion . II expresion  (85)
 
 	SUM  shift 133
 	RES  shift 134
@@ -2502,20 +2556,20 @@ state 164
 	NEGEXP  reduce 84
 
 
-state 165
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion DIST expresion .  (85)
-	expresion : expresion . II expresion  (86)
+state 166
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+	expresion : expresion II expresion .  (85)
 
 	SUM  shift 133
 	RES  shift 134
@@ -2557,75 +2611,75 @@ state 165
 	NEGEXP  reduce 85
 
 
-state 166
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-	expresion : expresion II expresion .  (86)
+state 167
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion SUM expresion .  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
 
-	SUM  shift 133
-	RES  shift 134
 	MUL  shift 135
 	DIV  shift 136
 	AND  shift 137
 	OR  shift 138
-	ID  reduce 86
-	NUM  reduce 86
-	REAL  reduce 86
-	TRUE  reduce 86
-	FALSE  reduce 86
-	CARACTER  reduce 86
-	TEXTO_OUT  reduce 86
-	EMPTY  reduce 86
-	LENGTH  reduce 86
-	VOID  reduce 86
-	SWITCH  reduce 86
-	WHILE  reduce 86
-	IF  reduce 86
-	IN  reduce 86
-	OUT  reduce 86
-	CREATE  reduce 86
-	DELETE  reduce 86
-	PIZ  reduce 86
-	PDE  reduce 86
-	LLIZ  reduce 86
-	PYC  reduce 86
-	COMA  reduce 86
-	MAYORIQ  reduce 86
-	MENORIQ  reduce 86
-	MAYORQ  reduce 86
-	MENORQ  reduce 86
-	DIST  reduce 86
-	II  reduce 86
-	ADDC  reduce 86
-	MINC  reduce 86
-	COMPC  reduce 86
-	NEGEXP  reduce 86
+	ID  reduce 74
+	NUM  reduce 74
+	REAL  reduce 74
+	TRUE  reduce 74
+	FALSE  reduce 74
+	CARACTER  reduce 74
+	TEXTO_OUT  reduce 74
+	EMPTY  reduce 74
+	LENGTH  reduce 74
+	VOID  reduce 74
+	SWITCH  reduce 74
+	WHILE  reduce 74
+	IF  reduce 74
+	IN  reduce 74
+	OUT  reduce 74
+	CREATE  reduce 74
+	DELETE  reduce 74
+	PIZ  reduce 74
+	PDE  reduce 74
+	LLIZ  reduce 74
+	PYC  reduce 74
+	COMA  reduce 74
+	MAYORIQ  reduce 74
+	MENORIQ  reduce 74
+	MAYORQ  reduce 74
+	MENORQ  reduce 74
+	DIST  reduce 74
+	II  reduce 74
+	SUM  reduce 74
+	RES  reduce 74
+	ADDC  reduce 74
+	MINC  reduce 74
+	COMPC  reduce 74
+	NEGEXP  reduce 74
 
 
-state 167
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion SUM expresion .  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
+state 168
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion RES expresion .  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
 
 	MUL  shift 135
 	DIV  shift 136
@@ -2667,23 +2721,21 @@ state 167
 	NEGEXP  reduce 75
 
 
-state 168
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion RES expresion .  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
+state 169
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion MUL expresion .  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
 
-	MUL  shift 135
-	DIV  shift 136
 	AND  shift 137
 	OR  shift 138
 	ID  reduce 76
@@ -2716,26 +2768,28 @@ state 168
 	II  reduce 76
 	SUM  reduce 76
 	RES  reduce 76
+	MUL  reduce 76
+	DIV  reduce 76
 	ADDC  reduce 76
 	MINC  reduce 76
 	COMPC  reduce 76
 	NEGEXP  reduce 76
 
 
-state 169
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion MUL expresion .  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
+state 170
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion DIV expresion .  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
 
 	AND  shift 137
 	OR  shift 138
@@ -2777,118 +2831,63 @@ state 169
 	NEGEXP  reduce 77
 
 
-state 170
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion DIV expresion .  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-
-	AND  shift 137
-	OR  shift 138
-	ID  reduce 78
-	NUM  reduce 78
-	REAL  reduce 78
-	TRUE  reduce 78
-	FALSE  reduce 78
-	CARACTER  reduce 78
-	TEXTO_OUT  reduce 78
-	EMPTY  reduce 78
-	LENGTH  reduce 78
-	VOID  reduce 78
-	SWITCH  reduce 78
-	WHILE  reduce 78
-	IF  reduce 78
-	IN  reduce 78
-	OUT  reduce 78
-	CREATE  reduce 78
-	DELETE  reduce 78
-	PIZ  reduce 78
-	PDE  reduce 78
-	LLIZ  reduce 78
-	PYC  reduce 78
-	COMA  reduce 78
-	MAYORIQ  reduce 78
-	MENORIQ  reduce 78
-	MAYORQ  reduce 78
-	MENORQ  reduce 78
-	DIST  reduce 78
-	II  reduce 78
-	SUM  reduce 78
-	RES  reduce 78
-	MUL  reduce 78
-	DIV  reduce 78
-	ADDC  reduce 78
-	MINC  reduce 78
-	COMPC  reduce 78
-	NEGEXP  reduce 78
-
-
 state 171
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion AND expresion .  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion AND expresion .  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+
+	.  reduce 78
+
+
+state 172
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion OR expresion .  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
 
 	.  reduce 79
 
 
-state 172
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion OR expresion .  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-
-	.  reduce 80
-
-
 state 173
-	llamada_proc : ID PIZ PDE . PYC  (109)
+	llamada_proc : ID PIZ PDE . PYC  (108)
 
 	PYC  shift 189
 	.  error
 
 
 state 174
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-	params_llamada : expresion .  (111)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+	params_llamada : expresion .  (110)
 
 	MAYORIQ  shift 127
 	MENORIQ  shift 128
@@ -2902,13 +2901,13 @@ state 174
 	DIV  shift 136
 	AND  shift 137
 	OR  shift 138
-	PDE  reduce 111
-	COMA  reduce 111
+	PDE  reduce 110
+	COMA  reduce 110
 
 
 state 175
-	llamada_proc : ID PIZ params_llamada . PDE PYC  (108)
-	params_llamada : params_llamada . COMA expresion  (110)
+	llamada_proc : ID PIZ params_llamada . PDE PYC  (107)
+	params_llamada : params_llamada . COMA expresion  (109)
 
 	PDE  shift 190
 	COMA  shift 191
@@ -2926,20 +2925,20 @@ state 176
 
 
 state 177
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-	while : WHILE PIZ expresion . PDE bloque  (101)
-	while : WHILE PIZ expresion . PDE PYC  (102)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+	while : WHILE PIZ expresion . PDE bloque  (100)
+	while : WHILE PIZ expresion . PDE PYC  (101)
 
 	PDE  shift 193
 	MAYORIQ  shift 127
@@ -2958,8 +2957,8 @@ state 177
 
 
 state 178
-	bloque : LLIZ . sentencias LLDE  (70)
-	bloque : LLIZ . LLDE  (72)
+	bloque : LLIZ . sentencias LLDE  (69)
+	bloque : LLIZ . LLDE  (71)
 
 	ID  shift 152
 	NUM  shift 75
@@ -3005,51 +3004,51 @@ state 178
 
 
 state 179
-	bloque : sentencia .  (71)
+	bloque : sentencia .  (70)
 
-	.  reduce 71
+	.  reduce 70
 
 
-180: shift/reduce conflict (shift 196, reduce 74) on ELSE
+180: shift/reduce conflict (shift 196, reduce 73) on ELSE
 state 180
-	if : IF expresion bloque . ELSE bloque  (73)
-	if : IF expresion bloque .  (74)
+	if : IF expresion bloque . ELSE bloque  (72)
+	if : IF expresion bloque .  (73)
 
 	ELSE  shift 196
-	ID  reduce 74
-	NUM  reduce 74
-	BREAK  reduce 74
-	REAL  reduce 74
-	TRUE  reduce 74
-	FALSE  reduce 74
-	CARACTER  reduce 74
-	TEXTO_OUT  reduce 74
-	EMPTY  reduce 74
-	LENGTH  reduce 74
-	VOID  reduce 74
-	SWITCH  reduce 74
-	WHILE  reduce 74
-	IF  reduce 74
-	IN  reduce 74
-	OUT  reduce 74
-	CREATE  reduce 74
-	DELETE  reduce 74
-	PIZ  reduce 74
-	LLDE  reduce 74
-	COMPC  reduce 74
-	NEGEXP  reduce 74
+	ID  reduce 73
+	NUM  reduce 73
+	BREAK  reduce 73
+	REAL  reduce 73
+	TRUE  reduce 73
+	FALSE  reduce 73
+	CARACTER  reduce 73
+	TEXTO_OUT  reduce 73
+	EMPTY  reduce 73
+	LENGTH  reduce 73
+	VOID  reduce 73
+	SWITCH  reduce 73
+	WHILE  reduce 73
+	IF  reduce 73
+	IN  reduce 73
+	OUT  reduce 73
+	CREATE  reduce 73
+	DELETE  reduce 73
+	PIZ  reduce 73
+	LLDE  reduce 73
+	COMPC  reduce 73
+	NEGEXP  reduce 73
 
 
 state 181
-	in : IN PIZ OP_INOUT . COMA ID PDE PYC  (107)
+	in : IN PIZ OP_INOUT . COMA ID PDE PYC  (106)
 
 	COMA  shift 197
 	.  error
 
 
 state 182
-	out : OUT PIZ TEXTO_OUT . COMA ids PDE PYC  (103)
-	out : OUT PIZ TEXTO_OUT . PDE PYC  (104)
+	out : OUT PIZ TEXTO_OUT . COMA ids PDE PYC  (102)
+	out : OUT PIZ TEXTO_OUT . PDE PYC  (103)
 
 	PDE  shift 198
 	COMA  shift 199
@@ -3057,57 +3056,57 @@ state 182
 
 
 state 183
-	destruye_conjunto : DELETE PIZ ID . PDE  (122)
+	destruye_conjunto : DELETE PIZ ID . PDE  (121)
 
 	PDE  shift 200
 	.  error
 
 
 state 184
-	cuerpo : LLIZ vars_s sentencias LLDE .  (114)
+	cuerpo : LLIZ vars_s sentencias LLDE .  (113)
 
-	.  reduce 114
+	.  reduce 113
 
 
 state 185
-	inserta_conjunto : expresion ADDC ID .  (125)
-
-	.  reduce 125
-
-
-state 186
-	saca_conjunto : expresion MINC ID .  (126)
-
-	.  reduce 126
-
-
-state 187
-	llamada_sivacio : EMPTY PIZ ID PDE .  (123)
-
-	.  reduce 123
-
-
-state 188
-	llamada_length : LENGTH PIZ ID PDE .  (124)
+	inserta_conjunto : expresion ADDC ID .  (124)
 
 	.  reduce 124
 
 
-state 189
-	llamada_proc : ID PIZ PDE PYC .  (109)
+state 186
+	saca_conjunto : expresion MINC ID .  (125)
 
-	.  reduce 109
+	.  reduce 125
+
+
+state 187
+	llamada_sivacio : EMPTY PIZ ID PDE .  (122)
+
+	.  reduce 122
+
+
+state 188
+	llamada_length : LENGTH PIZ ID PDE .  (123)
+
+	.  reduce 123
+
+
+state 189
+	llamada_proc : ID PIZ PDE PYC .  (108)
+
+	.  reduce 108
 
 
 state 190
-	llamada_proc : ID PIZ params_llamada PDE . PYC  (108)
+	llamada_proc : ID PIZ params_llamada PDE . PYC  (107)
 
 	PYC  shift 201
 	.  error
 
 
 state 191
-	params_llamada : params_llamada COMA . expresion  (110)
+	params_llamada : params_llamada COMA . expresion  (109)
 
 	ID  shift 74
 	NUM  shift 75
@@ -3142,8 +3141,8 @@ state 192
 
 
 state 193
-	while : WHILE PIZ expresion PDE . bloque  (101)
-	while : WHILE PIZ expresion PDE . PYC  (102)
+	while : WHILE PIZ expresion PDE . bloque  (100)
+	while : WHILE PIZ expresion PDE . PYC  (101)
 
 	ID  shift 152
 	NUM  shift 75
@@ -3190,14 +3189,14 @@ state 193
 
 
 state 194
-	bloque : LLIZ LLDE .  (72)
+	bloque : LLIZ LLDE .  (71)
 
-	.  reduce 72
+	.  reduce 71
 
 
 state 195
-	sentencias : sentencias . sentencia  (66)
-	bloque : LLIZ sentencias . LLDE  (70)
+	sentencias : sentencias . sentencia  (65)
+	bloque : LLIZ sentencias . LLDE  (69)
 
 	ID  shift 152
 	NUM  shift 75
@@ -3242,7 +3241,7 @@ state 195
 
 
 state 196
-	if : IF expresion bloque ELSE . bloque  (73)
+	if : IF expresion bloque ELSE . bloque  (72)
 
 	ID  shift 152
 	NUM  shift 75
@@ -3288,21 +3287,21 @@ state 196
 
 
 state 197
-	in : IN PIZ OP_INOUT COMA . ID PDE PYC  (107)
+	in : IN PIZ OP_INOUT COMA . ID PDE PYC  (106)
 
 	ID  shift 208
 	.  error
 
 
 state 198
-	out : OUT PIZ TEXTO_OUT PDE . PYC  (104)
+	out : OUT PIZ TEXTO_OUT PDE . PYC  (103)
 
 	PYC  shift 209
 	.  error
 
 
 state 199
-	out : OUT PIZ TEXTO_OUT COMA . ids PDE PYC  (103)
+	out : OUT PIZ TEXTO_OUT COMA . ids PDE PYC  (102)
 
 	ID  shift 210
 	.  error
@@ -3311,31 +3310,31 @@ state 199
 
 
 state 200
-	destruye_conjunto : DELETE PIZ ID PDE .  (122)
+	destruye_conjunto : DELETE PIZ ID PDE .  (121)
 
-	.  reduce 122
+	.  reduce 121
 
 
 state 201
-	llamada_proc : ID PIZ params_llamada PDE PYC .  (108)
+	llamada_proc : ID PIZ params_llamada PDE PYC .  (107)
 
-	.  reduce 108
+	.  reduce 107
 
 
 state 202
-	expresion : expresion . SUM expresion  (75)
-	expresion : expresion . RES expresion  (76)
-	expresion : expresion . MUL expresion  (77)
-	expresion : expresion . DIV expresion  (78)
-	expresion : expresion . AND expresion  (79)
-	expresion : expresion . OR expresion  (80)
-	expresion : expresion . MAYORIQ expresion  (81)
-	expresion : expresion . MENORIQ expresion  (82)
-	expresion : expresion . MAYORQ expresion  (83)
-	expresion : expresion . MENORQ expresion  (84)
-	expresion : expresion . DIST expresion  (85)
-	expresion : expresion . II expresion  (86)
-	params_llamada : params_llamada COMA expresion .  (110)
+	expresion : expresion . SUM expresion  (74)
+	expresion : expresion . RES expresion  (75)
+	expresion : expresion . MUL expresion  (76)
+	expresion : expresion . DIV expresion  (77)
+	expresion : expresion . AND expresion  (78)
+	expresion : expresion . OR expresion  (79)
+	expresion : expresion . MAYORIQ expresion  (80)
+	expresion : expresion . MENORIQ expresion  (81)
+	expresion : expresion . MAYORQ expresion  (82)
+	expresion : expresion . MENORQ expresion  (83)
+	expresion : expresion . DIST expresion  (84)
+	expresion : expresion . II expresion  (85)
+	params_llamada : params_llamada COMA expresion .  (109)
 
 	MAYORIQ  shift 127
 	MENORIQ  shift 128
@@ -3349,8 +3348,8 @@ state 202
 	DIV  shift 136
 	AND  shift 137
 	OR  shift 138
-	PDE  reduce 110
-	COMA  reduce 110
+	PDE  reduce 109
+	COMA  reduce 109
 
 
 state 203
@@ -3369,51 +3368,51 @@ state 203
 
 
 state 204
-	while : WHILE PIZ expresion PDE PYC .  (102)
-
-	.  reduce 102
-
-
-state 205
-	while : WHILE PIZ expresion PDE bloque .  (101)
+	while : WHILE PIZ expresion PDE PYC .  (101)
 
 	.  reduce 101
 
 
-state 206
-	bloque : LLIZ sentencias LLDE .  (70)
+state 205
+	while : WHILE PIZ expresion PDE bloque .  (100)
 
-	.  reduce 70
+	.  reduce 100
+
+
+state 206
+	bloque : LLIZ sentencias LLDE .  (69)
+
+	.  reduce 69
 
 
 state 207
-	if : IF expresion bloque ELSE bloque .  (73)
+	if : IF expresion bloque ELSE bloque .  (72)
 
-	.  reduce 73
+	.  reduce 72
 
 
 state 208
-	in : IN PIZ OP_INOUT COMA ID . PDE PYC  (107)
+	in : IN PIZ OP_INOUT COMA ID . PDE PYC  (106)
 
 	PDE  shift 217
 	.  error
 
 
 state 209
-	out : OUT PIZ TEXTO_OUT PDE PYC .  (104)
+	out : OUT PIZ TEXTO_OUT PDE PYC .  (103)
 
-	.  reduce 104
+	.  reduce 103
 
 
 state 210
-	ids : ID .  (106)
+	ids : ID .  (105)
 
-	.  reduce 106
+	.  reduce 105
 
 
 state 211
-	out : OUT PIZ TEXTO_OUT COMA ids . PDE PYC  (103)
-	ids : ids . COMA ID  (105)
+	out : OUT PIZ TEXTO_OUT COMA ids . PDE PYC  (102)
+	ids : ids . COMA ID  (104)
 
 	PDE  shift 218
 	COMA  shift 219
@@ -3425,17 +3424,16 @@ state 212
 	casos_s : CASE . literal PUNTOS BREAK PYC  (63)
 
 	NUM  shift 220
-	TEXTO_OUT  shift 221
 	.  error
 
-	literal  goto 222
+	literal  goto 221
 
 
 state 213
-	caso_defecto : DEFAULT . PUNTOS sentencias  (68)
-	caso_defecto : DEFAULT . PUNTOS  (69)
+	caso_defecto : DEFAULT . PUNTOS sentencias  (67)
+	caso_defecto : DEFAULT . PUNTOS  (68)
 
-	PUNTOS  shift 223
+	PUNTOS  shift 222
 	.  error
 
 
@@ -3451,39 +3449,39 @@ state 215
 	casos_s : casos_s . CASE literal PUNTOS sentencias BREAK PYC  (60)
 	casos_s : casos_s . CASE literal PUNTOS BREAK PYC  (62)
 
-	CASE  shift 224
+	CASE  shift 223
 	DEFAULT  shift 213
-	LLDE  shift 225
+	LLDE  shift 224
 	.  error
 
-	caso_defecto  goto 226
+	caso_defecto  goto 225
 
 
 state 216
 	switch : SWITCH PIZ ID PDE LLIZ caso_defecto . LLDE  (57)
 
-	LLDE  shift 227
+	LLDE  shift 226
 	.  error
 
 
 state 217
-	in : IN PIZ OP_INOUT COMA ID PDE . PYC  (107)
+	in : IN PIZ OP_INOUT COMA ID PDE . PYC  (106)
+
+	PYC  shift 227
+	.  error
+
+
+state 218
+	out : OUT PIZ TEXTO_OUT COMA ids PDE . PYC  (102)
 
 	PYC  shift 228
 	.  error
 
 
-state 218
-	out : OUT PIZ TEXTO_OUT COMA ids PDE . PYC  (103)
-
-	PYC  shift 229
-	.  error
-
-
 state 219
-	ids : ids COMA . ID  (105)
+	ids : ids COMA . ID  (104)
 
-	ID  shift 230
+	ID  shift 229
 	.  error
 
 
@@ -3494,163 +3492,16 @@ state 220
 
 
 state 221
-	literal : TEXTO_OUT .  (65)
-
-	.  reduce 65
-
-
-state 222
 	casos_s : CASE literal . PUNTOS sentencias BREAK PYC  (61)
 	casos_s : CASE literal . PUNTOS BREAK PYC  (63)
 
-	PUNTOS  shift 231
+	PUNTOS  shift 230
 	.  error
 
 
-state 223
-	caso_defecto : DEFAULT PUNTOS . sentencias  (68)
-	caso_defecto : DEFAULT PUNTOS .  (69)
-
-	ID  shift 152
-	NUM  shift 75
-	REAL  shift 76
-	TRUE  shift 77
-	FALSE  shift 78
-	CARACTER  shift 79
-	TEXTO_OUT  shift 80
-	EMPTY  shift 81
-	LENGTH  shift 82
-	VOID  shift 93
-	SWITCH  shift 94
-	WHILE  shift 95
-	IF  shift 96
-	IN  shift 97
-	OUT  shift 98
-	CREATE  shift 83
-	DELETE  shift 99
-	PIZ  shift 84
-	COMPC  shift 85
-	NEGEXP  shift 86
-	LLDE  reduce 69
-
-	proc  goto 102
-	expresion  goto 103
-	sentencia  goto 104
-	switch  goto 105
-	if  goto 106
-	while  goto 107
-	in  goto 108
-	out  goto 109
-	llamada_proc  goto 110
-	llamada_conjunto  goto 111
-	sentencias  goto 232
-	crea_conjunto  goto 88
-	llamada_complementario  goto 89
-	llamada_sivacio  goto 90
-	llamada_length  goto 91
-	inserta_conjunto  goto 113
-	saca_conjunto  goto 114
-	destruye_conjunto  goto 115
-
-
-state 224
-	casos_s : casos_s CASE . literal PUNTOS sentencias BREAK PYC  (60)
-	casos_s : casos_s CASE . literal PUNTOS BREAK PYC  (62)
-
-	NUM  shift 220
-	TEXTO_OUT  shift 221
-	.  error
-
-	literal  goto 233
-
-
-state 225
-	switch : SWITCH PIZ ID PDE LLIZ casos_s LLDE .  (58)
-
-	.  reduce 58
-
-
-state 226
-	switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto . LLDE  (56)
-
-	LLDE  shift 234
-	.  error
-
-
-state 227
-	switch : SWITCH PIZ ID PDE LLIZ caso_defecto LLDE .  (57)
-
-	.  reduce 57
-
-
-state 228
-	in : IN PIZ OP_INOUT COMA ID PDE PYC .  (107)
-
-	.  reduce 107
-
-
-state 229
-	out : OUT PIZ TEXTO_OUT COMA ids PDE PYC .  (103)
-
-	.  reduce 103
-
-
-state 230
-	ids : ids COMA ID .  (105)
-
-	.  reduce 105
-
-
-state 231
-	casos_s : CASE literal PUNTOS . sentencias BREAK PYC  (61)
-	casos_s : CASE literal PUNTOS . BREAK PYC  (63)
-
-	ID  shift 152
-	NUM  shift 75
-	BREAK  shift 235
-	REAL  shift 76
-	TRUE  shift 77
-	FALSE  shift 78
-	CARACTER  shift 79
-	TEXTO_OUT  shift 80
-	EMPTY  shift 81
-	LENGTH  shift 82
-	VOID  shift 93
-	SWITCH  shift 94
-	WHILE  shift 95
-	IF  shift 96
-	IN  shift 97
-	OUT  shift 98
-	CREATE  shift 83
-	DELETE  shift 99
-	PIZ  shift 84
-	COMPC  shift 85
-	NEGEXP  shift 86
-	.  error
-
-	proc  goto 102
-	expresion  goto 103
-	sentencia  goto 104
-	switch  goto 105
-	if  goto 106
-	while  goto 107
-	in  goto 108
-	out  goto 109
-	llamada_proc  goto 110
-	llamada_conjunto  goto 111
-	sentencias  goto 236
-	crea_conjunto  goto 88
-	llamada_complementario  goto 89
-	llamada_sivacio  goto 90
-	llamada_length  goto 91
-	inserta_conjunto  goto 113
-	saca_conjunto  goto 114
-	destruye_conjunto  goto 115
-
-
-state 232
-	sentencias : sentencias . sentencia  (66)
-	caso_defecto : DEFAULT PUNTOS sentencias .  (68)
+state 222
+	caso_defecto : DEFAULT PUNTOS . sentencias  (67)
+	caso_defecto : DEFAULT PUNTOS .  (68)
 
 	ID  shift 152
 	NUM  shift 75
@@ -3676,6 +3527,146 @@ state 232
 
 	proc  goto 102
 	expresion  goto 103
+	sentencia  goto 104
+	switch  goto 105
+	if  goto 106
+	while  goto 107
+	in  goto 108
+	out  goto 109
+	llamada_proc  goto 110
+	llamada_conjunto  goto 111
+	sentencias  goto 231
+	crea_conjunto  goto 88
+	llamada_complementario  goto 89
+	llamada_sivacio  goto 90
+	llamada_length  goto 91
+	inserta_conjunto  goto 113
+	saca_conjunto  goto 114
+	destruye_conjunto  goto 115
+
+
+state 223
+	casos_s : casos_s CASE . literal PUNTOS sentencias BREAK PYC  (60)
+	casos_s : casos_s CASE . literal PUNTOS BREAK PYC  (62)
+
+	NUM  shift 220
+	.  error
+
+	literal  goto 232
+
+
+state 224
+	switch : SWITCH PIZ ID PDE LLIZ casos_s LLDE .  (58)
+
+	.  reduce 58
+
+
+state 225
+	switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto . LLDE  (56)
+
+	LLDE  shift 233
+	.  error
+
+
+state 226
+	switch : SWITCH PIZ ID PDE LLIZ caso_defecto LLDE .  (57)
+
+	.  reduce 57
+
+
+state 227
+	in : IN PIZ OP_INOUT COMA ID PDE PYC .  (106)
+
+	.  reduce 106
+
+
+state 228
+	out : OUT PIZ TEXTO_OUT COMA ids PDE PYC .  (102)
+
+	.  reduce 102
+
+
+state 229
+	ids : ids COMA ID .  (104)
+
+	.  reduce 104
+
+
+state 230
+	casos_s : CASE literal PUNTOS . sentencias BREAK PYC  (61)
+	casos_s : CASE literal PUNTOS . BREAK PYC  (63)
+
+	ID  shift 152
+	NUM  shift 75
+	BREAK  shift 234
+	REAL  shift 76
+	TRUE  shift 77
+	FALSE  shift 78
+	CARACTER  shift 79
+	TEXTO_OUT  shift 80
+	EMPTY  shift 81
+	LENGTH  shift 82
+	VOID  shift 93
+	SWITCH  shift 94
+	WHILE  shift 95
+	IF  shift 96
+	IN  shift 97
+	OUT  shift 98
+	CREATE  shift 83
+	DELETE  shift 99
+	PIZ  shift 84
+	COMPC  shift 85
+	NEGEXP  shift 86
+	.  error
+
+	proc  goto 102
+	expresion  goto 103
+	sentencia  goto 104
+	switch  goto 105
+	if  goto 106
+	while  goto 107
+	in  goto 108
+	out  goto 109
+	llamada_proc  goto 110
+	llamada_conjunto  goto 111
+	sentencias  goto 235
+	crea_conjunto  goto 88
+	llamada_complementario  goto 89
+	llamada_sivacio  goto 90
+	llamada_length  goto 91
+	inserta_conjunto  goto 113
+	saca_conjunto  goto 114
+	destruye_conjunto  goto 115
+
+
+state 231
+	sentencias : sentencias . sentencia  (65)
+	caso_defecto : DEFAULT PUNTOS sentencias .  (67)
+
+	ID  shift 152
+	NUM  shift 75
+	REAL  shift 76
+	TRUE  shift 77
+	FALSE  shift 78
+	CARACTER  shift 79
+	TEXTO_OUT  shift 80
+	EMPTY  shift 81
+	LENGTH  shift 82
+	VOID  shift 93
+	SWITCH  shift 94
+	WHILE  shift 95
+	IF  shift 96
+	IN  shift 97
+	OUT  shift 98
+	CREATE  shift 83
+	DELETE  shift 99
+	PIZ  shift 84
+	COMPC  shift 85
+	NEGEXP  shift 86
+	LLDE  reduce 67
+
+	proc  goto 102
+	expresion  goto 103
 	sentencia  goto 154
 	switch  goto 105
 	if  goto 106
@@ -3693,30 +3684,76 @@ state 232
 	destruye_conjunto  goto 115
 
 
-state 233
+state 232
 	casos_s : casos_s CASE literal . PUNTOS sentencias BREAK PYC  (60)
 	casos_s : casos_s CASE literal . PUNTOS BREAK PYC  (62)
 
-	PUNTOS  shift 237
+	PUNTOS  shift 236
 	.  error
 
 
-state 234
+state 233
 	switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE .  (56)
 
 	.  reduce 56
 
 
-state 235
+state 234
 	casos_s : CASE literal PUNTOS BREAK . PYC  (63)
 
-	PYC  shift 238
+	PYC  shift 237
 	.  error
 
 
-state 236
+state 235
 	casos_s : CASE literal PUNTOS sentencias . BREAK PYC  (61)
-	sentencias : sentencias . sentencia  (66)
+	sentencias : sentencias . sentencia  (65)
+
+	ID  shift 152
+	NUM  shift 75
+	BREAK  shift 238
+	REAL  shift 76
+	TRUE  shift 77
+	FALSE  shift 78
+	CARACTER  shift 79
+	TEXTO_OUT  shift 80
+	EMPTY  shift 81
+	LENGTH  shift 82
+	VOID  shift 93
+	SWITCH  shift 94
+	WHILE  shift 95
+	IF  shift 96
+	IN  shift 97
+	OUT  shift 98
+	CREATE  shift 83
+	DELETE  shift 99
+	PIZ  shift 84
+	COMPC  shift 85
+	NEGEXP  shift 86
+	.  error
+
+	proc  goto 102
+	expresion  goto 103
+	sentencia  goto 154
+	switch  goto 105
+	if  goto 106
+	while  goto 107
+	in  goto 108
+	out  goto 109
+	llamada_proc  goto 110
+	llamada_conjunto  goto 111
+	crea_conjunto  goto 88
+	llamada_complementario  goto 89
+	llamada_sivacio  goto 90
+	llamada_length  goto 91
+	inserta_conjunto  goto 113
+	saca_conjunto  goto 114
+	destruye_conjunto  goto 115
+
+
+state 236
+	casos_s : casos_s CASE literal PUNTOS . sentencias BREAK PYC  (60)
+	casos_s : casos_s CASE literal PUNTOS . BREAK PYC  (62)
 
 	ID  shift 152
 	NUM  shift 75
@@ -3743,7 +3780,7 @@ state 236
 
 	proc  goto 102
 	expresion  goto 103
-	sentencia  goto 154
+	sentencia  goto 104
 	switch  goto 105
 	if  goto 106
 	while  goto 107
@@ -3751,6 +3788,7 @@ state 236
 	out  goto 109
 	llamada_proc  goto 110
 	llamada_conjunto  goto 111
+	sentencias  goto 240
 	crea_conjunto  goto 88
 	llamada_complementario  goto 89
 	llamada_sivacio  goto 90
@@ -3761,79 +3799,32 @@ state 236
 
 
 state 237
-	casos_s : casos_s CASE literal PUNTOS . sentencias BREAK PYC  (60)
-	casos_s : casos_s CASE literal PUNTOS . BREAK PYC  (62)
-
-	ID  shift 152
-	NUM  shift 75
-	BREAK  shift 240
-	REAL  shift 76
-	TRUE  shift 77
-	FALSE  shift 78
-	CARACTER  shift 79
-	TEXTO_OUT  shift 80
-	EMPTY  shift 81
-	LENGTH  shift 82
-	VOID  shift 93
-	SWITCH  shift 94
-	WHILE  shift 95
-	IF  shift 96
-	IN  shift 97
-	OUT  shift 98
-	CREATE  shift 83
-	DELETE  shift 99
-	PIZ  shift 84
-	COMPC  shift 85
-	NEGEXP  shift 86
-	.  error
-
-	proc  goto 102
-	expresion  goto 103
-	sentencia  goto 104
-	switch  goto 105
-	if  goto 106
-	while  goto 107
-	in  goto 108
-	out  goto 109
-	llamada_proc  goto 110
-	llamada_conjunto  goto 111
-	sentencias  goto 241
-	crea_conjunto  goto 88
-	llamada_complementario  goto 89
-	llamada_sivacio  goto 90
-	llamada_length  goto 91
-	inserta_conjunto  goto 113
-	saca_conjunto  goto 114
-	destruye_conjunto  goto 115
-
-
-state 238
 	casos_s : CASE literal PUNTOS BREAK PYC .  (63)
 
 	.  reduce 63
 
 
-state 239
+state 238
 	casos_s : CASE literal PUNTOS sentencias BREAK . PYC  (61)
+
+	PYC  shift 241
+	.  error
+
+
+state 239
+	casos_s : casos_s CASE literal PUNTOS BREAK . PYC  (62)
 
 	PYC  shift 242
 	.  error
 
 
 state 240
-	casos_s : casos_s CASE literal PUNTOS BREAK . PYC  (62)
-
-	PYC  shift 243
-	.  error
-
-
-state 241
 	casos_s : casos_s CASE literal PUNTOS sentencias . BREAK PYC  (60)
-	sentencias : sentencias . sentencia  (66)
+	sentencias : sentencias . sentencia  (65)
 
 	ID  shift 152
 	NUM  shift 75
-	BREAK  shift 244
+	BREAK  shift 243
 	REAL  shift 76
 	TRUE  shift 77
 	FALSE  shift 78
@@ -3873,26 +3864,26 @@ state 241
 	destruye_conjunto  goto 115
 
 
-state 242
+state 241
 	casos_s : CASE literal PUNTOS sentencias BREAK PYC .  (61)
 
 	.  reduce 61
 
 
-state 243
+state 242
 	casos_s : casos_s CASE literal PUNTOS BREAK PYC .  (62)
 
 	.  reduce 62
 
 
-state 244
+state 243
 	casos_s : casos_s CASE literal PUNTOS sentencias BREAK . PYC  (60)
 
-	PYC  shift 245
+	PYC  shift 244
 	.  error
 
 
-state 245
+state 244
 	casos_s : casos_s CASE literal PUNTOS sentencias BREAK PYC .  (60)
 
 	.  reduce 60
@@ -3902,4 +3893,4 @@ State 180 contains 1 shift/reduce conflict.
 
 
 70 terminals, 47 nonterminals
-128 grammar rules, 246 states
+127 grammar rules, 245 states

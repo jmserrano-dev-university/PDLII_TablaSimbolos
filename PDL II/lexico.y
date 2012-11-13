@@ -116,7 +116,7 @@ variables_s : variable
 | variable ASI expresion 
 ;
 variable : ID {pushTS(rellenaEntrada(linea_actual,$1.cadena,tipoAux,var,0)); imprimirTS();}
-| ID CORI NUM CORD 
+| ID CORI NUM CORD /*¿ESTO SE PONE?*/
 ;
 
 
@@ -128,26 +128,37 @@ params : params COMA tipo ID | tipo ID
 
 sentencia : switch | if | while | in | out | proc |llamada_proc | llamada_conjunto PYC | expresion PYC
 ;
-switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE
-| SWITCH PIZ ID PDE LLIZ caso_defecto LLDE
-| SWITCH PIZ ID PDE LLIZ casos_s LLDE | SWITCH PIZ ID PDE LLIZ LLDE
+switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE {if($3.tipo != entero) printf("Error linea %d: Expresion en switch no es booleana",linea_actual);}
+| SWITCH PIZ ID PDE LLIZ caso_defecto LLDE {if($3.tipo != entero) printf("Error linea %d: Expresion en switch no es booleana",linea_actual);}
+| SWITCH PIZ ID PDE LLIZ casos_s LLDE {if($3.tipo != entero) printf("Error linea %d: Expresion en switch no es booleana",linea_actual);}
+| SWITCH PIZ ID PDE LLIZ LLDE {if($3.tipo != entero) printf("Error linea %d: Expresion en switch no es booleana",linea_actual);}
 ;
-casos_s : casos_s CASE literal PUNTOS sentencias BREAK PYC
-| CASE literal PUNTOS sentencias BREAK PYC
-| casos_s CASE literal PUNTOS BREAK PYC
-| CASE literal PUNTOS BREAK PYC
+
+casos_s : casos_s CASE literal PUNTOS sentencias BREAK PYC {if($3.tipo != entero) printf("Error linea %d: Expresion en switch no es booleana",linea_actual);}
+| CASE literal PUNTOS sentencias BREAK PYC {if($2.tipo != entero) printf("Error linea %d: Expresion en switch no es booleana",linea_actual);}
+| casos_s CASE literal PUNTOS BREAK PYC {if($2.tipo != entero) printf("Error linea %d: Expresion en switch no es booleana",linea_actual);}
+| CASE literal PUNTOS BREAK PYC {if($2.tipo != entero) printf("Error linea %d: Expresion en switch no es booleana",linea_actual);}
 ;
-literal : NUM | TEXTO_OUT
+
+literal : NUM {$$.tipo = $1.tipo;} 
+/*| TEXTO_OUT {$$.tipo = $1.tipo;}*/
 ;
+
 sentencias : sentencias sentencia | sentencia
 ;
+
 caso_defecto : DEFAULT PUNTOS sentencias | DEFAULT PUNTOS
 ;
+
 bloque : LLIZ sentencias LLDE | sentencia | LLIZ LLDE
 ;
-if : IF expresion bloque ELSE bloque
-| IF expresion bloque
+
+
+if : IF expresion bloque ELSE bloque { if($2.tipo != booleano) printf("Error linea %d: Expresion en if no es booleana",linea_actual);}
+| IF expresion bloque { if($2.tipo != booleano) printf("Error linea %d: Expresion en if no es booleana",linea_actual);}
 ;
+
+
 expresion : expresion SUM expresion { if($1.tipo == $3.tipo){
 										$$.tipo = $1.tipo;
 									  }else{
@@ -185,50 +196,61 @@ expresion : expresion SUM expresion { if($1.tipo == $3.tipo){
 							   }
 							}
 | expresion MAYORIQ expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
-									$$.tipo = $1.tipo;
+									$$.tipo = booleano;
 								  }else{
 									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
 								  }
 								}
 | expresion MENORIQ expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
-									$$.tipo = $1.tipo;
+									$$.tipo = booleano;
 								  }else{
 									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
 								  }
 								}
 | expresion MAYORQ expresion	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
-									$$.tipo = $1.tipo;
+									$$.tipo = booleano;
 								  }else{
 									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
 								  }
 								}
 | expresion MENORQ expresion	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
-									$$.tipo = $1.tipo;
+									$$.tipo = booleano;
 								  }else{
 									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
 								  }
 								}
 | expresion DIST expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == booleano)){
-								$$.tipo = $1.tipo;
+								$$.tipo = booleano;
 							  }else{
 								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
 							  }
 							}
 | expresion II expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == booleano)){
-								$$.tipo = $1.tipo;
+								$$.tipo = booleano;
 							  }else{
 								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
 							  }
 							}
 | NUM {printf("\nENTERO: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
-| PIZ expresion PDE 
+| PIZ expresion PDE {$$.tipo = $2.tipo;}
 | NEGEXP expresion	{ if($2.tipo == booleano){
-							$$.tipo = $1.tipo;
+							$$.tipo = booleano;
 					   }else{
-							printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
+							printf("\nError linea: %d. Expresión con tipos distintos\n",linea_actual);
 					   }
 					}
-| ID {printf("\nID: %s con TIPO: %d\n",$1.cadena, $1.tipo);}
+| ID { if((tipoAux = existeEntradaLocal($1.cadena)) != 0){
+		$$.tipo = tipoAux;
+		printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
+	   }else{
+		if((tipoAux = existeEntrada($1.cadena)) != 0){
+		 $$.tipo = tipoAux;
+		 printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
+		}else{
+		 printf("\nError linea: %d. Variable no declarada\n",linea_actual);
+		}
+	   }
+     }
 | REAL {printf("\nREAL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
 | TRUE {printf("\nBOOL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
 | FALSE {printf("\nBOOL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
@@ -241,9 +263,10 @@ expresion : expresion SUM expresion { if($1.tipo == $3.tipo){
 | ID ASI expresion {printf("\nASIG: %s con TIPO: %d\n",$1.cadena, $3.tipo);}
 ;
 
-while : WHILE PIZ expresion PDE bloque
-| WHILE PIZ expresion PDE PYC
+while : WHILE PIZ expresion PDE bloque { if($3.tipo != booleano) printf("Error linea %d: Expresion en while no es booleana",linea_actual);}
+| WHILE PIZ expresion PDE PYC { if($3.tipo != booleano) printf("Error linea %d: Expresion en while no es booleana",linea_actual);}
 ;
+
 out : OUT PIZ TEXTO_OUT COMA ids PDE PYC
 | OUT PIZ TEXTO_OUT PDE PYC
 ;

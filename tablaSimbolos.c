@@ -50,14 +50,15 @@ void borrarHastaMarcaTS(){
 int existeEntrada(char * nombre){
     int tope = topeTS - 1;
     
-    while(strcmp(TS[tope].nombre,nombre) != 0 && tope != 0){
+    while(strcmp(TS[tope].nombre,nombre) != 0 && tope >= 0){
         tope--;
     }
     
-    if(tope !=0){
-        return 1; //true
+    if(tope > -1){
+        return TS[tope].tipoDato; //true
     }else{
         return 0; //false
+        
     }
 }
 
@@ -73,7 +74,7 @@ int existeEntradaLocal(char * nombre){
     }
     
     if(TS[tope].tipoEntrada != marca){
-        return 1; //True
+        return TS[tope].tipoDato; //True
     }else{
         return 0; //False
     }
