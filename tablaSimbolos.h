@@ -35,6 +35,7 @@ void pushTS(entrada e);
 entrada popTS();
 void borrarHastaMarcaTS();
 int existeEntrada(char * nombre);
+int existeEntradaDefTipo(char * nombre);
 int existeEntradaLocal(char * nombre);
 void imprimirTS();
 entrada rellenaEntrada(unsigned int linea, char* nombre, tDato tipoDato, tEntrada tipoEntrda, unsigned int numParam);

@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include "miLibreria.h"
 
+typedef int entero;
+
 bool asd;
 
 void main(){
-	int a=2,b,c;
+	entero a=2,b,c;
 	bool d,f;
 	float ca;
 	
@@ -14,7 +16,7 @@ void main(){
 		printf("ADIOS");
 	}
 	
-	while(2 < 3){
+	while(a < 3){
 		printf("HOLA");
 	}
 	

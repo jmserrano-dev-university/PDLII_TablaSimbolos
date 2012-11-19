@@ -90,7 +90,7 @@ cabeceras : CAB1 | CAB2
 ;
 defs : DEFINE ID NUM
 ;
-tipos : TYPEDEF tipo ID
+tipos : TYPEDEF tipo ID {pushTS(rellenaEntrada(linea_actual,$3.cadena,$2.tipo,defTipo,0)); imprimirTS();}
 ;
 
 
@@ -99,7 +99,13 @@ tipo : INT {$$.tipo = entero;}
 | FLOAT {$$.tipo = real;}
 | CHAR {$$.tipo = caracter;}
 | SET {$$.tipo = conjunto;}
-| ID 
+| ID {
+		if((tipoAux = existeEntradaDefTipo($1.cadena)) != 0){
+		 $$.tipo = tipoAux;
+		}else{
+			printf("\nError linea %d: Tipo propio no definido",linea_actual);
+		}
+	 }
 | BOOL {$$.tipo = booleano;}
 | STRING {$$.tipo = cadena;}
 ;
@@ -120,9 +126,12 @@ variable : ID {pushTS(rellenaEntrada(linea_actual,$1.cadena,tipoAux,var,0)); imp
 
 
 proc : VOID ID PIZ params PDE cuerpo
+
 | VOID ID PIZ PDE cuerpo
 ;
-params : params COMA tipo ID | tipo ID
+
+params : params COMA tipo ID 
+| tipo ID
 ;
 
 sentencia : switch | if | while | in | out | proc |llamada_proc | llamada_conjunto PYC | expresion PYC
@@ -353,18 +362,24 @@ while : WHILE PIZ expresion PDE bloque { if($3.tipo != booleano) printf("Error l
 out : OUT PIZ TEXTO_OUT COMA ids PDE PYC
 | OUT PIZ TEXTO_OUT PDE PYC
 ;
+
 ids : ids COMA ID | ID
 ;
+
 in : IN PIZ OP_INOUT COMA ID PDE PYC
 ;
+
 llamada_proc : ID PIZ params_llamada PDE PYC
 | ID PIZ PDE PYC
 ;
+
 params_llamada : params_llamada COMA expresion
 | expresion
 ;
+
 main : VOID MAIN {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); imprimirTS();}  PIZ PDE cuerpo
 ;
+
 cuerpo : LLIZ vars_s sentencias LLDE
 | LLIZ sentencias LLDE
 | LLIZ vars_s LLDE

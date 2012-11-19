@@ -66,6 +66,26 @@ int existeEntrada(char * nombre){
  * 
  * @param nombre
  */
+int existeEntradaDefTipo(char * nombre){
+    int tope = topeTS - 1;
+    
+    while(strcmp(TS[tope].nombre,nombre) != 0 && TS[tope].tipoEntrada != defTipo && tope >= 0){
+        tope--;
+    }
+    
+    if(tope > -1){
+        return TS[tope].tipoDato; //true
+    }else{
+        return 0; //false
+        
+    }
+}
+
+
+/**
+ * 
+ * @param nombre
+ */
 int existeEntradaLocal(char * nombre){
     int tope = topeTS - 1;
     
