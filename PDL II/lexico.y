@@ -134,7 +134,15 @@ params : params COMA tipo ID
 | tipo ID
 ;
 
-sentencia : switch | if | while | in | out | proc |llamada_proc | llamada_conjunto PYC | expresion PYC
+sentencia : switch 
+| if 
+| while 
+| in 
+| out 
+| proc {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); imprimirTS();}
+| llamada_proc 
+| llamada_conjunto PYC 
+| expresion PYC
 ;
 switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE { if((tipoAux = existeEntradaLocal($3.cadena)) != 0 && tipoAux == $6.tipo){
 																$$.tipo = tipoAux;

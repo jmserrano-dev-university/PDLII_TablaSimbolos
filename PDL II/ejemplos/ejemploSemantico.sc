@@ -10,6 +10,10 @@ void main(){
 	bool d,f;
 	float ca;
 	
+	void procedimiento(){
+		
+	}
+	
 	if( asd ){
 		printf("HOLA QUE TAL");
 	}else{
