@@ -14,7 +14,7 @@
 #define TAM_TABLA_SIMBOLOS 1000
 
 //Campo ENTRADA en TS
-typedef enum  { marca = 1, proc, func, var, paramForm, rangoArray } tEntrada;
+typedef enum  { marca = 1, proc, func, var, paramForm, rangoArray, defTipo} tEntrada;
 typedef enum { entero = 1, real, booleano, caracter, cadena, conjunto, desconocido, sinTipo} tDato ;
 
 typedef struct{
