@@ -131,26 +131,24 @@ variable : ID { if(existeEntradaLocal($1.cadena) == 0){
 ;
 
 
-proc : VOID ID PIZ params PDE{if(existeEntrada($2.cadena) != 0){
-								printf("\nError linea: %d: Funcion ya declarada");
-							  }else{
-							    pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0));
-							    pushTS(rellenaEntrada(linea_actual,$2.cadena,sinTipo,proc,0));
-								imprimirTS();
-							  }
-							 } cuerpo
-| VOID ID PIZ PDE {if(existeEntrada($2.cadena) != 0){
+proc : VOID ID PIZ{if(existeEntrada($2.cadena) != 0){
 						printf("\nError linea: %d: Funcion ya declarada");
 					  }else{
-						pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0));
 						pushTS(rellenaEntrada(linea_actual,$2.cadena,sinTipo,proc,0));
 						imprimirTS();
 					  }
-				   } cuerpo
+				   } params PDE {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); copiaParametrosFormales(); imprimirTS();}cuerpo
+| VOID ID PIZ {if(existeEntrada($2.cadena) != 0){
+					printf("\nError linea: %d: Funcion ya declarada");
+				  }else{
+					pushTS(rellenaEntrada(linea_actual,$2.cadena,sinTipo,proc,0));
+					imprimirTS();
+				  }
+			   } PDE {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); copiaParametrosFormales(); imprimirTS();}cuerpo
 ;
 
-params : params COMA tipo ID {pushTS(rellenaEntrada(linea_actual,$4.cadena,$3.tipo,paramForm,0)); imprimirTS();}
-| tipo ID {pushTS(rellenaEntrada(linea_actual,$2.cadena,$1.tipo,paramForm,0)); imprimirTS();}
+params : params COMA tipo ID {if(!pushTSParametroFormal(linea_actual, $4.cadena, $3.tipo)) printf("\nError linea: %d: Parametro formal existente\n",linea_actual); else imprimirTS();}
+| tipo ID {if(!pushTSParametroFormal(linea_actual, $2.cadena, $1.tipo)) printf("\nError linea: %d: Parametro formal existente\n",linea_actual); else imprimirTS();}
 ;
 
 sentencia : switch 

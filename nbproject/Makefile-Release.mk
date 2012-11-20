@@ -21,7 +21,7 @@ FC=gfortran.exe
 AS=as.exe
 
 # Macros
-CND_PLATFORM=MinGW_TDM-Windows
+CND_PLATFORM=MinGW-Windows
 CND_DLIB_EXT=dll
 CND_CONF=Release
 CND_DISTDIR=dist

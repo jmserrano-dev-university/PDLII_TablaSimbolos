@@ -40,7 +40,8 @@ int existeEntradaLocal(char * nombre);
 void imprimirTS();
 entrada rellenaEntrada(unsigned int linea, char* nombre, tDato tipoDato, tEntrada tipoEntrda, unsigned int numParam);
 
-
+int pushTSParametroFormal(unsigned int linea, char* nombre, tDato tipoDato);
+void copiaParametrosFormales();
 
 #endif	/* TABLASIMBOLOS_H */
 

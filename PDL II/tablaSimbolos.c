@@ -127,3 +127,50 @@ entrada rellenaEntrada(unsigned int linea, char* nombre, tDato tipoDato, tEntrad
     e.parametros = numParam;
     return e;
 }
+
+
+/**
+ * Introduce los parametros formales
+ * @param linea
+ * @param nombre
+ * @param tipoDato
+ * @return 
+ */
+int pushTSParametroFormal(unsigned int linea, char* nombre, tDato tipoDato){
+    int tope = topeTS - 1;
+    int existeParametro = 0; 
+    
+   while((!existeParametro) && (TS[tope].tipoEntrada != proc)){ 
+      if(TS[tope].tipoEntrada == paramForm){ 
+         if(!strcmp(TS[tope].nombre,nombre)){ 
+             existeParametro = 1;  //Encontramos que ya existe la variable
+         }else{ 
+             tope--;
+         }
+      }
+   }       
+   //Si no encontramos el parametro (por tanto hemos llegado a una marca) la introducimos en TS
+   if(!existeParametro){  
+      pushTS(rellenaEntrada(linea,nombre,tipoDato,paramForm,0));
+   }else{  //La variable ya ha sido declarada
+       return 0;
+   }
+  //Incrementamos el numero de parametros del primer identificador tipo procedimiento que nos encontremos
+/*   while(TS[pos].tipoEntrada != proc){
+      pos--;
+   } */
+   TS[tope].parametros++;
+   
+   return 1;
+}
+
+void copiaParametrosFormales(){
+   int tope = topeTS - 2; //Nos saltamos la marca
+   
+   while(TS[tope].tipoEntrada == paramForm){
+       pushTS(rellenaEntrada(TS[tope].linea,TS[tope].nombre,TS[tope].tipoDato,TS[tope].tipoEntrada,0));
+       tope--;
+   }
+}
+
+
