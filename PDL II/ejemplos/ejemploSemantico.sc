@@ -10,7 +10,7 @@ void main(){
 	bool a,f;
 	float ca;
 	
-	void procedimiento(int a,int b){
+	void procedimiento(){
 		
 	}
 	

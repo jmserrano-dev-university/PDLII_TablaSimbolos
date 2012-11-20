@@ -9,7 +9,10 @@
 #include <stdlib.h>
 #include "tablaSimbolos.h"
 
+
+
 int main(int argc, char** argv) {
+    int proc;
     createTS();
     //imprimirTS();
     

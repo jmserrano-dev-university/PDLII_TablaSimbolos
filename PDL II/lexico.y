@@ -131,8 +131,22 @@ variable : ID { if(existeEntradaLocal($1.cadena) == 0){
 ;
 
 
-proc : VOID ID PIZ params PDE{printf("\nProcedimineto con nombre: %s\n",$2.cadena);} cuerpo
-| VOID ID PIZ PDE {printf("\nProcedimineto con nombre: %s\n",$2.cadena);} cuerpo
+proc : VOID ID PIZ params PDE{if(existeEntrada($2.cadena) != 0){
+								printf("\nError linea: %d: Funcion ya declarada");
+							  }else{
+							    pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0));
+							    pushTS(rellenaEntrada(linea_actual,$2.cadena,sinTipo,proc,0));
+								imprimirTS();
+							  }
+							 } cuerpo
+| VOID ID PIZ PDE {if(existeEntrada($2.cadena) != 0){
+						printf("\nError linea: %d: Funcion ya declarada");
+					  }else{
+						pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0));
+						pushTS(rellenaEntrada(linea_actual,$2.cadena,sinTipo,proc,0));
+						imprimirTS();
+					  }
+				   } cuerpo
 ;
 
 params : params COMA tipo ID {pushTS(rellenaEntrada(linea_actual,$4.cadena,$3.tipo,paramForm,0)); imprimirTS();}
@@ -144,7 +158,7 @@ sentencia : switch
 | while 
 | in 
 | out 
-| proc {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); imprimirTS();}
+| proc
 | llamada_proc 
 | llamada_conjunto PYC 
 | expresion PYC
