@@ -120,18 +120,23 @@ variables : variables COMA variables_s
 variables_s : variable
 | variable ASI expresion 
 ;
-variable : ID {pushTS(rellenaEntrada(linea_actual,$1.cadena,tipoAux,var,0)); imprimirTS();}
+variable : ID { if(existeEntradaLocal($1.cadena) == 0){
+					pushTS(rellenaEntrada(linea_actual,$1.cadena,tipoAux,var,0)); 
+					imprimirTS();
+			    }else{
+					printf("\nError linea: %d: Identificador declarado anteriormente\n",linea_actual);
+				}
+			  }
 /*| ID CORI NUM CORD ¿ESTO SE PONE?*/
 ;
 
 
-proc : VOID ID PIZ params PDE cuerpo
-
-| VOID ID PIZ PDE cuerpo
+proc : VOID ID PIZ params PDE{printf("\nProcedimineto con nombre: %s\n",$2.cadena);} cuerpo
+| VOID ID PIZ PDE {printf("\nProcedimineto con nombre: %s\n",$2.cadena);} cuerpo
 ;
 
-params : params COMA tipo ID 
-| tipo ID
+params : params COMA tipo ID {pushTS(rellenaEntrada(linea_actual,$4.cadena,$3.tipo,paramForm,0)); imprimirTS();}
+| tipo ID {pushTS(rellenaEntrada(linea_actual,$2.cadena,$1.tipo,paramForm,0)); imprimirTS();}
 ;
 
 sentencia : switch 

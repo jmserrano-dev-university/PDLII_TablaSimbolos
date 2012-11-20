@@ -7,10 +7,10 @@ bool asd;
 
 void main(){
 	entero a=2,b,c;
-	bool d,f;
+	bool a,f;
 	float ca;
 	
-	void procedimiento(){
+	void procedimiento(int a,int b){
 		
 	}
 	
