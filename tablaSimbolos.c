@@ -174,3 +174,27 @@ void copiaParametrosFormales(){
 }
 
 
+
+int compruebaParametroProcedimiento(char * nombreProc, tDato tipoVariable, int posicion){
+    int i = topeTS - 1;
+    
+    while(strcmp(TS[i].nombre,nombreProc)!=0 && i >= 0){
+        if(TS[i].tipoEntrada == proc){
+            break;
+        }
+        i++;
+    }
+    
+    //Vamos hasta el paramentro
+    i += posicion;
+    
+    if(TS[i].tipoDato == tipoVariable)
+        return 1;
+    else
+        return 0;
+}
+
+int compruebaNumeroParametros(char * nombreProc, int numTotalParam){
+    
+}
+

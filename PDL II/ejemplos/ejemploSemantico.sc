@@ -10,9 +10,19 @@ void main(){
 	bool h,f;
 	float ca;
 	
+	
+	
 	void procedimiento(int a, int b, int c){
-		
+		int y,e,f;
+
+		void proc1(){
+			void procedimiento(int d, int e){
+			
+			}
+		}
 	}
+	
+	
 	
 	if( asd ){
 		printf("HOLA QUE TAL");
