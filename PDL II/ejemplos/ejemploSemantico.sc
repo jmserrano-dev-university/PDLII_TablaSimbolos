@@ -16,9 +16,15 @@ void main(){
 		int y,e,f;
 
 		void proc1(){
-			void procedimiento(int d, int e){
+			int tr;
+			int ert;
+			/*int rt;*/
 			
+			void procedimient(int d, int e, int s){
+				
 			}
+			
+			procedimient(tr,ert);
 		}
 	}
 	

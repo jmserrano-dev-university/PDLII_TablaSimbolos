@@ -43,5 +43,9 @@ entrada rellenaEntrada(unsigned int linea, char* nombre, tDato tipoDato, tEntrad
 int pushTSParametroFormal(unsigned int linea, char* nombre, tDato tipoDato);
 void copiaParametrosFormales();
 
+//Comprobación de procedimientos y parámetros
+int compruebaParametroProcedimiento(char * nombreProc, tDato tipoVariable, int posicion);
+int compruebaNumeroParametros(char * nombreProc, int numTotalParam);
+
 #endif	/* TABLASIMBOLOS_H */
 

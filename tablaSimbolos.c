@@ -179,22 +179,37 @@ int compruebaParametroProcedimiento(char * nombreProc, tDato tipoVariable, int p
     int i = topeTS - 1;
     
     while(strcmp(TS[i].nombre,nombreProc)!=0 && i >= 0){
-        if(TS[i].tipoEntrada == proc){
-            break;
-        }
-        i++;
+        i--;
     }
     
-    //Vamos hasta el paramentro
-    i += posicion;
-    
-    if(TS[i].tipoDato == tipoVariable)
-        return 1;
-    else
-        return 0;
+    if(TS[i].parametros > posicion){
+        //Vamos hasta el paramentro
+        i += posicion;
+        
+        if(TS[i].tipoDato == tipoVariable){
+            return 1;
+        }else{
+            return 0;
+        }
+    }else{
+        return 2;
+    }
 }
 
 int compruebaNumeroParametros(char * nombreProc, int numTotalParam){
+    int i = topeTS - 1;
+    
+    while(strcmp(TS[i].nombre,nombreProc)!=0 && i >= 0){
+        i--;
+    }
+    
+    
+    if(TS[i].parametros == numTotalParam){
+        return 1;
+    }else{
+        return 0;
+    }
+    
     
 }
 

@@ -26,6 +26,8 @@ void yyerror (char *msg){
 
 tDato tipoAux; //Almacenamos el tipo para las declaraciones de VARIABLES
 int numParametros;
+char nombreProc[100];
+
 %}
 
 /* A continuación declaramos los nombres simbólicos de los tokens, así como el símbolo inicial de la gramática (axioma). Byacc se encarga de asociar a cada uno un código */
@@ -446,8 +448,12 @@ llamada_proc : ID PIZ {  if(existeEntrada($1.cadena) != sinTipo){
 							printf("Error linea: %d: Llamada a procedimiento no declarada con anterioridad\n",linea_actual);
 							exit(0);
 						 }
-					  } params_llamada {printf("\n\nNUMERO DE PARAMETROS: %d \n\n", numParametros);} PDE PYC
-
+						 
+					  } params_llamada {	if(compruebaNumeroParametros($1.cadena, numParametros) == 0){ //Error en tipo
+												printf("Error linea %d: El numero de parametros no coindicen en la llamada al procedimiento", linea_actual);
+												exit(0);
+											}		
+									   }  PDE PYC
 
 | ID PIZ PDE PYC { if(existeEntrada($1.cadena) != sinTipo){
 					  printf("Error linea: %d: Llamada a procedimiento no declarada con anterioridad\n",linea_actual);
@@ -456,8 +462,22 @@ llamada_proc : ID PIZ {  if(existeEntrada($1.cadena) != sinTipo){
 				 }
 ;
 
-params_llamada : params_llamada COMA expresion {numParametros++;}
-| expresion {numParametros = 1; }
+params_llamada : params_llamada COMA expresion { numParametros++;
+													if(compruebaParametroProcedimiento($-1.cadena, $3.tipo, numParametros) == 0){
+														printf("Error linea: %d: Parametro del procedimiento no coinciden en tipo", linea_actual);
+														exit(0);
+													}
+													
+													if(compruebaParametroProcedimiento($-1.cadena, $3.tipo, numParametros) == 2){
+														printf("Error linea: %d: Número de parametros excedido en la llamada a procedimiento", linea_actual);
+														exit(0);
+													}
+												}
+| expresion {numParametros = 1; if(compruebaParametroProcedimiento($-1.cadena, $1.tipo, numParametros) == 0){
+									printf("Error linea: %d: Parametro del procedimiento no coinciden en tipo", linea_actual);
+									exit(0);
+								}
+			}
 ;
 
 main : VOID MAIN {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); imprimirTS();}  PIZ PDE cuerpo {borrarHastaMarcaTS(); printf("\n\nBORRADO HASTA LA MARCA\n"); imprimirTS();}
