@@ -1,24 +1,17 @@
 #include <stdio.h>
-
 #include "tablaSimbolos.h"
 
 
-//Funciones PRIVADAS
-
-
-
-//Funciones PÚBLICAS
-
 /**
- * 
+ * Constructor de la tabla de simbolos
  */
 void createTS(){
     topeTS = 0;
 }
 
 /**
- * 
- * @param e
+ * Procedimiento para insertar una entrada en la tabla de símbolos
+ * @param e Entrada en la tabla de simbolos
  */
 void pushTS(entrada e){
     TS[topeTS] = e;
@@ -26,15 +19,15 @@ void pushTS(entrada e){
 }
 
 /**
- * 
- * @return 
+ * Procedimineto para sacar la última entrada en la talba de símbolos
+ * @return Entrada que ha sido extraida
  */
 entrada popTS(){
     return TS[topeTS--];
 }
 
 /**
- * 
+ * Procedimiento que borra la tabla de simbolos hasta la MARCA más próxima
  */
 void borrarHastaMarcaTS(){
     topeTS--;
@@ -44,8 +37,8 @@ void borrarHastaMarcaTS(){
 }
 
 /**
- * 
- * @param nombre
+ * Función que comprueba si existe una entrada en la tabla de simbolos por nombre
+ * @param nombre Nombre de la entrada a comprobar
  */
 int existeEntrada(char * nombre){
     int tope = topeTS - 1;
@@ -58,13 +51,12 @@ int existeEntrada(char * nombre){
         return TS[tope].tipoDato; //true
     }else{
         return 0; //false
-        
     }
 }
 
 /**
- * 
- * @param nombre
+ * Función que comprueba si existe un TIPO DE DEFINICIÓN PROPIA en la tabla de simbolos
+ * @param nombre Nombre de la entrada a comprobar
  */
 int existeEntradaDefTipo(char * nombre){
     int tope = topeTS - 1;
@@ -82,14 +74,13 @@ int existeEntradaDefTipo(char * nombre){
         return TS[tope].tipoDato; //true
     }else{
         return 0; //false
-        
     }
 }
 
 
 /**
- * 
- * @param nombre
+ * Función que comprueba si existe una entrada hasta una MARCA (LOCAL)
+ * @param nombre Nombre Nombre de la entrada a comprobar
  */
 int existeEntradaLocal(char * nombre){
     int tope = topeTS - 1;
@@ -103,11 +94,10 @@ int existeEntradaLocal(char * nombre){
     }else{
         return 0; //False
     }
-    
 }
 
 /**
- * 
+ * Procedimineto para imprimir la tabla de simbolos
  */
 void imprimirTS(){
     int i;
@@ -121,7 +111,13 @@ void imprimirTS(){
 }
 
 /**
- * 
+ * Función que rellena una entrada de la tabla de simbolos
+ * @param linea Línea en que se encuentra en componente ha insertar
+ * @param nombre Nombre del componenete que se va a insertar
+ * @param tipoDato Tipo de dato del componente que se va a insertar
+ * @param tipoEntrda Tipo de entrada del componente que se va a insertar
+ * @param numParam Número de parámetros que tiene el componenete que se va a insertar
+ * @return La entrada rellena
  */
 entrada rellenaEntrada(unsigned int linea, char* nombre, tDato tipoDato, tEntrada tipoEntrda, unsigned int numParam){
     entrada e;
@@ -135,11 +131,11 @@ entrada rellenaEntrada(unsigned int linea, char* nombre, tDato tipoDato, tEntrad
 
 
 /**
- * Introduce los parametros formales
- * @param linea
- * @param nombre
- * @param tipoDato
- * @return 
+ * Introduce los parametros formales de un procedimineto
+ * @param linea Línea donde se encuentra el parámetro a insertar
+ * @param nombre Nombre del parámetro a insertar
+ * @param tipoDato Tipo del parámetro a insertar
+ * @return 0 sino se ha podido insertar o 1 si se ha insertado correctamente
  */
 int pushTSParametroFormal(unsigned int linea, char* nombre, tDato tipoDato){
     int tope = topeTS - 1;
@@ -161,14 +157,15 @@ int pushTSParametroFormal(unsigned int linea, char* nombre, tDato tipoDato){
        return 0;
    }
   //Incrementamos el numero de parametros del primer identificador tipo procedimiento que nos encontremos
-/*   while(TS[pos].tipoEntrada != proc){
-      pos--;
-   } */
    TS[tope].parametros++;
    
    return 1;
 }
 
+/**
+ * Procedimiento que realiza una copia de los parámetros de un procedimineto
+ * debajo de una MARCA, para considerarlos como parámetros locales
+ */
 void copiaParametrosFormales(){
    int tope = topeTS - 2; //Nos saltamos la marca
    
@@ -179,7 +176,14 @@ void copiaParametrosFormales(){
 }
 
 
-
+/**
+ * Función que comprueba los parámetros de un procedimiento cuando se realiza una llamada
+ * @param nombreProc Nombre del procedimiento invocado
+ * @param tipoVariable Tipo de dato del parámetro a comprobar
+ * @param posicion Posición en la que se encuentra dicho parámetro
+ * @return 0 si existe parametro de ese tipo, 1 si es correcto, 2 si el número de parámetros
+ *  de la llamada al procedimiento en mayor
+ */
 int compruebaParametroProcedimiento(char * nombreProc, tDato tipoVariable, int posicion){
     int i = topeTS - 1;
     
@@ -201,20 +205,23 @@ int compruebaParametroProcedimiento(char * nombreProc, tDato tipoVariable, int p
     }
 }
 
+/**
+ * Función que comprueba si el número de parámetros de una llamada a procedimiento es correcto
+ * @param nombreProc Nombre del procedimiento que se desea comprobar
+ * @param numTotalParam Númeto de parámetros de la llamada
+ * @return 0 si el número de parámetros en menor, 1 si el número de parámetros en correcto
+ */
 int compruebaNumeroParametros(char * nombreProc, int numTotalParam){
     int i = topeTS - 1;
     
     while(strcmp(TS[i].nombre,nombreProc)!=0 && i >= 0){
         i--;
-    }
-    
+    }  
     
     if(TS[i].parametros == numTotalParam){
         return 1;
     }else{
         return 0;
     }
-    
-    
 }
 

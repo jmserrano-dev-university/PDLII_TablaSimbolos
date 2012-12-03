@@ -500,27 +500,57 @@ cuerpo : LLIZ vars_s sentencias LLDE
 | LLIZ vars_s LLDE
 | LLIZ LLDE
 ;
+
 llamada_conjunto : inserta_conjunto
 | saca_conjunto | destruye_conjunto
 ;
 
-crea_conjunto : CREATE PIZ PDE
+crea_conjunto : CREATE PIZ PDE {
+									$$.tipo = conjunto;
+							   }
 ;
-destruye_conjunto : DELETE PIZ ID PDE
+destruye_conjunto : DELETE PIZ ID PDE {
+										if($3.tipo != conjunto){
+											printf("\n\n *Error linea %d: El ID no es de tipo conjunto",linea_actual);
+										}
+									  }
 ;
-llamada_sivacio : EMPTY PIZ ID PDE
+llamada_sivacio : EMPTY PIZ ID PDE {
+										if($3.tipo != conjunto){
+											printf("\n\n *Error linea %d: El ID no es de tipo conjunto",linea_actual);
+											
+										}else{
+											$$.tipo = booleano;
+										}
+								   }
 ;
-llamada_length : LENGTH PIZ ID PDE
+
+llamada_length : LENGTH PIZ ID PDE{
+										if($3.tipo != conjunto){
+											printf("\n\n *Error linea %d: El ID no es de tipo conjunto",linea_actual);
+											
+										}else{
+											$$.tipo = entero;
+										}
+								  }
 ;
 
 //inserta_conjunto : INSERT PIZ expresion COMA ID PDE
 //;
-inserta_conjunto : expresion ADDC ID
+inserta_conjunto : expresion ADDC ID {
+										if($1.tipo != conjunto){
+											printf("\n\n* Error linea %d: La variable no es un conjunto",linea_actual);
+										}
+									 }
 ;
 
 //saca_conjunto : EXTRACT PIZ expresion COMA ID PDE
 //;
-saca_conjunto : expresion MINC ID
+saca_conjunto : expresion MINC ID{
+									if($1.tipo != conjunto){
+										printf("\n\n* Error linea %d: La variable no es un conjunto",linea_actual);
+									}
+								 }
 ;
 
 //llamada_diferencia : MINUS PIZ expresion COMA expresion PDE
@@ -534,7 +564,11 @@ saca_conjunto : expresion MINC ID
 
 //llamada_complementario : NEG PIZ expresion PDE
 //;
-llamada_complementario : COMPC expresion
+llamada_complementario : COMPC expresion {
+											if($2.tipo != conjunto){
+												printf("\n\n* Error linea %d: La variable no es un conjunto",linea_actual);
+											}
+										 }
 ;
 
 %%
