@@ -2,10 +2,12 @@
 #include "miLibreria.h"
 
 typedef int entero;
+typedef float real;
 
 bool asd;
 
 void main(){
+	real r;
 	entero a=2,b,c;
 	bool h,f;
 	float ca;
@@ -18,13 +20,13 @@ void main(){
 		void proc1(){
 			int tr;
 			int ert;
-			/*int rt;*/
+			int rt;
 			
 			void procedimient(int d, int e, int s){
 				
 			}
 			
-			procedimient(tr,ert);
+			procedimient(tr,ert,tr);
 		}
 	}
 	

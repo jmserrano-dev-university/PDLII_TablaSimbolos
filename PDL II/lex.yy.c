@@ -1125,7 +1125,7 @@ return OP_INOUT;
 case 44:
 YY_RULE_SETUP
 #line 74 "lexico.l"
-return TEXTO_OUT;
+{yylval.cadena = strdup(yytext); yylval.tipo = cadena; return STRING;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP

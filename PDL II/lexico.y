@@ -37,7 +37,7 @@ char nombreProc[100];
 %token NUM BREAK
 %token INT FLOAT CHAR SET TYPEDEF REAL 
 %token STRING BOOL TRUE FALSE CARACTER
-%token TEXTO_OUT OP_INOUT EMPTY
+%token OP_INOUT EMPTY
 %token LENGTH VOID SWITCH
 %token WHILE INCLUDE DEFINE
 %token IF IN OUT DEFAULT ELSE
@@ -81,7 +81,7 @@ incs_s : incs_s incs | incs
 ;
 defs_s : defs_s defs defs 
 ;
-tipos_s : tipos_s tipos | tipos PYC
+tipos_s : tipos_s tipos | tipos /*PYC*/
 ;
 vars_s : vars_s vars | vars
 ;
@@ -93,7 +93,13 @@ cabeceras : CAB1 | CAB2
 ;
 defs : DEFINE ID NUM
 ;
-tipos : TYPEDEF tipo ID {pushTS(rellenaEntrada(linea_actual,$3.cadena,$2.tipo,defTipo,0)); imprimirTS();}
+tipos : TYPEDEF tipo ID PYC {
+								if(existeEntradaLocal($3.cadena) == 0){
+									pushTS(rellenaEntrada(linea_actual,$3.cadena,$2.tipo,defTipo,0));
+								}else{
+									printf("\n\n*Error linea %d: El identificador de la refinicion de tipo ya existe",linea_actual);
+								}
+							}
 ;
 
 
@@ -106,8 +112,8 @@ tipo : INT {$$.tipo = entero;}
 		if((tipoAux = existeEntradaDefTipo($1.cadena)) != 0){
 		 $$.tipo = tipoAux;
 		}else{
-			printf("\nError linea %d: Tipo propio no definido",linea_actual);
-			exit(0);
+			printf("\n\n* Error linea %d: Tipo propio no definido",linea_actual);
+			
 		}
 	 }
 | BOOL {$$.tipo = booleano;}
@@ -122,14 +128,22 @@ variables : variables COMA variables_s
 ;
 
 variables_s : variable
-| variable ASI expresion 
+| variable ASI expresion { 				   
+						   if(tipoAux != $3.tipo){
+								printf("\n\n* Error linea: %d. Asignacion de tipo incorrecta en la declaración",linea_actual);
+								
+						   }
+						 }
+
+
+ 
 ;
 variable : ID { if(existeEntradaLocal($1.cadena) == 0){
 					pushTS(rellenaEntrada(linea_actual,$1.cadena,tipoAux,var,0)); 
-					imprimirTS();
+					/*imprimirTS();*/
 			    }else{
-					printf("\nError linea: %d: Identificador declarado anteriormente\n",linea_actual);
-					exit(0);
+					printf("\n\n* Error linea: %d: Identificador declarado anteriormente\n",linea_actual);
+					
 				}
 			  }
 /*| ID CORI NUM CORD ¿ESTO SE PONE?*/
@@ -137,26 +151,26 @@ variable : ID { if(existeEntradaLocal($1.cadena) == 0){
 
 
 proc : VOID ID PIZ{if(existeEntradaLocal($2.cadena) != 0){
-						printf("\nError linea: %d: Funcion ya declarada",linea_actual);
-						exit(0);
+						printf("\n\n* Error linea: %d: Funcion ya declarada",linea_actual);
+						
 					  }else{
 						pushTS(rellenaEntrada(linea_actual,$2.cadena,sinTipo,proc,0));
-						imprimirTS();
+						/*imprimirTS();*/
 					  }
-				   } params PDE {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); copiaParametrosFormales(); imprimirTS();} cuerpo {borrarHastaMarcaTS(); printf("\n\nBORRADO HASTA LA MARCA\n"); imprimirTS();}
+				   } params PDE {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); copiaParametrosFormales(); /*imprimirTS();*/} cuerpo {borrarHastaMarcaTS(); /*imprimirTS();*/}
 				   
 | VOID ID PIZ {if(existeEntradaLocal($2.cadena) != 0){
-					printf("\nError linea: %d: Funcion ya declarada",linea_actual);
-					exit(0);
+					printf("\n\n* Error linea: %d: Funcion ya declarada",linea_actual);
+					
 				  }else{
 					pushTS(rellenaEntrada(linea_actual,$2.cadena,sinTipo,proc,0));
-					imprimirTS();
+					/*imprimirTS();*/
 				  }
-			   } PDE {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); copiaParametrosFormales(); imprimirTS();}cuerpo {borrarHastaMarcaTS(); printf("\n\nBORRADO HASTA LA MARCA\n"); imprimirTS();}
+			   } PDE {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); copiaParametrosFormales(); /*imprimirTS();*/}cuerpo {borrarHastaMarcaTS(); /*imprimirTS();*/}
 ;
 
-params : params COMA tipo ID {if(!pushTSParametroFormal(linea_actual, $4.cadena, $3.tipo)){ printf("\nError linea: %d: Parametro formal existente\n",linea_actual); exit(0);} else imprimirTS();}
-| tipo ID {if(!pushTSParametroFormal(linea_actual, $2.cadena, $1.tipo)){ printf("\nError linea: %d: Parametro formal existente\n",linea_actual); exit(0);}else imprimirTS();}
+params : params COMA tipo ID {if(!pushTSParametroFormal(linea_actual, $4.cadena, $3.tipo)){ printf("\n\n* Error linea: %d: Parametro formal existente\n",linea_actual); } /*else imprimirTS();*/}
+| tipo ID {if(!pushTSParametroFormal(linea_actual, $2.cadena, $1.tipo)){ printf("\n\n* Error linea: %d: Parametro formal existente\n",linea_actual); }/*else imprimirTS();*/}
 ;
 
 sentencia : switch 
@@ -172,23 +186,23 @@ sentencia : switch
 switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE { if((tipoAux = existeEntradaLocal($3.cadena)) != 0 && tipoAux == $6.tipo){
 																$$.tipo = tipoAux;
 																	if(tipoAux != entero && tipoAux != caracter){ 
-																		printf("Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-																		exit(0);
+																		printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
+																		
 																	}
 															   }else{
 																if((tipoAux = existeEntrada($3.cadena)) != 0 && tipoAux == $6.tipo){
 																 $$.tipo = tipoAux;
 																	 if(tipoAux != entero && tipoAux != caracter){
-																		printf("Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-																		exit(0);
+																		printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
+																		
 																	 }
 																}else{
 																	if(tipoAux == $6.tipo){
-																		printf("\nError linea: %d. Variable no declarada\n",linea_actual);
-																		exit(0);
+																		printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
+																		
 																	}else{
-																		printf("\nError linea: %d. Tipo de los CASES no corresponde con el tipo del SWITCH\n",linea_actual);
-																		exit(0);
+																		printf("\n\n* Error linea: %d. Tipo de los CASES no corresponde con el tipo del SWITCH\n",linea_actual);
+																		
 																	}
 																}
 															   }
@@ -196,42 +210,42 @@ switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE { if((tipoAux = existe
 | SWITCH PIZ ID PDE LLIZ caso_defecto LLDE { if((tipoAux = existeEntradaLocal($3.cadena)) != 0){
 												$$.tipo = tipoAux;
 													if(tipoAux != entero && tipoAux != caracter){ 
-														printf("Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-														exit(0);
+														printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
+														
 													}
 											   }else{
 												if((tipoAux = existeEntrada($3.cadena)) != 0){
 												 $$.tipo = tipoAux;
 													 if(tipoAux != entero && tipoAux != caracter){
-														printf("Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-														exit(0);
+														printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
+														
 													 }
 												}else{
-												 printf("\nError linea: %d. Variable no declarada\n",linea_actual);
-												 exit(0);
+												 printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
+												 
 												}
 											   }
 											  }
 | SWITCH PIZ ID PDE LLIZ casos_s LLDE{ 	if((tipoAux = existeEntradaLocal($3.cadena)) != 0 && tipoAux == $6.tipo){
 											$$.tipo = tipoAux;
 												if(tipoAux != entero && tipoAux != caracter){
-													printf("Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-													exit(0);
+													printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
+													
 												}
 										   }else{
 											if((tipoAux = existeEntrada($3.cadena)) != 0 && tipoAux == $6.tipo){
 											 $$.tipo = tipoAux;
 												 if(tipoAux != entero && tipoAux != caracter){
-													printf("Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-													exit(0);
+													printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
+													
 												 }
 											}else{
 												if(tipoAux == $6.tipo){
-													printf("\nError linea: %d. Variable no declarada\n",linea_actual);
-													exit(0);
+													printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
+													
 												}else{
-													printf("\nError linea: %d. Tipo de los CASES no corresponde con el tipo del SWITCH\n",linea_actual);
-													exit(0);
+													printf("\n\n* Error linea: %d. Tipo de los CASES no corresponde con el tipo del SWITCH\n",linea_actual);
+													
 												}
 											}
 										   }
@@ -239,34 +253,34 @@ switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE { if((tipoAux = existe
 | SWITCH PIZ ID PDE LLIZ LLDE { if((tipoAux = existeEntradaLocal($3.cadena)) != 0){
 									$$.tipo = tipoAux;
 									if(tipoAux != entero && tipoAux != caracter){
-										printf("Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-										exit(0);
+										printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
+										
 									}
 										
 								   }else{
 									if((tipoAux = existeEntrada($3.cadena)) != 0){
 										 $$.tipo = tipoAux;
 										 if(tipoAux != entero && tipoAux != caracter){
-											printf("Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-											exit(0);
+											printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
+											
 										 }
 									}else{
-										printf("\nError linea: %d. Variable no declarada\n",linea_actual);
-										exit(0);
+										printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
+										
 									}
 								   }
 								  }
 ;
 
 casos_s : casos_s CASE literal PUNTOS sentencias BREAK PYC {	if($1.tipo != $3.tipo){ 
-																	printf("Error linea: %d: CASEs del Switch con diferente tipo",linea_actual);
+																	printf("\n\n* Error linea: %d: CASEs del Switch con diferente tipo",linea_actual);
 																}else{
 																	$$.tipo = $3.tipo;
 																}
 														    }
 | CASE literal PUNTOS sentencias BREAK PYC {$$.tipo = $2.tipo;}
 | casos_s CASE literal PUNTOS BREAK PYC {	if($1.tipo != $3.tipo){
-												printf("Error linea: %d: CASEs del Switch con diferente tipo",linea_actual);
+												printf("\n\n* Error linea: %d: CASEs del Switch con diferente tipo",linea_actual);
 											}else{
 												$$.tipo = $3.tipo;
 											}
@@ -288,154 +302,152 @@ bloque : LLIZ sentencias LLDE | sentencia | LLIZ LLDE
 ;
 
 
-if : IF expresion bloque ELSE bloque { if($2.tipo != booleano){ printf("Error linea %d: Expresion en if no es booleana",linea_actual);exit(0);} }
-| IF expresion bloque { if($2.tipo != booleano){ printf("Error linea %d: Expresion en if no es booleana",linea_actual); exit(0);} }
+if : IF expresion bloque ELSE bloque { if($2.tipo != booleano){ printf("\n\n* Error linea %d: Expresion en if no es booleana",linea_actual);} }
+| IF expresion bloque { if($2.tipo != booleano){ printf("\n\n* Error linea %d: Expresion en if no es booleana",linea_actual); } }
 ;
 
 
-expresion : expresion SUM expresion { if($1.tipo == $3.tipo){
+expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == cadena)){
 										$$.tipo = $1.tipo;
 									  }else{
-										printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-										exit(0);
+										printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
 									  }
 									}
-| expresion RES expresion{ if($1.tipo == $3.tipo){
+| expresion RES expresion{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 								$$.tipo = $1.tipo;
 							  }else{
-								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-								exit(0);
+								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
 							  }
 							}
-| expresion MUL expresion { if($1.tipo == $3.tipo){
+| expresion MUL expresion { if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 								$$.tipo = $1.tipo;
 							  }else{
-								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-								exit(0);
+								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+								
 							  }
 							}
-| expresion DIV expresion { if($1.tipo == $3.tipo){
+| expresion DIV expresion { if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 								$$.tipo = $1.tipo;
 							  }else{
-								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-								exit(0);
+								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+								
 							  }
 							}
 | expresion AND expresion 	{ if($1.tipo == $3.tipo && $1.tipo == booleano){
 								$$.tipo = $1.tipo;
 							  }else{
-								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-								exit(0);
+								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+								
 							  }
 							}
 | expresion OR expresion 	{ if($1.tipo == $3.tipo && $1.tipo == booleano){
 									$$.tipo = $1.tipo;
 							   }else{
-									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-									exit(0);
+									printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+									
 							   }
 							}
 | expresion MAYORIQ expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 									$$.tipo = booleano;
 								  }else{
-									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-									exit(0);
+									printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+									
 								  }
 								}
 | expresion MENORIQ expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 									$$.tipo = booleano;
 								  }else{
-									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-									exit(0);
+									printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+									
 								  }
 								}
 | expresion MAYORQ expresion	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 									$$.tipo = booleano;
 								  }else{
-									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-									exit(0);
+									printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+									
 								  }
 								}
 | expresion MENORQ expresion	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 									$$.tipo = booleano;
 								  }else{
-									printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-									exit(0);
+									printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+									
 								  }
 								}
 | expresion DIST expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == booleano)){
 								$$.tipo = booleano;
 							  }else{
-								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-								exit(0);
+								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+								
 							  }
 							}
 | expresion II expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == booleano)){
 								$$.tipo = booleano;
 							  }else{
-								printf("\nError en la línea: %d. Expresión con tipos distintos\n",linea_actual);
-								exit(0);
+								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+								
 							  }
 							}
-| NUM {printf("\nENTERO: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| NUM //{printf("\nENTERO: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
 | PIZ expresion PDE {$$.tipo = $2.tipo;}
 | NEGEXP expresion	{ if($2.tipo == booleano){
 							$$.tipo = booleano;
 					   }else{
-							printf("\nError linea: %d. Expresión con tipos distintos\n",linea_actual);
-							exit(0);
+							printf("\n\n* Error linea: %d. Expresion con tipos distintos\n",linea_actual);
+							
 					   }
 					}
 | ID { if((tipoAux = existeEntradaLocal($1.cadena)) != 0){
 		$$.tipo = tipoAux;
-		printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
+		//printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
 	   }else{
 		if((tipoAux = existeEntrada($1.cadena)) != 0){
 			$$.tipo = tipoAux;
-			printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
+			//printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
 		}else{
-			printf("\nError linea: %d. Variable no declarada\n",linea_actual);
-			exit(0);
+			printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
+			
 		}
 	   }
      }
-| REAL {printf("\nREAL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
-| TRUE {printf("\nBOOL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
-| FALSE {printf("\nBOOL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
-| CARACTER {printf("\nCHAR: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
-| TEXTO_OUT 
+| REAL //{printf("\nREAL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| TRUE //{printf("\nBOOL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| FALSE //{printf("\nBOOL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| CARACTER //{printf("\nCHAR: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| STRING
 | crea_conjunto 
 | llamada_complementario 
 | llamada_sivacio 
 | llamada_length 
 | ID ASI expresion { if((tipoAux = existeEntradaLocal($1.cadena)) != 0){
 						$$.tipo = tipoAux;
-						printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
+						//printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
 					   }else{
 						if((tipoAux = existeEntrada($1.cadena)) != 0){
 						 $$.tipo = tipoAux;
-						 printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
+						 //printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
 						}else{
-							printf("\nError linea: %d. Variable no declarada\n",linea_actual);
-							exit(0);
+							printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
+							
 						}
 					   }
 					   
 					   if(tipoAux != $3.tipo){
-							printf("\nError linea: %d. Asignacion de tipo incorrecta",linea_actual);
-							exit(0);
+							printf("\n\n* Error linea: %d. Asignacion de tipo incorrecta",linea_actual);
+							
 					   }
 					 }
 
 /*{printf("\nASIG: %s con TIPO: %d\n",$1.cadena, $3.tipo);}*/
 ;
 
-while : WHILE PIZ expresion PDE bloque { if($3.tipo != booleano){ printf("Error linea %d: Expresion en while no es booleana",linea_actual); exit(0);} }
-| WHILE PIZ expresion PDE PYC { if($3.tipo != booleano){ printf("Error linea %d: Expresion en while no es booleana",linea_actual); exit(0);} }
+while : WHILE PIZ expresion PDE bloque { if($3.tipo != booleano){ printf("\n\n* Error linea %d: Expresion en while no es booleana",linea_actual); } }
+| WHILE PIZ expresion PDE PYC { if($3.tipo != booleano){ printf("\n\n* Error linea %d: Expresion en while no es booleana",linea_actual); } }
 ;
 
-out : OUT PIZ TEXTO_OUT COMA ids PDE PYC
-| OUT PIZ TEXTO_OUT PDE PYC
+out : OUT PIZ STRING COMA ids PDE PYC
+| OUT PIZ STRING PDE PYC
 ;
 
 ids : ids COMA ID | ID
@@ -445,42 +457,42 @@ in : IN PIZ OP_INOUT COMA ID PDE PYC
 ;
 
 llamada_proc : ID PIZ {  if(existeEntrada($1.cadena) != sinTipo){
-							printf("Error linea: %d: Llamada a procedimiento no declarada con anterioridad\n",linea_actual);
-							exit(0);
+							printf("\n\n* Error linea: %d: Llamada a procedimiento no declarada con anterioridad\n",linea_actual);
+							
 						 }
 						 
 					  } params_llamada {	if(compruebaNumeroParametros($1.cadena, numParametros) == 0){ //Error en tipo
-												printf("Error linea %d: El numero de parametros no coindicen en la llamada al procedimiento", linea_actual);
-												exit(0);
+												printf("\n\n* Error linea %d: El numero de parametros no coindicen en la llamada al procedimiento", linea_actual);
+												
 											}		
 									   }  PDE PYC
 
 | ID PIZ PDE PYC { if(existeEntrada($1.cadena) != sinTipo){
-					  printf("Error linea: %d: Llamada a procedimiento no declarada con anterioridad\n",linea_actual);
-					  exit(0);
+					  printf("\n\n* Error linea: %d: Llamada a procedimiento no declarada con anterioridad\n",linea_actual);
+					  
 				   }
 				 }
 ;
 
 params_llamada : params_llamada COMA expresion { numParametros++;
 													if(compruebaParametroProcedimiento($-1.cadena, $3.tipo, numParametros) == 0){
-														printf("Error linea: %d: Parametro del procedimiento no coinciden en tipo", linea_actual);
-														exit(0);
+														printf("\n\n* Error linea: %d: Parametro del procedimiento no coinciden en tipo", linea_actual);
+														
 													}
 													
 													if(compruebaParametroProcedimiento($-1.cadena, $3.tipo, numParametros) == 2){
-														printf("Error linea: %d: Número de parametros excedido en la llamada a procedimiento", linea_actual);
-														exit(0);
+														printf("\n\n* Error linea: %d: Numero de parametros excedido en la llamada a procedimiento", linea_actual);
+														
 													}
 												}
 | expresion {numParametros = 1; if(compruebaParametroProcedimiento($-1.cadena, $1.tipo, numParametros) == 0){
-									printf("Error linea: %d: Parametro del procedimiento no coinciden en tipo", linea_actual);
-									exit(0);
+									printf("\n\n* Error linea: %d: Parametro del procedimiento no coinciden en tipo", linea_actual);
+									
 								}
 			}
 ;
 
-main : VOID MAIN {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); imprimirTS();}  PIZ PDE cuerpo {borrarHastaMarcaTS(); printf("\n\nBORRADO HASTA LA MARCA\n"); imprimirTS();}
+main : VOID MAIN {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); /*imprimirTS();*/}  PIZ PDE cuerpo {borrarHastaMarcaTS(); /*imprimirTS();*/}
 ;
 
 cuerpo : LLIZ vars_s sentencias LLDE

@@ -68,9 +68,14 @@ int existeEntrada(char * nombre){
  */
 int existeEntradaDefTipo(char * nombre){
     int tope = topeTS - 1;
+    int encontrado = 0;
     
-    while(strcmp(TS[tope].nombre,nombre) != 0 && TS[tope].tipoEntrada != defTipo && tope >= 0){
-        tope--;
+    while(!encontrado && tope >= 0){
+        if(strcmp(TS[tope].nombre,nombre) == 0 && TS[tope].tipoEntrada == defTipo ){
+            break;
+        }else{
+            tope--;
+        }
     }
     
     if(tope > -1){
@@ -182,7 +187,7 @@ int compruebaParametroProcedimiento(char * nombreProc, tDato tipoVariable, int p
         i--;
     }
     
-    if(TS[i].parametros > posicion){
+    if(posicion <= TS[i].parametros){
         //Vamos hasta el paramentro
         i += posicion;
         

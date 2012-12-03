@@ -71,7 +71,7 @@ todos .
 "typedef" return TYPEDEF;
 {digito}+"."{digito}* {yylval.cadena = strdup(yytext); yylval.tipo = real;  return REAL;}
 \""%"[dfcso]\" return OP_INOUT;
-\"([^"\n]|\\\")*\" return TEXTO_OUT;
+\"([^"\n]|\\\")*\" {yylval.cadena = strdup(yytext); yylval.tipo = cadena; return STRING;}
 "empty" return EMPTY;
 "length" return LENGTH;
 "void" return VOID;

@@ -22,7 +22,7 @@
   16  defs_s : defs_s defs defs
 
   17  tipos_s : tipos_s tipos
-  18          | tipos PYC
+  18          | tipos
 
   19  vars_s : vars_s vars
   20         | vars
@@ -37,7 +37,7 @@
 
   26  defs : DEFINE ID NUM
 
-  27  tipos : TYPEDEF tipo ID
+  27  tipos : TYPEDEF tipo ID PYC
 
   28  tipo : INT
   29       | FLOAT
@@ -130,7 +130,7 @@
   95            | TRUE
   96            | FALSE
   97            | CARACTER
-  98            | TEXTO_OUT
+  98            | STRING
   99            | crea_conjunto
  100            | llamada_complementario
  101            | llamada_sivacio
@@ -140,8 +140,8 @@
  104  while : WHILE PIZ expresion PDE bloque
  105        | WHILE PIZ expresion PDE PYC
 
- 106  out : OUT PIZ TEXTO_OUT COMA ids PDE PYC
- 107      | OUT PIZ TEXTO_OUT PDE PYC
+ 106  out : OUT PIZ STRING COMA ids PDE PYC
+ 107      | OUT PIZ STRING PDE PYC
 
  108  ids : ids COMA ID
  109      | ID
@@ -247,7 +247,7 @@ state 5
 
 
 state 6
-	tipos : TYPEDEF . tipo ID  (27)
+	tipos : TYPEDEF . tipo ID PYC  (27)
 
 	ID  shift 1
 	INT  shift 2
@@ -435,10 +435,9 @@ state 20
 
 
 state 21
-	tipos_s : tipos . PYC  (18)
+	tipos_s : tipos .  (18)
 
-	PYC  shift 44
-	.  error
+	.  reduce 18
 
 
 state 22
@@ -459,13 +458,13 @@ state 24
 
 	.  reduce 35
 
-	$$1  goto 45
+	$$1  goto 44
 
 
 state 25
-	tipos : TYPEDEF tipo . ID  (27)
+	tipos : TYPEDEF tipo . ID PYC  (27)
 
-	ID  shift 46
+	ID  shift 45
 	.  error
 
 
@@ -473,7 +472,7 @@ state 26
 	proc : VOID ID . PIZ $$2 params PDE $$3 cuerpo  (44)
 	proc : VOID ID . PIZ $$4 PDE $$5 cuerpo  (47)
 
-	PIZ  shift 47
+	PIZ  shift 46
 	.  error
 
 
@@ -483,7 +482,7 @@ state 27
 
 	.  reduce 117
 
-	$$8  goto 48
+	$$8  goto 47
 
 
 state 28
@@ -526,7 +525,7 @@ state 32
 	BOOL  reduce 6
 	VOID  reduce 6
 
-	tipos_s  goto 49
+	tipos_s  goto 48
 	defs  goto 37
 	tipos  goto 21
 
@@ -557,7 +556,7 @@ state 34
 state 35
 	defs : DEFINE . ID NUM  (26)
 
-	ID  shift 50
+	ID  shift 49
 	.  error
 
 
@@ -584,7 +583,7 @@ state 37
 	DEFINE  shift 35
 	.  error
 
-	defs  goto 51
+	defs  goto 50
 
 
 state 38
@@ -600,7 +599,7 @@ state 39
 	VOID  shift 9
 	.  error
 
-	main  goto 52
+	main  goto 51
 	proc  goto 43
 
 
@@ -629,29 +628,24 @@ state 43
 
 
 state 44
-	tipos_s : tipos PYC .  (18)
+	vars : tipo $$1 . variables PYC  (36)
 
-	.  reduce 18
+	ID  shift 52
+	.  error
+
+	variables  goto 53
+	variables_s  goto 54
+	variable  goto 55
 
 
 state 45
-	vars : tipo $$1 . variables PYC  (36)
+	tipos : TYPEDEF tipo ID . PYC  (27)
 
-	ID  shift 53
+	PYC  shift 56
 	.  error
-
-	variables  goto 54
-	variables_s  goto 55
-	variable  goto 56
 
 
 state 46
-	tipos : TYPEDEF tipo ID .  (27)
-
-	.  reduce 27
-
-
-state 47
 	proc : VOID ID PIZ . $$2 params PDE $$3 cuerpo  (44)
 	proc : VOID ID PIZ . $$4 PDE $$5 cuerpo  (47)
 	$$2 : .  (42)
@@ -670,14 +664,14 @@ state 47
 	$$4  goto 58
 
 
-state 48
+state 47
 	main : VOID MAIN $$8 . PIZ PDE cuerpo  (118)
 
 	PIZ  shift 59
 	.  error
 
 
-state 49
+state 48
 	dec1 : incs_s defs_s tipos_s .  (3)
 	tipos_s : tipos_s . tipos  (17)
 
@@ -694,32 +688,32 @@ state 49
 	tipos  goto 38
 
 
-state 50
+state 49
 	defs : DEFINE ID . NUM  (26)
 
 	NUM  shift 60
 	.  error
 
 
-state 51
+state 50
 	defs_s : defs_s defs defs .  (16)
 
 	.  reduce 16
 
 
-state 52
+state 51
 	dec2 : vars_s procs_s main .  (10)
 
 	.  reduce 10
 
 
-state 53
+state 52
 	variable : ID .  (41)
 
 	.  reduce 41
 
 
-state 54
+state 53
 	vars : tipo $$1 variables . PYC  (36)
 	variables : variables . COMA variables_s  (37)
 
@@ -728,19 +722,25 @@ state 54
 	.  error
 
 
-state 55
+state 54
 	variables : variables_s .  (38)
 
 	.  reduce 38
 
 
-state 56
+state 55
 	variables_s : variable .  (39)
 	variables_s : variable . ASI expresion  (40)
 
 	ASI  shift 63
 	PYC  reduce 39
 	COMA  reduce 39
+
+
+state 56
+	tipos : TYPEDEF tipo ID PYC .  (27)
+
+	.  reduce 27
 
 
 state 57
@@ -788,11 +788,11 @@ state 61
 state 62
 	variables : variables COMA . variables_s  (37)
 
-	ID  shift 53
+	ID  shift 52
 	.  error
 
 	variables_s  goto 68
-	variable  goto 56
+	variable  goto 55
 
 
 state 63
@@ -801,10 +801,10 @@ state 63
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -868,10 +868,10 @@ state 69
 	ID  reduce 93
 	NUM  reduce 93
 	REAL  reduce 93
+	STRING  reduce 93
 	TRUE  reduce 93
 	FALSE  reduce 93
 	CARACTER  reduce 93
-	TEXTO_OUT  reduce 93
 	EMPTY  reduce 93
 	LENGTH  reduce 93
 	VOID  reduce 93
@@ -918,27 +918,27 @@ state 71
 
 
 state 72
+	expresion : STRING .  (98)
+
+	.  reduce 98
+
+
+state 73
 	expresion : TRUE .  (95)
 
 	.  reduce 95
 
 
-state 73
+state 74
 	expresion : FALSE .  (96)
 
 	.  reduce 96
 
 
-state 74
+state 75
 	expresion : CARACTER .  (97)
 
 	.  reduce 97
-
-
-state 75
-	expresion : TEXTO_OUT .  (98)
-
-	.  reduce 98
 
 
 state 76
@@ -968,10 +968,10 @@ state 79
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -993,10 +993,10 @@ state 80
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1018,10 +1018,10 @@ state 81
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1144,49 +1144,48 @@ state 91
 	CHAR  shift 4
 	SET  shift 5
 	REAL  shift 71
-	STRING  shift 7
+	STRING  shift 116
 	BOOL  shift 8
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
-	LLDE  shift 123
+	LLDE  shift 124
 	COMPC  shift 80
 	NEGEXP  shift 81
 	.  error
 
-	vars_s  goto 124
+	vars_s  goto 125
 	vars  goto 22
-	proc  goto 125
+	proc  goto 126
 	tipo  goto 24
-	expresion  goto 126
-	sentencia  goto 127
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
-	sentencias  goto 135
+	expresion  goto 127
+	sentencia  goto 128
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
+	sentencias  goto 136
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
 state 92
@@ -1201,10 +1200,10 @@ state 93
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1213,7 +1212,7 @@ state 93
 	NEGEXP  shift 81
 	.  error
 
-	expresion  goto 139
+	expresion  goto 140
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
@@ -1223,21 +1222,21 @@ state 93
 state 94
 	llamada_sivacio : EMPTY PIZ . ID PDE  (128)
 
-	ID  shift 140
+	ID  shift 141
 	.  error
 
 
 state 95
 	llamada_length : LENGTH PIZ . ID PDE  (129)
 
-	ID  shift 141
+	ID  shift 142
 	.  error
 
 
 state 96
 	crea_conjunto : CREATE PIZ . PDE  (126)
 
-	PDE  shift 142
+	PDE  shift 143
 	.  error
 
 
@@ -1256,7 +1255,7 @@ state 97
 	expresion : expresion . II expresion  (89)
 	expresion : PIZ expresion . PDE  (91)
 
-	PDE  shift 143
+	PDE  shift 144
 	MAYORIQ  shift 100
 	MENORIQ  shift 101
 	MAYORQ  shift 102
@@ -1314,35 +1313,10 @@ state 100
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
-	EMPTY  shift 76
-	LENGTH  shift 77
-	CREATE  shift 78
-	PIZ  shift 79
-	COMPC  shift 80
-	NEGEXP  shift 81
-	.  error
-
-	expresion  goto 144
-	crea_conjunto  goto 83
-	llamada_complementario  goto 84
-	llamada_sivacio  goto 85
-	llamada_length  goto 86
-
-
-state 101
-	expresion : expresion MENORIQ . expresion  (85)
-
-	ID  shift 69
-	NUM  shift 70
-	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1358,16 +1332,16 @@ state 101
 	llamada_length  goto 86
 
 
-state 102
-	expresion : expresion MAYORQ . expresion  (86)
+state 101
+	expresion : expresion MENORIQ . expresion  (85)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1383,16 +1357,16 @@ state 102
 	llamada_length  goto 86
 
 
-state 103
-	expresion : expresion MENORQ . expresion  (87)
+state 102
+	expresion : expresion MAYORQ . expresion  (86)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1408,16 +1382,16 @@ state 103
 	llamada_length  goto 86
 
 
-state 104
-	expresion : expresion DIST . expresion  (88)
+state 103
+	expresion : expresion MENORQ . expresion  (87)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1433,16 +1407,16 @@ state 104
 	llamada_length  goto 86
 
 
-state 105
-	expresion : expresion II . expresion  (89)
+state 104
+	expresion : expresion DIST . expresion  (88)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1458,16 +1432,16 @@ state 105
 	llamada_length  goto 86
 
 
-state 106
-	expresion : expresion SUM . expresion  (78)
+state 105
+	expresion : expresion II . expresion  (89)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1483,16 +1457,16 @@ state 106
 	llamada_length  goto 86
 
 
-state 107
-	expresion : expresion RES . expresion  (79)
+state 106
+	expresion : expresion SUM . expresion  (78)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1508,16 +1482,16 @@ state 107
 	llamada_length  goto 86
 
 
-state 108
-	expresion : expresion MUL . expresion  (80)
+state 107
+	expresion : expresion RES . expresion  (79)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1533,16 +1507,16 @@ state 108
 	llamada_length  goto 86
 
 
-state 109
-	expresion : expresion DIV . expresion  (81)
+state 108
+	expresion : expresion MUL . expresion  (80)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1558,16 +1532,16 @@ state 109
 	llamada_length  goto 86
 
 
-state 110
-	expresion : expresion AND . expresion  (82)
+state 109
+	expresion : expresion DIV . expresion  (81)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1583,16 +1557,16 @@ state 110
 	llamada_length  goto 86
 
 
-state 111
-	expresion : expresion OR . expresion  (83)
+state 110
+	expresion : expresion AND . expresion  (82)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1608,19 +1582,44 @@ state 111
 	llamada_length  goto 86
 
 
+state 111
+	expresion : expresion OR . expresion  (83)
+
+	ID  shift 69
+	NUM  shift 70
+	REAL  shift 71
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
+	EMPTY  shift 76
+	LENGTH  shift 77
+	CREATE  shift 78
+	PIZ  shift 79
+	COMPC  shift 80
+	NEGEXP  shift 81
+	.  error
+
+	expresion  goto 156
+	crea_conjunto  goto 83
+	llamada_complementario  goto 84
+	llamada_sivacio  goto 85
+	llamada_length  goto 86
+
+
 state 112
 	proc : VOID ID PIZ $$2 params PDE $$3 . cuerpo  (44)
 
 	LLIZ  shift 91
 	.  error
 
-	cuerpo  goto 156
+	cuerpo  goto 157
 
 
 state 113
 	params : params COMA tipo . ID  (48)
 
-	ID  shift 157
+	ID  shift 158
 	.  error
 
 
@@ -1637,7 +1636,7 @@ state 115
 	llamada_proc : ID . PIZ $$6 params_llamada $$7 PDE PYC  (113)
 	llamada_proc : ID . PIZ PDE PYC  (114)
 
-	PIZ  shift 158
+	PIZ  shift 159
 	ASI  shift 93
 	ID  reduce 32
 	PYC  reduce 93
@@ -1658,6 +1657,28 @@ state 115
 
 
 state 116
+	tipo : STRING .  (34)
+	expresion : STRING .  (98)
+
+	ID  reduce 34
+	PYC  reduce 98
+	MAYORIQ  reduce 98
+	MENORIQ  reduce 98
+	MAYORQ  reduce 98
+	MENORQ  reduce 98
+	DIST  reduce 98
+	II  reduce 98
+	SUM  reduce 98
+	RES  reduce 98
+	MUL  reduce 98
+	DIV  reduce 98
+	AND  reduce 98
+	OR  reduce 98
+	ADDC  reduce 98
+	MINC  reduce 98
+
+
+state 117
 	proc : VOID . ID PIZ $$2 params PDE $$3 cuerpo  (44)
 	proc : VOID . ID PIZ $$4 PDE $$5 cuerpo  (47)
 
@@ -1665,35 +1686,35 @@ state 116
 	.  error
 
 
-state 117
+state 118
 	switch : SWITCH . PIZ ID PDE LLIZ casos_s caso_defecto LLDE  (59)
 	switch : SWITCH . PIZ ID PDE LLIZ caso_defecto LLDE  (60)
 	switch : SWITCH . PIZ ID PDE LLIZ casos_s LLDE  (61)
 	switch : SWITCH . PIZ ID PDE LLIZ LLDE  (62)
-
-	PIZ  shift 159
-	.  error
-
-
-state 118
-	while : WHILE . PIZ expresion PDE bloque  (104)
-	while : WHILE . PIZ expresion PDE PYC  (105)
 
 	PIZ  shift 160
 	.  error
 
 
 state 119
+	while : WHILE . PIZ expresion PDE bloque  (104)
+	while : WHILE . PIZ expresion PDE PYC  (105)
+
+	PIZ  shift 161
+	.  error
+
+
+state 120
 	if : IF . expresion bloque ELSE bloque  (76)
 	if : IF . expresion bloque  (77)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -1702,42 +1723,42 @@ state 119
 	NEGEXP  shift 81
 	.  error
 
-	expresion  goto 161
+	expresion  goto 162
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
 
 
-state 120
-	in : IN . PIZ OP_INOUT COMA ID PDE PYC  (110)
-
-	PIZ  shift 162
-	.  error
-
-
 state 121
-	out : OUT . PIZ TEXTO_OUT COMA ids PDE PYC  (106)
-	out : OUT . PIZ TEXTO_OUT PDE PYC  (107)
+	in : IN . PIZ OP_INOUT COMA ID PDE PYC  (110)
 
 	PIZ  shift 163
 	.  error
 
 
 state 122
-	destruye_conjunto : DELETE . PIZ ID PDE  (127)
+	out : OUT . PIZ STRING COMA ids PDE PYC  (106)
+	out : OUT . PIZ STRING PDE PYC  (107)
 
 	PIZ  shift 164
 	.  error
 
 
 state 123
+	destruye_conjunto : DELETE . PIZ ID PDE  (127)
+
+	PIZ  shift 165
+	.  error
+
+
+state 124
 	cuerpo : LLIZ LLDE .  (122)
 
 	.  reduce 122
 
 
-state 124
+state 125
 	vars_s : vars_s . vars  (19)
 	cuerpo : LLIZ vars_s . sentencias LLDE  (119)
 	cuerpo : LLIZ vars_s . LLDE  (121)
@@ -1749,57 +1770,56 @@ state 124
 	CHAR  shift 4
 	SET  shift 5
 	REAL  shift 71
-	STRING  shift 7
+	STRING  shift 116
 	BOOL  shift 8
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
-	LLDE  shift 165
+	LLDE  shift 166
 	COMPC  shift 80
 	NEGEXP  shift 81
 	.  error
 
 	vars  goto 41
-	proc  goto 125
+	proc  goto 126
 	tipo  goto 24
-	expresion  goto 126
-	sentencia  goto 127
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
-	sentencias  goto 166
+	expresion  goto 127
+	sentencia  goto 128
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
+	sentencias  goto 167
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
-state 125
+state 126
 	sentencia : proc .  (55)
 
 	.  reduce 55
 
 
-state 126
+state 127
 	sentencia : expresion . PYC  (58)
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
@@ -1816,7 +1836,7 @@ state 126
 	inserta_conjunto : expresion . ADDC ID  (130)
 	saca_conjunto : expresion . MINC ID  (131)
 
-	PYC  shift 167
+	PYC  shift 168
 	MAYORIQ  shift 100
 	MENORIQ  shift 101
 	MAYORQ  shift 102
@@ -1829,125 +1849,125 @@ state 126
 	DIV  shift 109
 	AND  shift 110
 	OR  shift 111
-	ADDC  shift 168
-	MINC  shift 169
+	ADDC  shift 169
+	MINC  shift 170
 	.  error
 
 
-state 127
+state 128
 	sentencias : sentencia .  (70)
 
 	.  reduce 70
 
 
-state 128
+state 129
 	sentencia : switch .  (50)
 
 	.  reduce 50
 
 
-state 129
+state 130
 	sentencia : if .  (51)
 
 	.  reduce 51
 
 
-state 130
+state 131
 	sentencia : while .  (52)
 
 	.  reduce 52
 
 
-state 131
+state 132
 	sentencia : in .  (53)
 
 	.  reduce 53
 
 
-state 132
+state 133
 	sentencia : out .  (54)
 
 	.  reduce 54
 
 
-state 133
+state 134
 	sentencia : llamada_proc .  (56)
 
 	.  reduce 56
 
 
-state 134
+state 135
 	sentencia : llamada_conjunto . PYC  (57)
 
-	PYC  shift 170
+	PYC  shift 171
 	.  error
 
 
-state 135
+state 136
 	sentencias : sentencias . sentencia  (69)
 	cuerpo : LLIZ sentencias . LLDE  (120)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
-	LLDE  shift 172
+	LLDE  shift 173
 	COMPC  shift 80
 	NEGEXP  shift 81
 	.  error
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 173
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 174
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
-state 136
+state 137
 	llamada_conjunto : inserta_conjunto .  (123)
 
 	.  reduce 123
 
 
-state 137
+state 138
 	llamada_conjunto : saca_conjunto .  (124)
 
 	.  reduce 124
 
 
-state 138
+state 139
 	llamada_conjunto : destruye_conjunto .  (125)
 
 	.  reduce 125
 
 
-state 139
+state 140
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -1977,10 +1997,10 @@ state 139
 	ID  reduce 103
 	NUM  reduce 103
 	REAL  reduce 103
+	STRING  reduce 103
 	TRUE  reduce 103
 	FALSE  reduce 103
 	CARACTER  reduce 103
-	TEXTO_OUT  reduce 103
 	EMPTY  reduce 103
 	LENGTH  reduce 103
 	VOID  reduce 103
@@ -2002,33 +2022,33 @@ state 139
 	NEGEXP  reduce 103
 
 
-state 140
-	llamada_sivacio : EMPTY PIZ ID . PDE  (128)
-
-	PDE  shift 174
-	.  error
-
-
 state 141
-	llamada_length : LENGTH PIZ ID . PDE  (129)
+	llamada_sivacio : EMPTY PIZ ID . PDE  (128)
 
 	PDE  shift 175
 	.  error
 
 
 state 142
+	llamada_length : LENGTH PIZ ID . PDE  (129)
+
+	PDE  shift 176
+	.  error
+
+
+state 143
 	crea_conjunto : CREATE PIZ PDE .  (126)
 
 	.  reduce 126
 
 
-state 143
+state 144
 	expresion : PIZ expresion PDE .  (91)
 
 	.  reduce 91
 
 
-state 144
+state 145
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2052,10 +2072,10 @@ state 144
 	ID  reduce 84
 	NUM  reduce 84
 	REAL  reduce 84
+	STRING  reduce 84
 	TRUE  reduce 84
 	FALSE  reduce 84
 	CARACTER  reduce 84
-	TEXTO_OUT  reduce 84
 	EMPTY  reduce 84
 	LENGTH  reduce 84
 	VOID  reduce 84
@@ -2083,7 +2103,7 @@ state 144
 	NEGEXP  reduce 84
 
 
-state 145
+state 146
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2107,10 +2127,10 @@ state 145
 	ID  reduce 85
 	NUM  reduce 85
 	REAL  reduce 85
+	STRING  reduce 85
 	TRUE  reduce 85
 	FALSE  reduce 85
 	CARACTER  reduce 85
-	TEXTO_OUT  reduce 85
 	EMPTY  reduce 85
 	LENGTH  reduce 85
 	VOID  reduce 85
@@ -2138,7 +2158,7 @@ state 145
 	NEGEXP  reduce 85
 
 
-state 146
+state 147
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2162,10 +2182,10 @@ state 146
 	ID  reduce 86
 	NUM  reduce 86
 	REAL  reduce 86
+	STRING  reduce 86
 	TRUE  reduce 86
 	FALSE  reduce 86
 	CARACTER  reduce 86
-	TEXTO_OUT  reduce 86
 	EMPTY  reduce 86
 	LENGTH  reduce 86
 	VOID  reduce 86
@@ -2193,7 +2213,7 @@ state 146
 	NEGEXP  reduce 86
 
 
-state 147
+state 148
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2217,10 +2237,10 @@ state 147
 	ID  reduce 87
 	NUM  reduce 87
 	REAL  reduce 87
+	STRING  reduce 87
 	TRUE  reduce 87
 	FALSE  reduce 87
 	CARACTER  reduce 87
-	TEXTO_OUT  reduce 87
 	EMPTY  reduce 87
 	LENGTH  reduce 87
 	VOID  reduce 87
@@ -2248,7 +2268,7 @@ state 147
 	NEGEXP  reduce 87
 
 
-state 148
+state 149
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2272,10 +2292,10 @@ state 148
 	ID  reduce 88
 	NUM  reduce 88
 	REAL  reduce 88
+	STRING  reduce 88
 	TRUE  reduce 88
 	FALSE  reduce 88
 	CARACTER  reduce 88
-	TEXTO_OUT  reduce 88
 	EMPTY  reduce 88
 	LENGTH  reduce 88
 	VOID  reduce 88
@@ -2303,7 +2323,7 @@ state 148
 	NEGEXP  reduce 88
 
 
-state 149
+state 150
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2327,10 +2347,10 @@ state 149
 	ID  reduce 89
 	NUM  reduce 89
 	REAL  reduce 89
+	STRING  reduce 89
 	TRUE  reduce 89
 	FALSE  reduce 89
 	CARACTER  reduce 89
-	TEXTO_OUT  reduce 89
 	EMPTY  reduce 89
 	LENGTH  reduce 89
 	VOID  reduce 89
@@ -2358,7 +2378,7 @@ state 149
 	NEGEXP  reduce 89
 
 
-state 150
+state 151
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion SUM expresion .  (78)
 	expresion : expresion . RES expresion  (79)
@@ -2380,10 +2400,10 @@ state 150
 	ID  reduce 78
 	NUM  reduce 78
 	REAL  reduce 78
+	STRING  reduce 78
 	TRUE  reduce 78
 	FALSE  reduce 78
 	CARACTER  reduce 78
-	TEXTO_OUT  reduce 78
 	EMPTY  reduce 78
 	LENGTH  reduce 78
 	VOID  reduce 78
@@ -2413,7 +2433,7 @@ state 150
 	NEGEXP  reduce 78
 
 
-state 151
+state 152
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion RES expresion .  (79)
@@ -2435,10 +2455,10 @@ state 151
 	ID  reduce 79
 	NUM  reduce 79
 	REAL  reduce 79
+	STRING  reduce 79
 	TRUE  reduce 79
 	FALSE  reduce 79
 	CARACTER  reduce 79
-	TEXTO_OUT  reduce 79
 	EMPTY  reduce 79
 	LENGTH  reduce 79
 	VOID  reduce 79
@@ -2468,7 +2488,7 @@ state 151
 	NEGEXP  reduce 79
 
 
-state 152
+state 153
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2488,10 +2508,10 @@ state 152
 	ID  reduce 80
 	NUM  reduce 80
 	REAL  reduce 80
+	STRING  reduce 80
 	TRUE  reduce 80
 	FALSE  reduce 80
 	CARACTER  reduce 80
-	TEXTO_OUT  reduce 80
 	EMPTY  reduce 80
 	LENGTH  reduce 80
 	VOID  reduce 80
@@ -2523,7 +2543,7 @@ state 152
 	NEGEXP  reduce 80
 
 
-state 153
+state 154
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2543,10 +2563,10 @@ state 153
 	ID  reduce 81
 	NUM  reduce 81
 	REAL  reduce 81
+	STRING  reduce 81
 	TRUE  reduce 81
 	FALSE  reduce 81
 	CARACTER  reduce 81
-	TEXTO_OUT  reduce 81
 	EMPTY  reduce 81
 	LENGTH  reduce 81
 	VOID  reduce 81
@@ -2578,7 +2598,7 @@ state 153
 	NEGEXP  reduce 81
 
 
-state 154
+state 155
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2596,7 +2616,7 @@ state 154
 	.  reduce 82
 
 
-state 155
+state 156
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2614,31 +2634,31 @@ state 155
 	.  reduce 83
 
 
-state 156
+state 157
 	proc : VOID ID PIZ $$2 params PDE $$3 cuerpo .  (44)
 
 	.  reduce 44
 
 
-state 157
+state 158
 	params : params COMA tipo ID .  (48)
 
 	.  reduce 48
 
 
-state 158
+state 159
 	llamada_proc : ID PIZ . $$6 params_llamada $$7 PDE PYC  (113)
 	llamada_proc : ID PIZ . PDE PYC  (114)
 	$$6 : .  (111)
 
-	PDE  shift 176
+	PDE  shift 177
 	ID  reduce 111
 	NUM  reduce 111
 	REAL  reduce 111
+	STRING  reduce 111
 	TRUE  reduce 111
 	FALSE  reduce 111
 	CARACTER  reduce 111
-	TEXTO_OUT  reduce 111
 	EMPTY  reduce 111
 	LENGTH  reduce 111
 	CREATE  reduce 111
@@ -2646,30 +2666,30 @@ state 158
 	COMPC  reduce 111
 	NEGEXP  reduce 111
 
-	$$6  goto 177
+	$$6  goto 178
 
 
-state 159
+state 160
 	switch : SWITCH PIZ . ID PDE LLIZ casos_s caso_defecto LLDE  (59)
 	switch : SWITCH PIZ . ID PDE LLIZ caso_defecto LLDE  (60)
 	switch : SWITCH PIZ . ID PDE LLIZ casos_s LLDE  (61)
 	switch : SWITCH PIZ . ID PDE LLIZ LLDE  (62)
 
-	ID  shift 178
+	ID  shift 179
 	.  error
 
 
-state 160
+state 161
 	while : WHILE PIZ . expresion PDE bloque  (104)
 	while : WHILE PIZ . expresion PDE PYC  (105)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -2678,14 +2698,14 @@ state 160
 	NEGEXP  shift 81
 	.  error
 
-	expresion  goto 179
+	expresion  goto 180
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
 
 
-state 161
+state 162
 	if : IF expresion . bloque ELSE bloque  (76)
 	if : IF expresion . bloque  (77)
 	expresion : expresion . SUM expresion  (78)
@@ -2701,25 +2721,25 @@ state 161
 	expresion : expresion . DIST expresion  (88)
 	expresion : expresion . II expresion  (89)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
-	LLIZ  shift 180
+	LLIZ  shift 181
 	MAYORIQ  shift 100
 	MENORIQ  shift 101
 	MAYORQ  shift 102
@@ -2736,133 +2756,133 @@ state 161
 	NEGEXP  shift 81
 	.  error
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 181
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
-	bloque  goto 182
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 182
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
+	bloque  goto 183
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
-
-
-state 162
-	in : IN PIZ . OP_INOUT COMA ID PDE PYC  (110)
-
-	OP_INOUT  shift 183
-	.  error
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
 state 163
-	out : OUT PIZ . TEXTO_OUT COMA ids PDE PYC  (106)
-	out : OUT PIZ . TEXTO_OUT PDE PYC  (107)
+	in : IN PIZ . OP_INOUT COMA ID PDE PYC  (110)
 
-	TEXTO_OUT  shift 184
+	OP_INOUT  shift 184
 	.  error
 
 
 state 164
-	destruye_conjunto : DELETE PIZ . ID PDE  (127)
+	out : OUT PIZ . STRING COMA ids PDE PYC  (106)
+	out : OUT PIZ . STRING PDE PYC  (107)
 
-	ID  shift 185
+	STRING  shift 185
 	.  error
 
 
 state 165
+	destruye_conjunto : DELETE PIZ . ID PDE  (127)
+
+	ID  shift 186
+	.  error
+
+
+state 166
 	cuerpo : LLIZ vars_s LLDE .  (121)
 
 	.  reduce 121
 
 
-state 166
+state 167
 	sentencias : sentencias . sentencia  (69)
 	cuerpo : LLIZ vars_s sentencias . LLDE  (119)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
-	LLDE  shift 186
+	LLDE  shift 187
 	COMPC  shift 80
 	NEGEXP  shift 81
 	.  error
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 173
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 174
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
-state 167
+state 168
 	sentencia : expresion PYC .  (58)
 
 	.  reduce 58
 
 
-state 168
-	inserta_conjunto : expresion ADDC . ID  (130)
-
-	ID  shift 187
-	.  error
-
-
 state 169
-	saca_conjunto : expresion MINC . ID  (131)
+	inserta_conjunto : expresion ADDC . ID  (130)
 
 	ID  shift 188
 	.  error
 
 
 state 170
+	saca_conjunto : expresion MINC . ID  (131)
+
+	ID  shift 189
+	.  error
+
+
+state 171
 	sentencia : llamada_conjunto PYC .  (57)
 
 	.  reduce 57
 
 
-state 171
+state 172
 	expresion : ID .  (93)
 	expresion : ID . ASI expresion  (103)
 	llamada_proc : ID . PIZ $$6 params_llamada $$7 PDE PYC  (113)
 	llamada_proc : ID . PIZ PDE PYC  (114)
 
-	PIZ  shift 158
+	PIZ  shift 159
 	ASI  shift 93
 	PYC  reduce 93
 	MAYORIQ  reduce 93
@@ -2881,47 +2901,47 @@ state 171
 	MINC  reduce 93
 
 
-state 172
+state 173
 	cuerpo : LLIZ sentencias LLDE .  (120)
 
 	.  reduce 120
 
 
-state 173
+state 174
 	sentencias : sentencias sentencia .  (69)
 
 	.  reduce 69
 
 
-state 174
+state 175
 	llamada_sivacio : EMPTY PIZ ID PDE .  (128)
 
 	.  reduce 128
 
 
-state 175
+state 176
 	llamada_length : LENGTH PIZ ID PDE .  (129)
 
 	.  reduce 129
 
 
-state 176
+state 177
 	llamada_proc : ID PIZ PDE . PYC  (114)
 
-	PYC  shift 189
+	PYC  shift 190
 	.  error
 
 
-state 177
+state 178
 	llamada_proc : ID PIZ $$6 . params_llamada $$7 PDE PYC  (113)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -2930,25 +2950,25 @@ state 177
 	NEGEXP  shift 81
 	.  error
 
-	expresion  goto 190
+	expresion  goto 191
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	params_llamada  goto 191
+	params_llamada  goto 192
 
 
-state 178
+state 179
 	switch : SWITCH PIZ ID . PDE LLIZ casos_s caso_defecto LLDE  (59)
 	switch : SWITCH PIZ ID . PDE LLIZ caso_defecto LLDE  (60)
 	switch : SWITCH PIZ ID . PDE LLIZ casos_s LLDE  (61)
 	switch : SWITCH PIZ ID . PDE LLIZ LLDE  (62)
 
-	PDE  shift 192
+	PDE  shift 193
 	.  error
 
 
-state 179
+state 180
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -2964,7 +2984,7 @@ state 179
 	while : WHILE PIZ expresion . PDE bloque  (104)
 	while : WHILE PIZ expresion . PDE PYC  (105)
 
-	PDE  shift 193
+	PDE  shift 194
 	MAYORIQ  shift 100
 	MENORIQ  shift 101
 	MAYORQ  shift 102
@@ -2980,73 +3000,73 @@ state 179
 	.  error
 
 
-state 180
+state 181
 	bloque : LLIZ . sentencias LLDE  (73)
 	bloque : LLIZ . LLDE  (75)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
-	LLDE  shift 194
+	LLDE  shift 195
 	COMPC  shift 80
 	NEGEXP  shift 81
 	.  error
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 127
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
-	sentencias  goto 195
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 128
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
+	sentencias  goto 196
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
-state 181
+state 182
 	bloque : sentencia .  (74)
 
 	.  reduce 74
 
 
-182: shift/reduce conflict (shift 196, reduce 77) on ELSE
-state 182
+183: shift/reduce conflict (shift 197, reduce 77) on ELSE
+state 183
 	if : IF expresion bloque . ELSE bloque  (76)
 	if : IF expresion bloque .  (77)
 
-	ELSE  shift 196
+	ELSE  shift 197
 	ID  reduce 77
 	NUM  reduce 77
 	BREAK  reduce 77
 	REAL  reduce 77
+	STRING  reduce 77
 	TRUE  reduce 77
 	FALSE  reduce 77
 	CARACTER  reduce 77
-	TEXTO_OUT  reduce 77
 	EMPTY  reduce 77
 	LENGTH  reduce 77
 	VOID  reduce 77
@@ -3063,54 +3083,54 @@ state 182
 	NEGEXP  reduce 77
 
 
-state 183
+state 184
 	in : IN PIZ OP_INOUT . COMA ID PDE PYC  (110)
 
-	COMA  shift 197
-	.  error
-
-
-state 184
-	out : OUT PIZ TEXTO_OUT . COMA ids PDE PYC  (106)
-	out : OUT PIZ TEXTO_OUT . PDE PYC  (107)
-
-	PDE  shift 198
-	COMA  shift 199
+	COMA  shift 198
 	.  error
 
 
 state 185
-	destruye_conjunto : DELETE PIZ ID . PDE  (127)
+	out : OUT PIZ STRING . COMA ids PDE PYC  (106)
+	out : OUT PIZ STRING . PDE PYC  (107)
 
-	PDE  shift 200
+	PDE  shift 199
+	COMA  shift 200
 	.  error
 
 
 state 186
+	destruye_conjunto : DELETE PIZ ID . PDE  (127)
+
+	PDE  shift 201
+	.  error
+
+
+state 187
 	cuerpo : LLIZ vars_s sentencias LLDE .  (119)
 
 	.  reduce 119
 
 
-state 187
+state 188
 	inserta_conjunto : expresion ADDC ID .  (130)
 
 	.  reduce 130
 
 
-state 188
+state 189
 	saca_conjunto : expresion MINC ID .  (131)
 
 	.  reduce 131
 
 
-state 189
+state 190
 	llamada_proc : ID PIZ PDE PYC .  (114)
 
 	.  reduce 114
 
 
-state 190
+state 191
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -3141,212 +3161,212 @@ state 190
 	COMA  reduce 116
 
 
-state 191
+state 192
 	llamada_proc : ID PIZ $$6 params_llamada . $$7 PDE PYC  (113)
 	params_llamada : params_llamada . COMA expresion  (115)
 	$$7 : .  (112)
 
-	COMA  shift 201
+	COMA  shift 202
 	PDE  reduce 112
 
-	$$7  goto 202
+	$$7  goto 203
 
 
-state 192
+state 193
 	switch : SWITCH PIZ ID PDE . LLIZ casos_s caso_defecto LLDE  (59)
 	switch : SWITCH PIZ ID PDE . LLIZ caso_defecto LLDE  (60)
 	switch : SWITCH PIZ ID PDE . LLIZ casos_s LLDE  (61)
 	switch : SWITCH PIZ ID PDE . LLIZ LLDE  (62)
 
-	LLIZ  shift 203
+	LLIZ  shift 204
 	.  error
 
 
-state 193
+state 194
 	while : WHILE PIZ expresion PDE . bloque  (104)
 	while : WHILE PIZ expresion PDE . PYC  (105)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
-	LLIZ  shift 180
-	PYC  shift 204
+	LLIZ  shift 181
+	PYC  shift 205
 	COMPC  shift 80
 	NEGEXP  shift 81
 	.  error
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 181
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
-	bloque  goto 205
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 182
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
+	bloque  goto 206
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
-state 194
+state 195
 	bloque : LLIZ LLDE .  (75)
 
 	.  reduce 75
 
 
-state 195
+state 196
 	sentencias : sentencias . sentencia  (69)
 	bloque : LLIZ sentencias . LLDE  (73)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
-	LLDE  shift 206
+	LLDE  shift 207
 	COMPC  shift 80
 	NEGEXP  shift 81
 	.  error
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 173
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 174
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
-
-
-state 196
-	if : IF expresion bloque ELSE . bloque  (76)
-
-	ID  shift 171
-	NUM  shift 70
-	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
-	EMPTY  shift 76
-	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
-	CREATE  shift 78
-	DELETE  shift 122
-	PIZ  shift 79
-	LLIZ  shift 180
-	COMPC  shift 80
-	NEGEXP  shift 81
-	.  error
-
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 181
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
-	bloque  goto 207
-	crea_conjunto  goto 83
-	llamada_complementario  goto 84
-	llamada_sivacio  goto 85
-	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
 state 197
-	in : IN PIZ OP_INOUT COMA . ID PDE PYC  (110)
+	if : IF expresion bloque ELSE . bloque  (76)
 
-	ID  shift 208
+	ID  shift 172
+	NUM  shift 70
+	REAL  shift 71
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
+	EMPTY  shift 76
+	LENGTH  shift 77
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
+	CREATE  shift 78
+	DELETE  shift 123
+	PIZ  shift 79
+	LLIZ  shift 181
+	COMPC  shift 80
+	NEGEXP  shift 81
 	.  error
+
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 182
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
+	bloque  goto 208
+	crea_conjunto  goto 83
+	llamada_complementario  goto 84
+	llamada_sivacio  goto 85
+	llamada_length  goto 86
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
 state 198
-	out : OUT PIZ TEXTO_OUT PDE . PYC  (107)
+	in : IN PIZ OP_INOUT COMA . ID PDE PYC  (110)
 
-	PYC  shift 209
+	ID  shift 209
 	.  error
 
 
 state 199
-	out : OUT PIZ TEXTO_OUT COMA . ids PDE PYC  (106)
+	out : OUT PIZ STRING PDE . PYC  (107)
 
-	ID  shift 210
+	PYC  shift 210
 	.  error
-
-	ids  goto 211
 
 
 state 200
+	out : OUT PIZ STRING COMA . ids PDE PYC  (106)
+
+	ID  shift 211
+	.  error
+
+	ids  goto 212
+
+
+state 201
 	destruye_conjunto : DELETE PIZ ID PDE .  (127)
 
 	.  reduce 127
 
 
-state 201
+state 202
 	params_llamada : params_llamada COMA . expresion  (115)
 
 	ID  shift 69
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
 	CREATE  shift 78
@@ -3355,88 +3375,88 @@ state 201
 	NEGEXP  shift 81
 	.  error
 
-	expresion  goto 212
+	expresion  goto 213
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
 
 
-state 202
+state 203
 	llamada_proc : ID PIZ $$6 params_llamada $$7 . PDE PYC  (113)
 
-	PDE  shift 213
+	PDE  shift 214
 	.  error
 
 
-state 203
+state 204
 	switch : SWITCH PIZ ID PDE LLIZ . casos_s caso_defecto LLDE  (59)
 	switch : SWITCH PIZ ID PDE LLIZ . caso_defecto LLDE  (60)
 	switch : SWITCH PIZ ID PDE LLIZ . casos_s LLDE  (61)
 	switch : SWITCH PIZ ID PDE LLIZ . LLDE  (62)
 
-	CASE  shift 214
-	DEFAULT  shift 215
-	LLDE  shift 216
+	CASE  shift 215
+	DEFAULT  shift 216
+	LLDE  shift 217
 	.  error
 
-	casos_s  goto 217
-	caso_defecto  goto 218
+	casos_s  goto 218
+	caso_defecto  goto 219
 
 
-state 204
+state 205
 	while : WHILE PIZ expresion PDE PYC .  (105)
 
 	.  reduce 105
 
 
-state 205
+state 206
 	while : WHILE PIZ expresion PDE bloque .  (104)
 
 	.  reduce 104
 
 
-state 206
+state 207
 	bloque : LLIZ sentencias LLDE .  (73)
 
 	.  reduce 73
 
 
-state 207
+state 208
 	if : IF expresion bloque ELSE bloque .  (76)
 
 	.  reduce 76
 
 
-state 208
+state 209
 	in : IN PIZ OP_INOUT COMA ID . PDE PYC  (110)
 
-	PDE  shift 219
+	PDE  shift 220
 	.  error
 
 
-state 209
-	out : OUT PIZ TEXTO_OUT PDE PYC .  (107)
+state 210
+	out : OUT PIZ STRING PDE PYC .  (107)
 
 	.  reduce 107
 
 
-state 210
+state 211
 	ids : ID .  (109)
 
 	.  reduce 109
 
 
-state 211
-	out : OUT PIZ TEXTO_OUT COMA ids . PDE PYC  (106)
+state 212
+	out : OUT PIZ STRING COMA ids . PDE PYC  (106)
 	ids : ids . COMA ID  (108)
 
-	PDE  shift 220
-	COMA  shift 221
+	PDE  shift 221
+	COMA  shift 222
 	.  error
 
 
-state 212
+state 213
 	expresion : expresion . SUM expresion  (78)
 	expresion : expresion . RES expresion  (79)
 	expresion : expresion . MUL expresion  (80)
@@ -3467,499 +3487,499 @@ state 212
 	COMA  reduce 115
 
 
-state 213
+state 214
 	llamada_proc : ID PIZ $$6 params_llamada $$7 PDE . PYC  (113)
 
-	PYC  shift 222
+	PYC  shift 223
 	.  error
-
-
-state 214
-	casos_s : CASE . literal PUNTOS sentencias BREAK PYC  (64)
-	casos_s : CASE . literal PUNTOS BREAK PYC  (66)
-
-	NUM  shift 223
-	CARACTER  shift 224
-	.  error
-
-	literal  goto 225
 
 
 state 215
-	caso_defecto : DEFAULT . PUNTOS sentencias  (71)
-	caso_defecto : DEFAULT . PUNTOS  (72)
+	casos_s : CASE . literal PUNTOS sentencias BREAK PYC  (64)
+	casos_s : CASE . literal PUNTOS BREAK PYC  (66)
 
-	PUNTOS  shift 226
+	NUM  shift 224
+	CARACTER  shift 225
 	.  error
+
+	literal  goto 226
 
 
 state 216
+	caso_defecto : DEFAULT . PUNTOS sentencias  (71)
+	caso_defecto : DEFAULT . PUNTOS  (72)
+
+	PUNTOS  shift 227
+	.  error
+
+
+state 217
 	switch : SWITCH PIZ ID PDE LLIZ LLDE .  (62)
 
 	.  reduce 62
 
 
-state 217
+state 218
 	switch : SWITCH PIZ ID PDE LLIZ casos_s . caso_defecto LLDE  (59)
 	switch : SWITCH PIZ ID PDE LLIZ casos_s . LLDE  (61)
 	casos_s : casos_s . CASE literal PUNTOS sentencias BREAK PYC  (63)
 	casos_s : casos_s . CASE literal PUNTOS BREAK PYC  (65)
 
-	CASE  shift 227
-	DEFAULT  shift 215
-	LLDE  shift 228
+	CASE  shift 228
+	DEFAULT  shift 216
+	LLDE  shift 229
 	.  error
 
-	caso_defecto  goto 229
-
-
-state 218
-	switch : SWITCH PIZ ID PDE LLIZ caso_defecto . LLDE  (60)
-
-	LLDE  shift 230
-	.  error
+	caso_defecto  goto 230
 
 
 state 219
-	in : IN PIZ OP_INOUT COMA ID PDE . PYC  (110)
+	switch : SWITCH PIZ ID PDE LLIZ caso_defecto . LLDE  (60)
 
-	PYC  shift 231
+	LLDE  shift 231
 	.  error
 
 
 state 220
-	out : OUT PIZ TEXTO_OUT COMA ids PDE . PYC  (106)
+	in : IN PIZ OP_INOUT COMA ID PDE . PYC  (110)
 
 	PYC  shift 232
 	.  error
 
 
 state 221
-	ids : ids COMA . ID  (108)
+	out : OUT PIZ STRING COMA ids PDE . PYC  (106)
 
-	ID  shift 233
+	PYC  shift 233
 	.  error
 
 
 state 222
+	ids : ids COMA . ID  (108)
+
+	ID  shift 234
+	.  error
+
+
+state 223
 	llamada_proc : ID PIZ $$6 params_llamada $$7 PDE PYC .  (113)
 
 	.  reduce 113
 
 
-state 223
+state 224
 	literal : NUM .  (67)
 
 	.  reduce 67
 
 
-state 224
+state 225
 	literal : CARACTER .  (68)
 
 	.  reduce 68
 
 
-state 225
+state 226
 	casos_s : CASE literal . PUNTOS sentencias BREAK PYC  (64)
 	casos_s : CASE literal . PUNTOS BREAK PYC  (66)
 
-	PUNTOS  shift 234
+	PUNTOS  shift 235
 	.  error
 
 
-state 226
+state 227
 	caso_defecto : DEFAULT PUNTOS . sentencias  (71)
 	caso_defecto : DEFAULT PUNTOS .  (72)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
 	COMPC  shift 80
 	NEGEXP  shift 81
 	LLDE  reduce 72
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 127
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
-	sentencias  goto 235
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 128
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
+	sentencias  goto 236
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
-
-
-state 227
-	casos_s : casos_s CASE . literal PUNTOS sentencias BREAK PYC  (63)
-	casos_s : casos_s CASE . literal PUNTOS BREAK PYC  (65)
-
-	NUM  shift 223
-	CARACTER  shift 224
-	.  error
-
-	literal  goto 236
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
 state 228
+	casos_s : casos_s CASE . literal PUNTOS sentencias BREAK PYC  (63)
+	casos_s : casos_s CASE . literal PUNTOS BREAK PYC  (65)
+
+	NUM  shift 224
+	CARACTER  shift 225
+	.  error
+
+	literal  goto 237
+
+
+state 229
 	switch : SWITCH PIZ ID PDE LLIZ casos_s LLDE .  (61)
 
 	.  reduce 61
 
 
-state 229
+state 230
 	switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto . LLDE  (59)
 
-	LLDE  shift 237
+	LLDE  shift 238
 	.  error
 
 
-state 230
+state 231
 	switch : SWITCH PIZ ID PDE LLIZ caso_defecto LLDE .  (60)
 
 	.  reduce 60
 
 
-state 231
+state 232
 	in : IN PIZ OP_INOUT COMA ID PDE PYC .  (110)
 
 	.  reduce 110
 
 
-state 232
-	out : OUT PIZ TEXTO_OUT COMA ids PDE PYC .  (106)
+state 233
+	out : OUT PIZ STRING COMA ids PDE PYC .  (106)
 
 	.  reduce 106
 
 
-state 233
+state 234
 	ids : ids COMA ID .  (108)
 
 	.  reduce 108
 
 
-state 234
+state 235
 	casos_s : CASE literal PUNTOS . sentencias BREAK PYC  (64)
 	casos_s : CASE literal PUNTOS . BREAK PYC  (66)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
-	BREAK  shift 238
+	BREAK  shift 239
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
 	COMPC  shift 80
 	NEGEXP  shift 81
 	.  error
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 127
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
-	sentencias  goto 239
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 128
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
+	sentencias  goto 240
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
-state 235
+state 236
 	sentencias : sentencias . sentencia  (69)
 	caso_defecto : DEFAULT PUNTOS sentencias .  (71)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
 	COMPC  shift 80
 	NEGEXP  shift 81
 	LLDE  reduce 71
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 173
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 174
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
-
-
-state 236
-	casos_s : casos_s CASE literal . PUNTOS sentencias BREAK PYC  (63)
-	casos_s : casos_s CASE literal . PUNTOS BREAK PYC  (65)
-
-	PUNTOS  shift 240
-	.  error
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
 state 237
+	casos_s : casos_s CASE literal . PUNTOS sentencias BREAK PYC  (63)
+	casos_s : casos_s CASE literal . PUNTOS BREAK PYC  (65)
+
+	PUNTOS  shift 241
+	.  error
+
+
+state 238
 	switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE .  (59)
 
 	.  reduce 59
 
 
-state 238
+state 239
 	casos_s : CASE literal PUNTOS BREAK . PYC  (66)
 
-	PYC  shift 241
+	PYC  shift 242
 	.  error
-
-
-state 239
-	casos_s : CASE literal PUNTOS sentencias . BREAK PYC  (64)
-	sentencias : sentencias . sentencia  (69)
-
-	ID  shift 171
-	NUM  shift 70
-	BREAK  shift 242
-	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
-	EMPTY  shift 76
-	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
-	CREATE  shift 78
-	DELETE  shift 122
-	PIZ  shift 79
-	COMPC  shift 80
-	NEGEXP  shift 81
-	.  error
-
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 173
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
-	crea_conjunto  goto 83
-	llamada_complementario  goto 84
-	llamada_sivacio  goto 85
-	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
 
 
 state 240
-	casos_s : casos_s CASE literal PUNTOS . sentencias BREAK PYC  (63)
-	casos_s : casos_s CASE literal PUNTOS . BREAK PYC  (65)
+	casos_s : CASE literal PUNTOS sentencias . BREAK PYC  (64)
+	sentencias : sentencias . sentencia  (69)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
 	BREAK  shift 243
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
 	COMPC  shift 80
 	NEGEXP  shift 81
 	.  error
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 127
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
-	sentencias  goto 244
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 174
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
 state 241
+	casos_s : casos_s CASE literal PUNTOS . sentencias BREAK PYC  (63)
+	casos_s : casos_s CASE literal PUNTOS . BREAK PYC  (65)
+
+	ID  shift 172
+	NUM  shift 70
+	BREAK  shift 244
+	REAL  shift 71
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
+	EMPTY  shift 76
+	LENGTH  shift 77
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
+	CREATE  shift 78
+	DELETE  shift 123
+	PIZ  shift 79
+	COMPC  shift 80
+	NEGEXP  shift 81
+	.  error
+
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 128
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
+	sentencias  goto 245
+	crea_conjunto  goto 83
+	llamada_complementario  goto 84
+	llamada_sivacio  goto 85
+	llamada_length  goto 86
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
+
+
+state 242
 	casos_s : CASE literal PUNTOS BREAK PYC .  (66)
 
 	.  reduce 66
 
 
-state 242
-	casos_s : CASE literal PUNTOS sentencias BREAK . PYC  (64)
-
-	PYC  shift 245
-	.  error
-
-
 state 243
-	casos_s : casos_s CASE literal PUNTOS BREAK . PYC  (65)
+	casos_s : CASE literal PUNTOS sentencias BREAK . PYC  (64)
 
 	PYC  shift 246
 	.  error
 
 
 state 244
+	casos_s : casos_s CASE literal PUNTOS BREAK . PYC  (65)
+
+	PYC  shift 247
+	.  error
+
+
+state 245
 	casos_s : casos_s CASE literal PUNTOS sentencias . BREAK PYC  (63)
 	sentencias : sentencias . sentencia  (69)
 
-	ID  shift 171
+	ID  shift 172
 	NUM  shift 70
-	BREAK  shift 247
+	BREAK  shift 248
 	REAL  shift 71
-	TRUE  shift 72
-	FALSE  shift 73
-	CARACTER  shift 74
-	TEXTO_OUT  shift 75
+	STRING  shift 72
+	TRUE  shift 73
+	FALSE  shift 74
+	CARACTER  shift 75
 	EMPTY  shift 76
 	LENGTH  shift 77
-	VOID  shift 116
-	SWITCH  shift 117
-	WHILE  shift 118
-	IF  shift 119
-	IN  shift 120
-	OUT  shift 121
+	VOID  shift 117
+	SWITCH  shift 118
+	WHILE  shift 119
+	IF  shift 120
+	IN  shift 121
+	OUT  shift 122
 	CREATE  shift 78
-	DELETE  shift 122
+	DELETE  shift 123
 	PIZ  shift 79
 	COMPC  shift 80
 	NEGEXP  shift 81
 	.  error
 
-	proc  goto 125
-	expresion  goto 126
-	sentencia  goto 173
-	switch  goto 128
-	if  goto 129
-	while  goto 130
-	in  goto 131
-	out  goto 132
-	llamada_proc  goto 133
-	llamada_conjunto  goto 134
+	proc  goto 126
+	expresion  goto 127
+	sentencia  goto 174
+	switch  goto 129
+	if  goto 130
+	while  goto 131
+	in  goto 132
+	out  goto 133
+	llamada_proc  goto 134
+	llamada_conjunto  goto 135
 	crea_conjunto  goto 83
 	llamada_complementario  goto 84
 	llamada_sivacio  goto 85
 	llamada_length  goto 86
-	inserta_conjunto  goto 136
-	saca_conjunto  goto 137
-	destruye_conjunto  goto 138
+	inserta_conjunto  goto 137
+	saca_conjunto  goto 138
+	destruye_conjunto  goto 139
 
 
-state 245
+state 246
 	casos_s : CASE literal PUNTOS sentencias BREAK PYC .  (64)
 
 	.  reduce 64
 
 
-state 246
+state 247
 	casos_s : casos_s CASE literal PUNTOS BREAK PYC .  (65)
 
 	.  reduce 65
 
 
-state 247
+state 248
 	casos_s : casos_s CASE literal PUNTOS sentencias BREAK . PYC  (63)
 
-	PYC  shift 248
+	PYC  shift 249
 	.  error
 
 
-state 248
+state 249
 	casos_s : casos_s CASE literal PUNTOS sentencias BREAK PYC .  (63)
 
 	.  reduce 63
 
 
-State 182 contains 1 shift/reduce conflict.
+State 183 contains 1 shift/reduce conflict.
 
 
-70 terminals, 53 nonterminals
-133 grammar rules, 249 states
+69 terminals, 53 nonterminals
+133 grammar rules, 250 states

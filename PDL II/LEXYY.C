@@ -797,7 +797,7 @@ return OP_INOUT;
 	YY_BREAK
 case 44:
 # line 74 "lexico.l"
-return TEXTO_OUT;
+{yylval.cadena = strdup(yytext); yylval.tipo = cadena; return STRING;}
 	YY_BREAK
 case 45:
 # line 75 "lexico.l"
