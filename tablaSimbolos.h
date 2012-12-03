@@ -5,18 +5,25 @@
  * Author: José Manuel Serrano Mármol
  * Author: Raúl Salazar de Torres
  */
+
 #include <string.h>
 
 #ifndef TABLASIMBOLOS_H
 #define	TABLASIMBOLOS_H
 
-//CONSTANTES definidas
-#define TAM_TABLA_SIMBOLOS 1000
+/*------------------------ CONSTANTES ---------------------------*/
+#define TAM_TABLA_SIMBOLOS 1000 /** Numero máximo de entradas en la tabla de simbolos */
 
-//Campo ENTRADA en TS
+
+/*------------------------ DEFINICIONES ---------------------------*/
+
+/** Enumeración para el tipo de entrada en la tabla de símbolos*/
 typedef enum  { marca = 1, proc, func, var, paramForm, rangoArray, defTipo} tEntrada;
+
+/** Enumeración para el tipo de dato insertado en la tabla de simbolos*/
 typedef enum { entero = 1, real, booleano, caracter, cadena, conjunto, desconocido, sinTipo} tDato ;
 
+/** Estructura de una entrada en la tabla de símbolos*/
 typedef struct{
     tDato tipoDato;
     char nombre[100];
@@ -25,25 +32,31 @@ typedef struct{
     unsigned int linea;
 }entrada;
 
-//Estructura de datos
-entrada TS[TAM_TABLA_SIMBOLOS]; //Tabla de simbolos
-int topeTS;                 //Indica por donde va la pila TS
 
-//Funciones
+entrada TS[TAM_TABLA_SIMBOLOS]; /** Tabla de simbolos*/
+int topeTS;                     /** Tope de la talba de simbolos*/
+
+
+
+/*------------------------ FUNCIONES ---------------------------*/
+
 void createTS();
 void pushTS(entrada e);
 entrada popTS();
+
 void borrarHastaMarcaTS();
+
 int existeEntrada(char * nombre);
 int existeEntradaDefTipo(char * nombre);
 int existeEntradaLocal(char * nombre);
+
 void imprimirTS();
+
 entrada rellenaEntrada(unsigned int linea, char* nombre, tDato tipoDato, tEntrada tipoEntrda, unsigned int numParam);
 
 int pushTSParametroFormal(unsigned int linea, char* nombre, tDato tipoDato);
 void copiaParametrosFormales();
 
-//Comprobación de procedimientos y parámetros
 int compruebaParametroProcedimiento(char * nombreProc, tDato tipoVariable, int posicion);
 int compruebaNumeroParametros(char * nombreProc, int numTotalParam);
 
