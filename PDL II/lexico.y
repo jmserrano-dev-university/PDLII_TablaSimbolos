@@ -307,13 +307,13 @@ if : IF expresion bloque ELSE bloque { if($2.tipo != booleano){ printf("\n\n* Er
 ;
 
 
-expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == cadena)){
+expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == cadena || $1.tipo == conjunto /*UNION*/)){
 										$$.tipo = $1.tipo;
 									  }else{
 										printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
 									  }
 									}
-| expresion RES expresion{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
+| expresion RES expresion{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == conjunto /*DIFERENCIA*/)){
 								$$.tipo = $1.tipo;
 							  }else{
 								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
@@ -326,7 +326,7 @@ expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == enter
 								
 							  }
 							}
-| expresion DIV expresion { if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
+| expresion DIV expresion { if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == conjunto /*INTERSECCION*/)){
 								$$.tipo = $1.tipo;
 							  }else{
 								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
@@ -389,7 +389,7 @@ expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == enter
 								
 							  }
 							}
-| NUM //{printf("\nENTERO: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| NUM
 | PIZ expresion PDE {$$.tipo = $2.tipo;}
 | NEGEXP expresion	{ if($2.tipo == booleano){
 							$$.tipo = booleano;
@@ -400,36 +400,31 @@ expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == enter
 					}
 | ID { if((tipoAux = existeEntradaLocal($1.cadena)) != 0){
 		$$.tipo = tipoAux;
-		//printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
 	   }else{
 		if((tipoAux = existeEntrada($1.cadena)) != 0){
 			$$.tipo = tipoAux;
-			//printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
 		}else{
 			printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
 			
 		}
 	   }
      }
-| REAL //{printf("\nREAL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
-| TRUE //{printf("\nBOOL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
-| FALSE //{printf("\nBOOL: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
-| CARACTER //{printf("\nCHAR: %s con TIPO: %d\n", $1.cadena, $1.tipo);}
+| REAL
+| TRUE
+| FALSE
+| CARACTER
 | STRING
-| crea_conjunto 
+| crea_conjunto {$$.tipo = $1.tipo;}
 | llamada_complementario 
-| llamada_sivacio 
-| llamada_length 
+| llamada_sivacio {$$.tipo = $1.tipo;}
+| llamada_length {$$.tipo = $1.tipo;}
 | ID ASI expresion { if((tipoAux = existeEntradaLocal($1.cadena)) != 0){
 						$$.tipo = tipoAux;
-						//printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
 					   }else{
 						if((tipoAux = existeEntrada($1.cadena)) != 0){
 						 $$.tipo = tipoAux;
-						 //printf("\nID: %s con TIPO: %d\n",$1.cadena, $$.tipo);
 						}else{
 							printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
-							
 						}
 					   }
 					   
@@ -438,8 +433,6 @@ expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == enter
 							
 					   }
 					 }
-
-/*{printf("\nASIG: %s con TIPO: %d\n",$1.cadena, $3.tipo);}*/
 ;
 
 while : WHILE PIZ expresion PDE bloque { if($3.tipo != booleano){ printf("\n\n* Error linea %d: Expresion en while no es booleana",linea_actual); } }
@@ -502,23 +495,22 @@ cuerpo : LLIZ vars_s sentencias LLDE
 ;
 
 llamada_conjunto : inserta_conjunto
-| saca_conjunto | destruye_conjunto
+| saca_conjunto 
+| destruye_conjunto
 ;
 
 crea_conjunto : CREATE PIZ PDE {
 									$$.tipo = conjunto;
 							   }
 ;
-destruye_conjunto : DELETE PIZ ID PDE {
-										if($3.tipo != conjunto){
-											printf("\n\n *Error linea %d: El ID no es de tipo conjunto",linea_actual);
+destruye_conjunto : DELETE PIZ ID PDE { if( existeEntradaLocal($3.cadena) != conjunto && existeEntrada($3.cadena) != conjunto){
+											printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
 										}
 									  }
 ;
-llamada_sivacio : EMPTY PIZ ID PDE {
-										if($3.tipo != conjunto){
-											printf("\n\n *Error linea %d: El ID no es de tipo conjunto",linea_actual);
-											
+llamada_sivacio : EMPTY PIZ ID PDE {  	
+										if( existeEntradaLocal($3.cadena) != conjunto && existeEntrada($3.cadena) != conjunto){
+											printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
 										}else{
 											$$.tipo = booleano;
 										}
@@ -526,49 +518,36 @@ llamada_sivacio : EMPTY PIZ ID PDE {
 ;
 
 llamada_length : LENGTH PIZ ID PDE{
-										if($3.tipo != conjunto){
-											printf("\n\n *Error linea %d: El ID no es de tipo conjunto",linea_actual);
-											
-										}else{
-											$$.tipo = entero;
-										}
+									if( existeEntradaLocal($3.cadena) != conjunto && existeEntrada($3.cadena) != conjunto){
+										printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
+									}else{
+										$$.tipo = entero;
+									}
 								  }
 ;
 
-//inserta_conjunto : INSERT PIZ expresion COMA ID PDE
-//;
-inserta_conjunto : expresion ADDC ID {
-										if($1.tipo != conjunto){
-											printf("\n\n* Error linea %d: La variable no es un conjunto",linea_actual);
+inserta_conjunto : ID ADDC expresion {
+										if( existeEntradaLocal($1.cadena) != conjunto && existeEntrada($1.cadena) != conjunto){
+											printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
 										}
 									 }
 ;
 
-//saca_conjunto : EXTRACT PIZ expresion COMA ID PDE
-//;
-saca_conjunto : expresion MINC ID{
-									if($1.tipo != conjunto){
-										printf("\n\n* Error linea %d: La variable no es un conjunto",linea_actual);
+saca_conjunto : ID MINC expresion{
+									if( existeEntradaLocal($1.cadena) != conjunto && existeEntrada($1.cadena) != conjunto){
+										printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
 									}
 								 }
 ;
 
-//llamada_diferencia : MINUS PIZ expresion COMA expresion PDE
-//;
 
-//llamada_union : UNION PIZ expresion COMA expresion PDE
-//;
-
-//llamada_interseccion : INTERSECTION PIZ expresion COMA expresion PDE
-//;
-
-//llamada_complementario : NEG PIZ expresion PDE
-//;
-llamada_complementario : COMPC expresion {
-											if($2.tipo != conjunto){
-												printf("\n\n* Error linea %d: La variable no es un conjunto",linea_actual);
-											}
-										 }
+llamada_complementario : COMPC ID {
+									if( existeEntradaLocal($2.cadena) != conjunto && existeEntrada($2.cadena) != conjunto){
+										printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
+									}else{
+										$$.tipo = conjunto;
+									}
+								  }
 ;
 
 %%

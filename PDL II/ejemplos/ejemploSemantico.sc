@@ -12,9 +12,34 @@ void main(){
 	bool h,f;
 	float ca;
 	
+	/*CONJUNTOS*/
+	set conj,uni,inter,dif;
 	
+	conj = create();
 	
-	void procedimiento(int a, int b, int c){
+	if(empty(conj)){
+	
+	}
+	
+	a = length(conj);
+	
+	/*Insertamos en conjunto*/
+	conj <-- conj;
+	
+	/*Sacamos del conjunto*/
+	conj --> ca;
+	
+	/*conjunto*/
+	~conj;
+	
+	/*Operaciones: Union , Interseccion y Diferencia*/
+	uni = conj + conj;
+	inter = conj / conj;
+	dif = conj - conj;
+	
+	delete(conj);
+	
+	/*void procedimiento(int a, int b, int c){
 		int y,e,f;
 
 		void proc1(){
@@ -53,4 +78,5 @@ void main(){
 		default:
 			printf("NADA de NADA");
 	}
+	*/
 }
