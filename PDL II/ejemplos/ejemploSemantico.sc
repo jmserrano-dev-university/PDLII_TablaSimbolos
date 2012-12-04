@@ -39,7 +39,7 @@ void main(){
 	
 	delete(conj);
 	
-	/*void procedimiento(int a, int b, int c){
+	void procedimiento(int a, int b, int c){
 		int y,e,f;
 
 		void proc1(){
@@ -78,5 +78,5 @@ void main(){
 		default:
 			printf("NADA de NADA");
 	}
-	*/
+	
 }
