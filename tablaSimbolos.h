@@ -21,7 +21,7 @@
 typedef enum  { marca = 1, proc, func, var, paramForm, rangoArray, defTipo} tEntrada;
 
 /** Enumeración para el tipo de dato insertado en la tabla de simbolos*/
-typedef enum { entero = 1, real, booleano, caracter, cadena, conjunto, desconocido, sinTipo} tDato ;
+typedef enum { entero = 1, real, booleano, caracter, cadena, conjunto, desconocido, sinTipo, errorTipo} tDato ;
 
 /** Estructura de una entrada en la tabla de símbolos*/
 typedef struct{

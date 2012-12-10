@@ -8,11 +8,16 @@ FILE *abrir_entrada(int argc, char **argv){
 	FILE *f= NULL;
 	if (argc > 1) {
 		f = fopen(argv[1],"r");
+		
+		printf("\n\n*----------------------------*\n");
+		printf("*--  ANALIZADOR SEMANTICO  --*\n");
+		printf("*----------------------------*\n\n");
+		
 		if (f==NULL) {
-			fprintf(stderr,"Fichero '%s' no encontrado",argv[1]);
+			fprintf(stderr,"* ERROR: Fichero '%s' no encontrado :')",argv[1]);
 			exit(1);
 		}else 
-			printf("Leyendo fichero '%s'.",argv[1]);
+			printf("--> Leyendo fichero '%s' :) \n\n",argv[1]);
 	}else 
 		printf("Leyendo entrada standard");
 		return f;

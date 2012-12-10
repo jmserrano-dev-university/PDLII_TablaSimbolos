@@ -57,14 +57,16 @@ void main(){
 	
 	
 	
-	if( asd ){
+	if( 2 < 3.0){
 		printf("HOLA QUE TAL");
 	}else{
 		printf("ADIOS");
 	}
 	
-	while(a < 3){
-		printf("HOLA");
+	while(a < 3.0){
+		if(3.0 < ca){
+			printf("ERROR, XD!");
+		}
 	}
 	
 	switch(a){

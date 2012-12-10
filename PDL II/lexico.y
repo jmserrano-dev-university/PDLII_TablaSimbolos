@@ -12,21 +12,21 @@ typedef struct{
 }atributos;
 
 #define YYSTYPE atributos
-/*Fin Declaración*/
+	/*Fin Declaración*/
+	int linea_actual = 1;	 //Almacena la línea por la que vamos
+	tDato tipoAux; 			 //Almacenamos el tipo para las declaraciones de VARIABLES
+	int numParametros;		 //Número de parámetros para los procedimientos
+	int linea_if;			 //Línea que nos indica la linea de la cabecera del id
+	int linea_aux;			 //Línea actual auxiliar para el if
+	int contadorErrores = 0; //Contador de errores
 
-int linea_actual = 1;
-
-/* Se debe modificar la implementación la función yyerror. En este caso simplemente se escribe el mensaje en pantalla, por lo que habrá que añadir previamente la declaración de la variable global asociada al número de línea (declarada en la práctica anterior en el fichero fuente del flex) y modificar yyerror para que se muestre dicho número de línea */
-void yyerror (char *msg){
-	char buffer[50];
-	sprintf(buffer,"%s %d",msg,linea_actual);
-	fprintf(stderr, "\n");
-	fprintf(stderr,buffer);
-}
-
-tDato tipoAux; //Almacenamos el tipo para las declaraciones de VARIABLES
-int numParametros;
-char nombreProc[100];
+	/* Se debe modificar la implementación la función yyerror. En este caso simplemente se escribe el mensaje en pantalla, por lo que habrá que añadir previamente la declaración de la variable global asociada al número de línea (declarada en la práctica anterior en el fichero fuente del flex) y modificar yyerror para que se muestre dicho número de línea */
+	void yyerror (char *msg){
+		char buffer[50];
+		sprintf(buffer,"%s %d",msg,linea_actual);
+		fprintf(stderr, "\n");
+		fprintf(stderr,buffer);
+	}
 
 %}
 
@@ -56,13 +56,32 @@ char nombreProc[100];
 %left ADDC MINC COMPC
 %left NEGEXP
 
-
-
-
-
 %%
+
 /* Sección de producciones que definen la gramática */
-prog : dec1 dec2 | dec2 {createTS();}
+
+prog : dec1 dec2 {
+					if(contadorErrores == 0){
+						printf("\n\n-------------------------------\n");
+						printf(" -- Generacion correcta.\n");
+						printf("\n-------------------------------\n\n");
+					}else{
+						printf("\n\n-------------------------------\n");
+						printf("\n-- Se ha encontrado %d errores.\n", contadorErrores);
+						printf("\n-------------------------------\n\n");
+					}
+				 }
+| dec2 {
+			if(contadorErrores == 0){
+				printf("\n\n-------------------------------\n");
+				printf(" -- Generacion correcta.\n\n");
+				printf("\n-------------------------------\n\n");
+			}else{
+				printf("\n\n-------------------------------\n");
+				printf("\n--Se ha encontrado %d errores.\n", contadorErrores);
+				printf("\n-------------------------------\n\n");
+			}
+	   }
 ;
 dec1 : incs_s defs_s tipos_s
 | defs_s tipos_s 
@@ -81,7 +100,7 @@ incs_s : incs_s incs | incs
 ;
 defs_s : defs_s defs defs 
 ;
-tipos_s : tipos_s tipos | tipos /*PYC*/
+tipos_s : tipos_s tipos | tipos
 ;
 vars_s : vars_s vars | vars
 ;
@@ -97,7 +116,9 @@ tipos : TYPEDEF tipo ID PYC {
 								if(existeEntradaLocal($3.cadena) == 0){
 									pushTS(rellenaEntrada(linea_actual,$3.cadena,$2.tipo,defTipo,0));
 								}else{
-									printf("\n\n*Error linea %d: El identificador de la refinicion de tipo ya existe",linea_actual);
+									printf("\n* Error linea: %d. El identificador \" %s \" de la refinicion de tipo ya existe.\n",linea_actual, $3.cadena);
+									$$.tipo = errorTipo;
+									contadorErrores++;
 								}
 							}
 ;
@@ -112,8 +133,9 @@ tipo : INT {$$.tipo = entero;}
 		if((tipoAux = existeEntradaDefTipo($1.cadena)) != 0){
 		 $$.tipo = tipoAux;
 		}else{
-			printf("\n\n* Error linea %d: Tipo propio no definido",linea_actual);
-			
+			printf("\n* Error linea: %d. Tipo \" %s \" propio no definido.\n",linea_actual, $1.cadena);
+			$$.tipo = errorTipo;
+			contadorErrores++;
 		}
 	 }
 | BOOL {$$.tipo = booleano;}
@@ -129,21 +151,25 @@ variables : variables COMA variables_s
 
 variables_s : variable
 | variable ASI expresion { 				   
-						   if(tipoAux != $3.tipo){
-								printf("\n\n* Error linea: %d. Asignacion de tipo incorrecta en la declaración",linea_actual);
-								
+						   if(tipoAux != $3.tipo && $3.tipo != errorTipo){
+								printf("\n* Error linea: %d. Asignacion de tipo incorrecta en la declaracion de la variable \" %s\".\n",linea_actual, $1.cadena);
+								$$.tipo = errorTipo;
+								contadorErrores++;
 						   }
+						   
+						   if($3.tipo == errorTipo){ //Subimos el error
+								$$.tipo = errorTipo;
+						   }
+						   
 						 }
-
-
- 
 ;
+
 variable : ID { if(existeEntradaLocal($1.cadena) == 0){
-					pushTS(rellenaEntrada(linea_actual,$1.cadena,tipoAux,var,0)); 
-					/*imprimirTS();*/
+					pushTS(rellenaEntrada(linea_actual,$1.cadena,tipoAux,var,0));
 			    }else{
-					printf("\n\n* Error linea: %d: Identificador declarado anteriormente\n",linea_actual);
-					
+					printf("\n* Error linea: %d. Identificador \" %s \" declarado anteriormente.\n",linea_actual, $1.cadena);
+					$$.tipo = errorTipo;
+					contadorErrores++;
 				}
 			  }
 /*| ID CORI NUM CORD ¿ESTO SE PONE?*/
@@ -151,26 +177,44 @@ variable : ID { if(existeEntradaLocal($1.cadena) == 0){
 
 
 proc : VOID ID PIZ{if(existeEntradaLocal($2.cadena) != 0){
-						printf("\n\n* Error linea: %d: Funcion ya declarada",linea_actual);
-						
+						printf("\n* Error linea: %d. Funcion \" %s \" ya declarada.\n",linea_actual, $2.cadena);
+						$$.tipo = errorTipo;
+						contadorErrores++;
 					  }else{
 						pushTS(rellenaEntrada(linea_actual,$2.cadena,sinTipo,proc,0));
-						/*imprimirTS();*/
 					  }
-				   } params PDE {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); copiaParametrosFormales(); /*imprimirTS();*/} cuerpo {borrarHastaMarcaTS(); /*imprimirTS();*/}
+				   } params PDE {
+									pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0));
+									copiaParametrosFormales();
+								} cuerpo {borrarHastaMarcaTS();}
 				   
 | VOID ID PIZ {if(existeEntradaLocal($2.cadena) != 0){
-					printf("\n\n* Error linea: %d: Funcion ya declarada",linea_actual);
-					
+					printf("\n* Error linea: %d. Funcion \" %s \" ya declarada.",linea_actual, $2.cadena);
+					$$.tipo = errorTipo;
+					contadorErrores++;
 				  }else{
 					pushTS(rellenaEntrada(linea_actual,$2.cadena,sinTipo,proc,0));
-					/*imprimirTS();*/
 				  }
-			   } PDE {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); copiaParametrosFormales(); /*imprimirTS();*/}cuerpo {borrarHastaMarcaTS(); /*imprimirTS();*/}
+			   } PDE {
+						pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0));
+						copiaParametrosFormales();
+					 }cuerpo {borrarHastaMarcaTS();}
 ;
 
-params : params COMA tipo ID {if(!pushTSParametroFormal(linea_actual, $4.cadena, $3.tipo)){ printf("\n\n* Error linea: %d: Parametro formal existente\n",linea_actual); } /*else imprimirTS();*/}
-| tipo ID {if(!pushTSParametroFormal(linea_actual, $2.cadena, $1.tipo)){ printf("\n\n* Error linea: %d: Parametro formal existente\n",linea_actual); }/*else imprimirTS();*/}
+params : params COMA tipo ID {
+								if(!pushTSParametroFormal(linea_actual, $4.cadena, $3.tipo)){
+									printf("\n* Error linea: %d. El parametro formal \" %s \" existente.\n",linea_actual, $4.cadena);
+									$$.tipo = errorTipo;
+									contadorErrores++;
+								}
+							 }
+| tipo ID {
+				if(!pushTSParametroFormal(linea_actual, $2.cadena, $1.tipo)){
+					printf("\n* Error linea: %d. Parametro formal \" %s \" existente.\n",linea_actual, $2.cadena);
+					$$.tipo  = errorTipo;
+					contadorErrores++;
+				}
+		  }
 ;
 
 sentencia : switch 
@@ -186,23 +230,23 @@ sentencia : switch
 switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE { if((tipoAux = existeEntradaLocal($3.cadena)) != 0 && tipoAux == $6.tipo){
 																$$.tipo = tipoAux;
 																	if(tipoAux != entero && tipoAux != caracter){ 
-																		printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-																		
+																		printf("\n* Error linea: %d. Expresion en switch es distinto a entero o caracter.\n",linea_actual);
+																		contadorErrores++;
 																	}
 															   }else{
 																if((tipoAux = existeEntrada($3.cadena)) != 0 && tipoAux == $6.tipo){
 																 $$.tipo = tipoAux;
 																	 if(tipoAux != entero && tipoAux != caracter){
-																		printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-																		
+																		printf("\n* Error linea: %d. Expresion en switch es distinto a entero o caracter.\n",linea_actual);
+																		contadorErrores++;
 																	 }
 																}else{
 																	if(tipoAux == $6.tipo){
-																		printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
-																		
+																		printf("\n* Error linea: %d. Variable \" %s \" no declarada\n",linea_actual, $3.cadena);
+																		contadorErrores++;
 																	}else{
-																		printf("\n\n* Error linea: %d. Tipo de los CASES no corresponde con el tipo del SWITCH\n",linea_actual);
-																		
+																		printf("\n* Error linea: %d. Tipo de los CASES no corresponde con el tipo del SWITCH.\n",linea_actual);
+																		contadorErrores++;
 																	}
 																}
 															   }
@@ -210,42 +254,42 @@ switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE { if((tipoAux = existe
 | SWITCH PIZ ID PDE LLIZ caso_defecto LLDE { if((tipoAux = existeEntradaLocal($3.cadena)) != 0){
 												$$.tipo = tipoAux;
 													if(tipoAux != entero && tipoAux != caracter){ 
-														printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-														
+														printf("\n* Error linea: %d. Expresion en switch es distinto a entero o caracter.\n",linea_actual);
+														contadorErrores++;
 													}
 											   }else{
 												if((tipoAux = existeEntrada($3.cadena)) != 0){
 												 $$.tipo = tipoAux;
 													 if(tipoAux != entero && tipoAux != caracter){
-														printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-														
+														printf("\n* Error linea: %d. Expresion en switch es distinto a entero o caracter.\n",linea_actual);
+														contadorErrores++;
 													 }
 												}else{
-												 printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
-												 
+													printf("\n* Error linea: %d. Variable \" %s \" no declarada.\n",linea_actual, $3.cadena);
+													contadorErrores++;
 												}
 											   }
 											  }
 | SWITCH PIZ ID PDE LLIZ casos_s LLDE{ 	if((tipoAux = existeEntradaLocal($3.cadena)) != 0 && tipoAux == $6.tipo){
 											$$.tipo = tipoAux;
 												if(tipoAux != entero && tipoAux != caracter){
-													printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-													
+													printf("\n* Error linea: %d. Expresion en switch es distinto a entero o caracter.\n",linea_actual);
+													contadorErrores++;
 												}
 										   }else{
 											if((tipoAux = existeEntrada($3.cadena)) != 0 && tipoAux == $6.tipo){
 											 $$.tipo = tipoAux;
 												 if(tipoAux != entero && tipoAux != caracter){
-													printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-													
+													printf("\n* Error linea: %d. Expresion en switch es distinto a entero o caracter.\n",linea_actual);
+													contadorErrores++;
 												 }
 											}else{
 												if(tipoAux == $6.tipo){
-													printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
-													
+													printf("\n* Error linea: %d. Variable \" %s \" no declarada.\n",linea_actual, $3.cadena);
+													contadorErrores++;
 												}else{
-													printf("\n\n* Error linea: %d. Tipo de los CASES no corresponde con el tipo del SWITCH\n",linea_actual);
-													
+													printf("\n* Error linea: %d. Tipo de los CASES no corresponde con el tipo del SWITCH.\n",linea_actual);
+													contadorErrores++;
 												}
 											}
 										   }
@@ -253,34 +297,37 @@ switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE { if((tipoAux = existe
 | SWITCH PIZ ID PDE LLIZ LLDE { if((tipoAux = existeEntradaLocal($3.cadena)) != 0){
 									$$.tipo = tipoAux;
 									if(tipoAux != entero && tipoAux != caracter){
-										printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-										
+										printf("\n* Error linea: %d. Expresion en switch es distinto a entero o caracter.\n",linea_actual);
+										contadorErrores++;
 									}
 										
 								   }else{
 									if((tipoAux = existeEntrada($3.cadena)) != 0){
 										 $$.tipo = tipoAux;
 										 if(tipoAux != entero && tipoAux != caracter){
-											printf("\n\n* Error linea %d: Expresion en switch es distinto a entero o caracter",linea_actual);
-											
+											printf("\n* Error linea: %d. Expresion en switch es distinto a entero o caracter",linea_actual);
+											contadorErrores++;
 										 }
 									}else{
-										printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
+										printf("\n* Error linea: %d. Variable \" %s \" no declarada.\n",linea_actual, $3.cadena);
 										
 									}
 								   }
 								  }
 ;
 
-casos_s : casos_s CASE literal PUNTOS sentencias BREAK PYC {	if($1.tipo != $3.tipo){ 
-																	printf("\n\n* Error linea: %d: CASEs del Switch con diferente tipo",linea_actual);
+casos_s : casos_s CASE literal PUNTOS sentencias BREAK PYC {	
+																if($1.tipo != $3.tipo){ 
+																	printf("\n* Error linea: %d. CASEs del Switch con diferente tipo.\n",linea_actual);
+																	contadorErrores++;
 																}else{
 																	$$.tipo = $3.tipo;
 																}
 														    }
 | CASE literal PUNTOS sentencias BREAK PYC {$$.tipo = $2.tipo;}
 | casos_s CASE literal PUNTOS BREAK PYC {	if($1.tipo != $3.tipo){
-												printf("\n\n* Error linea: %d: CASEs del Switch con diferente tipo",linea_actual);
+												printf("\n* Error linea: %d. CASEs del Switch con diferente tipo.\n",linea_actual);
+												contadorErrores++;
 											}else{
 												$$.tipo = $3.tipo;
 											}
@@ -298,95 +345,131 @@ sentencias : sentencias sentencia | sentencia
 caso_defecto : DEFAULT PUNTOS sentencias | DEFAULT PUNTOS
 ;
 
-bloque : LLIZ sentencias LLDE | sentencia | LLIZ LLDE
+bloque : LLIZ {linea_aux = linea_actual - 1;} sentencias LLDE 
+| {linea_aux = linea_actual - 1;} sentencia 
+| LLIZ {linea_aux = linea_actual - 1;} LLDE
 ;
 
 
-if : IF expresion bloque ELSE bloque { if($2.tipo != booleano){ printf("\n\n* Error linea %d: Expresion en if no es booleana",linea_actual);} }
-| IF expresion bloque { if($2.tipo != booleano){ printf("\n\n* Error linea %d: Expresion en if no es booleana",linea_actual); } }
+if : IF expresion bloque ELSE {linea_if = linea_aux;} bloque {
+																if($2.tipo != booleano && $2.tipo != errorTipo){ 
+																	printf("\n* Error linea: %d. Expresion en if no es booleana.\n",linea_if);
+																	$$.tipo = errorTipo;
+																	contadorErrores++;
+																}
+																
+																if($2.tipo == errorTipo){
+																	$$.tipo = errorTipo;
+																}
+															}
+| IF expresion bloque {
+							if($2.tipo != booleano && $2.tipo != errorTipo){ 
+								printf("\n* Error linea: %d. Expresion en if no es booleana.\n",linea_aux);
+								$$.tipo = errorTipo;
+								contadorErrores++;
+							}
+							
+							if($2.tipo == errorTipo){
+								$$.tipo = errorTipo;
+							}
+					  }
 ;
 
 
 expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == cadena || $1.tipo == conjunto /*UNION*/)){
 										$$.tipo = $1.tipo;
 									  }else{
-										printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion suma.\n",linea_actual);
+										$$.tipo = errorTipo;
+										contadorErrores++;
 									  }
 									}
 | expresion RES expresion{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == conjunto /*DIFERENCIA*/)){
 								$$.tipo = $1.tipo;
 							  }else{
-								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
+								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion resta.\n",linea_actual);
+								$$.tipo = errorTipo;
+								contadorErrores++;
 							  }
 							}
 | expresion MUL expresion { if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 								$$.tipo = $1.tipo;
 							  }else{
-								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
-								
+								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion de multiplicacion.\n",linea_actual);
+								$$.tipo = errorTipo;
+								contadorErrores++;
 							  }
 							}
 | expresion DIV expresion { if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == conjunto /*INTERSECCION*/)){
 								$$.tipo = $1.tipo;
 							  }else{
-								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
-								
+								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la  operacion de dividir.\n",linea_actual);
+								$$.tipo = errorTipo;
+								contadorErrores++;
 							  }
 							}
 | expresion AND expresion 	{ if($1.tipo == $3.tipo && $1.tipo == booleano){
 								$$.tipo = $1.tipo;
 							  }else{
-								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
-								
+								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion booleana AND.\n",linea_actual);
+								$$.tipo = errorTipo;
+								contadorErrores++;
 							  }
 							}
 | expresion OR expresion 	{ if($1.tipo == $3.tipo && $1.tipo == booleano){
 									$$.tipo = $1.tipo;
 							   }else{
-									printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
-									
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion booleana OR.\n",linea_actual);
+									$$.tipo = errorTipo;
+									contadorErrores++;
 							   }
 							}
 | expresion MAYORIQ expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 									$$.tipo = booleano;
 								  }else{
-									printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
-									
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+									$$.tipo = errorTipo;
+									contadorErrores++;
 								  }
 								}
 | expresion MENORIQ expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 									$$.tipo = booleano;
 								  }else{
-									printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
-									
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+									$$.tipo = errorTipo;
+									contadorErrores++;
 								  }
 								}
 | expresion MAYORQ expresion	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 									$$.tipo = booleano;
 								  }else{
-									printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
-									
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+									$$.tipo = errorTipo;
+									contadorErrores++;
 								  }
 								}
 | expresion MENORQ expresion	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 									$$.tipo = booleano;
 								  }else{
-									printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
-									
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+									$$.tipo = errorTipo;
+									contadorErrores++;
 								  }
 								}
 | expresion DIST expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == booleano)){
 								$$.tipo = booleano;
 							  }else{
-								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
-								
+								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+								$$.tipo = errorTipo;
+								contadorErrores++;
 							  }
 							}
 | expresion II expresion 	{ if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == booleano)){
 								$$.tipo = booleano;
 							  }else{
-								printf("\n\n* Error en la linea: %d. Expresion con tipos distintos\n",linea_actual);
-								
+								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+								$$.tipo = errorTipo;
+								contadorErrores++;
 							  }
 							}
 | NUM
@@ -394,8 +477,9 @@ expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == enter
 | NEGEXP expresion	{ if($2.tipo == booleano){
 							$$.tipo = booleano;
 					   }else{
-							printf("\n\n* Error linea: %d. Expresion con tipos distintos\n",linea_actual);
-							
+							printf("\n* Error linea: %d. Expresion con tipos distintos en el operador booleano de negacion.\n",linea_actual);
+							$$.tipo = errorTipo;
+							contadorErrores++;
 					   }
 					}
 | ID { if((tipoAux = existeEntradaLocal($1.cadena)) != 0){
@@ -404,8 +488,9 @@ expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == enter
 		if((tipoAux = existeEntrada($1.cadena)) != 0){
 			$$.tipo = tipoAux;
 		}else{
-			printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
-			
+			printf("\n* Error linea: %d. La variable \" %s \" no declarada.\n",linea_actual,$1.cadena);
+			$$.tipo = errorTipo;
+			contadorErrores++;
 		}
 	   }
      }
@@ -424,19 +509,42 @@ expresion : expresion SUM expresion { if($1.tipo == $3.tipo && ($1.tipo == enter
 						if((tipoAux = existeEntrada($1.cadena)) != 0){
 						 $$.tipo = tipoAux;
 						}else{
-							printf("\n\n* Error linea: %d. Variable no declarada\n",linea_actual);
+							printf("\n* Error linea: %d. Variable \" %s \" no declarada.\n",linea_actual,$1.cadena);
+							$$.tipo = errorTipo;
+							contadorErrores++;
 						}
-					   }
+				    }
 					   
 					   if(tipoAux != $3.tipo){
-							printf("\n\n* Error linea: %d. Asignacion de tipo incorrecta",linea_actual);
-							
+							printf("\n* Error linea: %d. Asignacion de tipo incorrecta.\n",linea_actual);
+							$$.tipo = errorTipo;
+							contadorErrores++;
 					   }
 					 }
 ;
 
-while : WHILE PIZ expresion PDE bloque { if($3.tipo != booleano){ printf("\n\n* Error linea %d: Expresion en while no es booleana",linea_actual); } }
-| WHILE PIZ expresion PDE PYC { if($3.tipo != booleano){ printf("\n\n* Error linea %d: Expresion en while no es booleana",linea_actual); } }
+while : WHILE PIZ expresion PDE bloque { 
+											if($3.tipo != booleano && $3.tipo != errorTipo){ 
+												printf("\n* Error linea: %d. Expresion en while no es booleana.\n",linea_actual);
+												$$.tipo = errorTipo;
+												contadorErrores++;
+											}
+											
+											if($3.tipo == errorTipo){
+												$$.tipo = errorTipo;
+											}
+									   }
+| WHILE PIZ expresion PDE PYC {
+								if($3.tipo != booleano && $3.tipo != errorTipo){
+									printf("\n* Error linea: %d. Expresion en while no es booleana.\n",linea_actual);
+									$$.tipo = errorTipo;
+									contadorErrores++;
+								}
+								
+								if($3.tipo == errorTipo){
+									$$.tipo = errorTipo;
+								}
+							  }
 ;
 
 out : OUT PIZ STRING COMA ids PDE PYC
@@ -450,42 +558,61 @@ in : IN PIZ OP_INOUT COMA ID PDE PYC
 ;
 
 llamada_proc : ID PIZ {  if(existeEntrada($1.cadena) != sinTipo){
-							printf("\n\n* Error linea: %d: Llamada a procedimiento no declarada con anterioridad\n",linea_actual);
-							
+							printf("\n* Error linea: %d. Llamada a procedimiento no declarada con anterioridad.\n",linea_actual);
+							$$.tipo = errorTipo;
+							contadorErrores++;
 						 }
 						 
 					  } params_llamada {	if(compruebaNumeroParametros($1.cadena, numParametros) == 0){ //Error en tipo
-												printf("\n\n* Error linea %d: El numero de parametros no coindicen en la llamada al procedimiento", linea_actual);
-												
+												printf("\n* Error linea: %d. El numero de parametros no coindicen en la llamada al procedimiento.\n", linea_actual);
+												$$.tipo = errorTipo;
+												contadorErrores++;
 											}		
 									   }  PDE PYC
 
 | ID PIZ PDE PYC { if(existeEntrada($1.cadena) != sinTipo){
-					  printf("\n\n* Error linea: %d: Llamada a procedimiento no declarada con anterioridad\n",linea_actual);
-					  
+					  printf("\n* Error linea: %d. Llamada a procedimiento \" %s \" no declarada con anterioridad.\n",linea_actual, $1.cadena);
+					  $$.tipo = errorTipo;
+					  contadorErrores++;
 				   }
 				 }
 ;
 
-params_llamada : params_llamada COMA expresion { numParametros++;
-													if(compruebaParametroProcedimiento($-1.cadena, $3.tipo, numParametros) == 0){
-														printf("\n\n* Error linea: %d: Parametro del procedimiento no coinciden en tipo", linea_actual);
+params_llamada : params_llamada COMA expresion { 	
+													if($3.tipo != errorTipo){
+														numParametros++;
+														if(compruebaParametroProcedimiento($-1.cadena, $3.tipo, numParametros) == 0){
+															printf("\n* Error linea: %d. Parametro del procedimiento no coinciden en tipo.\n", linea_actual);
+															$$.tipo = errorTipo;
+															contadorErrores++;
+														}
 														
-													}
-													
-													if(compruebaParametroProcedimiento($-1.cadena, $3.tipo, numParametros) == 2){
-														printf("\n\n* Error linea: %d: Numero de parametros excedido en la llamada a procedimiento", linea_actual);
-														
+														if(compruebaParametroProcedimiento($-1.cadena, $3.tipo, numParametros) == 2){
+															printf("\n* Error linea: %d. Numero de parametros excedido en la llamada a procedimiento.\n", linea_actual);
+															$$.tipo = errorTipo;
+															contadorErrores++;
+														}
+													}else{
+														$$.tipo = errorTipo;
 													}
 												}
-| expresion {numParametros = 1; if(compruebaParametroProcedimiento($-1.cadena, $1.tipo, numParametros) == 0){
-									printf("\n\n* Error linea: %d: Parametro del procedimiento no coinciden en tipo", linea_actual);
-									
-								}
+| expresion {	
+				if($1.tipo != errorTipo){
+					numParametros = 1;
+					if(compruebaParametroProcedimiento($-1.cadena, $1.tipo, numParametros) == 0){
+						printf("\n* Error linea: %d. Parametro del procedimiento no coinciden en tipo.\n", linea_actual);
+						$$.tipo = errorTipo;
+						contadorErrores++;
+					}
+				}else{
+					$$.tipo = errorTipo;
+				}
 			}
 ;
 
-main : VOID MAIN {pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0)); /*imprimirTS();*/}  PIZ PDE cuerpo {borrarHastaMarcaTS(); /*imprimirTS();*/}
+main : VOID MAIN {
+					pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0));
+				 }  PIZ PDE cuerpo {borrarHastaMarcaTS();}
 ;
 
 cuerpo : LLIZ vars_s sentencias LLDE
@@ -504,13 +631,16 @@ crea_conjunto : CREATE PIZ PDE {
 							   }
 ;
 destruye_conjunto : DELETE PIZ ID PDE { if( existeEntradaLocal($3.cadena) != conjunto && existeEntrada($3.cadena) != conjunto){
-											printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
+											printf("\n* Error linea: %d. Identificador \" %s \" no declarado.\n",linea_actual, $3.cadena);
+											contadorErrores++;
 										}
 									  }
 ;
 llamada_sivacio : EMPTY PIZ ID PDE {  	
 										if( existeEntradaLocal($3.cadena) != conjunto && existeEntrada($3.cadena) != conjunto){
-											printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
+											printf("\n* Error linea. %d. Identificador \" %s \" no declarado",linea_actual, $3.cadena);
+											$$.tipo = errorTipo;
+											contadorErrores++;
 										}else{
 											$$.tipo = booleano;
 										}
@@ -519,7 +649,9 @@ llamada_sivacio : EMPTY PIZ ID PDE {
 
 llamada_length : LENGTH PIZ ID PDE{
 									if( existeEntradaLocal($3.cadena) != conjunto && existeEntrada($3.cadena) != conjunto){
-										printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
+										printf("\n* Error linea. %d. Identificador \" %s \" no declarado.\n",linea_actual, $3.cadena);
+										$$.tipo = errorTipo;
+										contadorErrores++;
 									}else{
 										$$.tipo = entero;
 									}
@@ -527,15 +659,27 @@ llamada_length : LENGTH PIZ ID PDE{
 ;
 
 inserta_conjunto : ID ADDC expresion {
-										if( existeEntradaLocal($1.cadena) != conjunto && existeEntrada($1.cadena) != conjunto){
-											printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
+										if($3.tipo != errorTipo){
+											if( existeEntradaLocal($1.cadena) != conjunto && existeEntrada($1.cadena) != conjunto){
+												printf("\n* Error linea: %d. Identificador \" %s \" no declarado.\n",linea_actual, $1.cadena);
+												$$.tipo = errorTipo;
+												contadorErrores++;
+											}
+										}else{
+											$$.tipo = errorTipo;
 										}
 									 }
 ;
 
 saca_conjunto : ID MINC expresion{
-									if( existeEntradaLocal($1.cadena) != conjunto && existeEntrada($1.cadena) != conjunto){
-										printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
+									if($3.tipo != errorTipo){
+										if( existeEntradaLocal($1.cadena) != conjunto && existeEntrada($1.cadena) != conjunto){
+											printf("\n* Error linea: %d. Identificador \" %s \" no declarado",linea_actual, $1.cadena);
+											$$.tipo = errorTipo;
+											contadorErrores++;
+										}
+									}else{
+										$$.tipo = errorTipo;
 									}
 								 }
 ;
@@ -543,7 +687,9 @@ saca_conjunto : ID MINC expresion{
 
 llamada_complementario : COMPC ID {
 									if( existeEntradaLocal($2.cadena) != conjunto && existeEntrada($2.cadena) != conjunto){
-										printf("\n\n* Error linea %d: Identificador no declarado",linea_actual);
+										printf("\n* Error linea: %d. Identificador \" %s \" no declarado",linea_actual, $2.cadena);
+										$$.tipo = errorTipo;
+										contadorErrores++;
 									}else{
 										$$.tipo = conjunto;
 									}

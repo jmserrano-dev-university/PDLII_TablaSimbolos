@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "tablaSimbolos.h"
 
+int topeTS = 0;
 
 /**
  * Constructor de la tabla de simbolos
