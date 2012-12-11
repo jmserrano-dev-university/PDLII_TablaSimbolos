@@ -21,17 +21,17 @@ Terminals unused in grammar
 
 Rules useless in grammar
 
-  127 dec1: incs_s defs_s tipos_s
-  128     | defs_s tipos_s
-  129     | incs_s defs_s
-  130     | defs_s
+  131 dec1: incs_s defs_s tipos_s
+  132     | defs_s tipos_s
+  133     | incs_s defs_s
+  134     | defs_s
 
-  131 defs_s: defs_s defs defs
+  135 defs_s: defs_s defs defs
 
-  132 defs: DEFINE ID NUM
+  136 defs: DEFINE ID NUM
 
 
-State 175 conflicts: 1 shift/reduce
+State 176 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -89,17 +89,17 @@ Grammar
 
    35 variable: ID
 
-   36 $@2: /* empty */
+   36 @2: /* empty */
 
    37 $@3: /* empty */
 
-   38 proc: VOID ID PIZ $@2 params PDE $@3 cuerpo
+   38 proc: VOID ID PIZ @2 params PDE $@3 cuerpo
 
-   39 $@4: /* empty */
+   39 @4: /* empty */
 
    40 $@5: /* empty */
 
-   41 proc: VOID ID PIZ $@4 PDE $@5 cuerpo
+   41 proc: VOID ID PIZ @4 PDE $@5 cuerpo
 
    42 params: params COMA tipo ID
    43       | tipo ID
@@ -133,87 +133,97 @@ Grammar
    65 caso_defecto: DEFAULT PUNTOS sentencias
    66             | DEFAULT PUNTOS
 
-   67 bloque: LLIZ sentencias LLDE
-   68       | sentencia
-   69       | LLIZ LLDE
+   67 $@6: /* empty */
 
-   70 if: IF expresion bloque ELSE bloque
-   71   | IF expresion bloque
+   68 bloque: LLIZ $@6 sentencias LLDE
 
-   72 expresion: expresion SUM expresion
-   73          | expresion RES expresion
-   74          | expresion MUL expresion
-   75          | expresion DIV expresion
-   76          | expresion AND expresion
-   77          | expresion OR expresion
-   78          | expresion MAYORIQ expresion
-   79          | expresion MENORIQ expresion
-   80          | expresion MAYORQ expresion
-   81          | expresion MENORQ expresion
-   82          | expresion DIST expresion
-   83          | expresion II expresion
-   84          | NUM
-   85          | PIZ expresion PDE
-   86          | NEGEXP expresion
-   87          | ID
-   88          | REAL
-   89          | TRUE
-   90          | FALSE
-   91          | CARACTER
-   92          | STRING
-   93          | crea_conjunto
-   94          | llamada_complementario
-   95          | llamada_sivacio
-   96          | llamada_length
-   97          | ID ASI expresion
+   69 $@7: /* empty */
 
-   98 while: WHILE PIZ expresion PDE bloque
-   99      | WHILE PIZ expresion PDE PYC
+   70 bloque: $@7 sentencia
 
-  100 out: OUT PIZ STRING COMA ids PDE PYC
-  101    | OUT PIZ STRING PDE PYC
+   71 $@8: /* empty */
 
-  102 ids: ids COMA ID
-  103    | ID
+   72 bloque: LLIZ $@8 LLDE
 
-  104 in: IN PIZ OP_INOUT COMA ID PDE PYC
+   73 $@9: /* empty */
 
-  105 $@6: /* empty */
+   74 if: IF expresion bloque ELSE $@9 bloque
+   75   | IF expresion bloque
 
-  106 $@7: /* empty */
+   76 expresion: expresion SUM expresion
+   77          | expresion RES expresion
+   78          | expresion MUL expresion
+   79          | expresion DIV expresion
+   80          | expresion AND expresion
+   81          | expresion OR expresion
+   82          | expresion MAYORIQ expresion
+   83          | expresion MENORIQ expresion
+   84          | expresion MAYORQ expresion
+   85          | expresion MENORQ expresion
+   86          | expresion DIST expresion
+   87          | expresion II expresion
+   88          | NUM
+   89          | PIZ expresion PDE
+   90          | NEGEXP expresion
+   91          | ID
+   92          | REAL
+   93          | TRUE
+   94          | FALSE
+   95          | CARACTER
+   96          | STRING
+   97          | crea_conjunto
+   98          | llamada_complementario
+   99          | llamada_sivacio
+  100          | llamada_length
+  101          | ID ASI expresion
 
-  107 llamada_proc: ID PIZ $@6 params_llamada $@7 PDE PYC
-  108             | ID PIZ PDE PYC
+  102 while: WHILE PIZ expresion PDE bloque
+  103      | WHILE PIZ expresion PDE PYC
 
-  109 params_llamada: params_llamada COMA expresion
-  110               | expresion
+  104 out: OUT PIZ STRING COMA ids PDE PYC
+  105    | OUT PIZ STRING PDE PYC
 
-  111 $@8: /* empty */
+  106 ids: ids COMA ID
+  107    | ID
 
-  112 main: VOID MAIN $@8 PIZ PDE cuerpo
+  108 in: IN PIZ OP_INOUT COMA ID PDE PYC
 
-  113 cuerpo: LLIZ vars_s sentencias LLDE
-  114       | LLIZ sentencias LLDE
-  115       | LLIZ vars_s LLDE
-  116       | LLIZ LLDE
+  109 @10: /* empty */
 
-  117 llamada_conjunto: inserta_conjunto
-  118                 | saca_conjunto
-  119                 | destruye_conjunto
+  110 @11: /* empty */
 
-  120 crea_conjunto: CREATE PIZ PDE
+  111 llamada_proc: ID PIZ @10 params_llamada @11 PDE PYC
+  112             | ID PIZ PDE PYC
 
-  121 destruye_conjunto: DELETE PIZ ID PDE
+  113 params_llamada: params_llamada COMA expresion
+  114               | expresion
 
-  122 llamada_sivacio: EMPTY PIZ ID PDE
+  115 $@12: /* empty */
 
-  123 llamada_length: LENGTH PIZ ID PDE
+  116 main: VOID MAIN $@12 PIZ PDE cuerpo
 
-  124 inserta_conjunto: expresion ADDC ID
+  117 cuerpo: LLIZ vars_s sentencias LLDE
+  118       | LLIZ sentencias LLDE
+  119       | LLIZ vars_s LLDE
+  120       | LLIZ LLDE
 
-  125 saca_conjunto: expresion MINC ID
+  121 llamada_conjunto: inserta_conjunto
+  122                 | saca_conjunto
+  123                 | destruye_conjunto
 
-  126 llamada_complementario: COMPC expresion
+  124 crea_conjunto: CREATE PIZ PDE
+
+  125 destruye_conjunto: DELETE PIZ ID PDE
+
+  126 llamada_sivacio: EMPTY PIZ ID PDE
+
+  127 llamada_length: LENGTH PIZ ID PDE
+
+  128 inserta_conjunto: ID ADDC expresion
+
+  129 saca_conjunto: ID MINC expresion
+
+  130 llamada_complementario: COMPC ID
 
 
 Terminals, with rules where they appear
@@ -223,73 +233,73 @@ error (256)
 CAB1 (258) 19
 CAB2 (259) 20
 CASE (260) 57 58 59 60
-ID (261) 21 26 35 38 41 42 43 53 54 55 56 87 97 102 103 104 107 108
-    121 122 123 124 125
-NUM (262) 61 84
+ID (261) 21 26 35 38 41 42 43 53 54 55 56 91 101 106 107 108 111 112
+    125 126 127 128 129 130
+NUM (262) 61 88
 BREAK (263) 57 58 59 60
 INT (264) 22
 FLOAT (265) 23
 CHAR (266) 24
 SET (267) 25
 TYPEDEF (268) 21
-REAL (269) 88
-STRING (270) 28 92 100 101
+REAL (269) 92
+STRING (270) 28 96 104 105
 BOOL (271) 27
-TRUE (272) 89
-FALSE (273) 90
-CARACTER (274) 62 91
-OP_INOUT (275) 104
-EMPTY (276) 122
-LENGTH (277) 123
-VOID (278) 38 41 112
+TRUE (272) 93
+FALSE (273) 94
+CARACTER (274) 62 95
+OP_INOUT (275) 108
+EMPTY (276) 126
+LENGTH (277) 127
+VOID (278) 38 41 116
 SWITCH (279) 53 54 55 56
-WHILE (280) 98 99
+WHILE (280) 102 103
 INCLUDE (281) 18
 DEFINE (282)
-IF (283) 70 71
-IN (284) 104
-OUT (285) 100 101
+IF (283) 74 75
+IN (284) 108
+OUT (285) 104 105
 DEFAULT (286) 65 66
-ELSE (287) 70
-CREATE (288) 120
+ELSE (287) 74
+CREATE (288) 124
 INSERT (289)
-MAIN (290) 112
+MAIN (290) 116
 EXTRACT (291)
-DELETE (292) 121
+DELETE (292) 125
 MINUS (293)
 UNION (294)
 INTERSECTION (295)
 NEG (296)
-PIZ (297) 38 41 53 54 55 56 85 98 99 100 101 104 107 108 112 120 121
-    122 123
-PDE (298) 38 41 53 54 55 56 85 98 99 100 101 104 107 108 112 120 121
-    122 123
+PIZ (297) 38 41 53 54 55 56 89 102 103 104 105 108 111 112 116 124
+    125 126 127
+PDE (298) 38 41 53 54 55 56 89 102 103 104 105 108 111 112 116 124
+    125 126 127
 COMEN (299)
 ERR (300)
 CORI (301)
 CORD (302)
 PUNTOS (303) 57 58 59 60 65 66
-LLIZ (304) 53 54 55 56 67 69 113 114 115 116
-LLDE (305) 53 54 55 56 67 69 113 114 115 116
-PYC (306) 21 30 51 52 57 58 59 60 99 100 101 104 107 108
-COMA (307) 31 42 100 102 104 109
-ASI (308) 34 97
-II (309) 83
-DIST (310) 82
-MENORQ (311) 81
-MAYORQ (312) 80
-MENORIQ (313) 79
-MAYORIQ (314) 78
-RES (315) 73
-SUM (316) 72
-DIV (317) 75
-MUL (318) 74
-OR (319) 77
-AND (320) 76
-COMPC (321) 126
-MINC (322) 125
-ADDC (323) 124
-NEGEXP (324) 86
+LLIZ (304) 53 54 55 56 68 72 117 118 119 120
+LLDE (305) 53 54 55 56 68 72 117 118 119 120
+PYC (306) 21 30 51 52 57 58 59 60 103 104 105 108 111 112
+COMA (307) 31 42 104 106 108 113
+ASI (308) 34 101
+II (309) 87
+DIST (310) 86
+MENORQ (311) 85
+MAYORQ (312) 84
+MENORIQ (313) 83
+MAYORIQ (314) 82
+RES (315) 77
+SUM (316) 76
+DIV (317) 79
+MUL (318) 78
+OR (319) 81
+AND (320) 80
+COMPC (321) 130
+MINC (322) 129
+ADDC (323) 128
+NEGEXP (324) 90
 
 
 Nonterminals, with rules where they appear
@@ -307,7 +317,7 @@ incs_s (74)
 tipos_s (75)
     on left: 12 13, on right: 3 5 12
 vars_s (76)
-    on left: 14 15, on right: 6 7 14 113 115
+    on left: 14 15, on right: 6 7 14 117 119
 procs_s (77)
     on left: 16 17, on right: 6 8 16
 incs (78)
@@ -330,18 +340,18 @@ variable (86)
     on left: 35, on right: 33 34
 proc (87)
     on left: 38 41, on right: 16 17 49
-$@2 (88)
+@2 (88)
     on left: 36, on right: 38
 $@3 (89)
     on left: 37, on right: 38
-$@4 (90)
+@4 (90)
     on left: 39, on right: 41
 $@5 (91)
     on left: 40, on right: 41
 params (92)
     on left: 42 43, on right: 38 42
 sentencia (93)
-    on left: 44 45 46 47 48 49 50 51 52, on right: 63 64 68
+    on left: 44 45 46 47 48 49 50 51 52, on right: 63 64 70
 switch (94)
     on left: 53 54 55 56, on right: 44
 casos_s (95)
@@ -349,55 +359,63 @@ casos_s (95)
 literal (96)
     on left: 61 62, on right: 57 58 59 60
 sentencias (97)
-    on left: 63 64, on right: 57 58 63 65 67 113 114
+    on left: 63 64, on right: 57 58 63 65 68 117 118
 caso_defecto (98)
     on left: 65 66, on right: 53 54
 bloque (99)
-    on left: 67 68 69, on right: 70 71 98
-if (100)
-    on left: 70 71, on right: 45
-expresion (101)
-    on left: 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89
-    90 91 92 93 94 95 96 97, on right: 34 52 70 71 72 73 74 75 76 77
-    78 79 80 81 82 83 85 86 97 98 99 109 110 124 125 126
-while (102)
-    on left: 98 99, on right: 46
-out (103)
-    on left: 100 101, on right: 48
-ids (104)
-    on left: 102 103, on right: 100 102
-in (105)
-    on left: 104, on right: 47
-llamada_proc (106)
-    on left: 107 108, on right: 50
-$@6 (107)
-    on left: 105, on right: 107
-$@7 (108)
-    on left: 106, on right: 107
-params_llamada (109)
-    on left: 109 110, on right: 107 109
-main (110)
-    on left: 112, on right: 6 7 8 9
-$@8 (111)
-    on left: 111, on right: 112
-cuerpo (112)
-    on left: 113 114 115 116, on right: 38 41 112
-llamada_conjunto (113)
-    on left: 117 118 119, on right: 51
-crea_conjunto (114)
-    on left: 120, on right: 93
-destruye_conjunto (115)
-    on left: 121, on right: 119
-llamada_sivacio (116)
-    on left: 122, on right: 95
-llamada_length (117)
-    on left: 123, on right: 96
-inserta_conjunto (118)
-    on left: 124, on right: 117
-saca_conjunto (119)
-    on left: 125, on right: 118
-llamada_complementario (120)
-    on left: 126, on right: 94
+    on left: 68 70 72, on right: 74 75 102
+$@6 (100)
+    on left: 67, on right: 68
+$@7 (101)
+    on left: 69, on right: 70
+$@8 (102)
+    on left: 71, on right: 72
+if (103)
+    on left: 74 75, on right: 45
+$@9 (104)
+    on left: 73, on right: 74
+expresion (105)
+    on left: 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93
+    94 95 96 97 98 99 100 101, on right: 34 52 74 75 76 77 78 79 80
+    81 82 83 84 85 86 87 89 90 101 102 103 113 114 128 129
+while (106)
+    on left: 102 103, on right: 46
+out (107)
+    on left: 104 105, on right: 48
+ids (108)
+    on left: 106 107, on right: 104 106
+in (109)
+    on left: 108, on right: 47
+llamada_proc (110)
+    on left: 111 112, on right: 50
+@10 (111)
+    on left: 109, on right: 111
+@11 (112)
+    on left: 110, on right: 111
+params_llamada (113)
+    on left: 113 114, on right: 111 113
+main (114)
+    on left: 116, on right: 6 7 8 9
+$@12 (115)
+    on left: 115, on right: 116
+cuerpo (116)
+    on left: 117 118 119 120, on right: 38 41 116
+llamada_conjunto (117)
+    on left: 121 122 123, on right: 51
+crea_conjunto (118)
+    on left: 124, on right: 97
+destruye_conjunto (119)
+    on left: 125, on right: 123
+llamada_sivacio (120)
+    on left: 126, on right: 99
+llamada_length (121)
+    on left: 127, on right: 100
+inserta_conjunto (122)
+    on left: 128, on right: 121
+saca_conjunto (123)
+    on left: 129, on right: 122
+llamada_complementario (124)
+    on left: 130, on right: 98
 
 
 state 0
@@ -496,9 +514,9 @@ state 8
 
 state 9
 
-   38 proc: VOID . ID PIZ $@2 params PDE $@3 cuerpo
-   41     | VOID . ID PIZ $@4 PDE $@5 cuerpo
-  112 main: VOID . MAIN $@8 PIZ PDE cuerpo
+   38 proc: VOID . ID PIZ @2 params PDE $@3 cuerpo
+   41     | VOID . ID PIZ @4 PDE $@5 cuerpo
+  116 main: VOID . MAIN $@12 PIZ PDE cuerpo
 
     ID    shift, and go to state 25
     MAIN  shift, and go to state 26
@@ -664,19 +682,19 @@ state 24
 
 state 25
 
-   38 proc: VOID ID . PIZ $@2 params PDE $@3 cuerpo
-   41     | VOID ID . PIZ $@4 PDE $@5 cuerpo
+   38 proc: VOID ID . PIZ @2 params PDE $@3 cuerpo
+   41     | VOID ID . PIZ @4 PDE $@5 cuerpo
 
     PIZ  shift, and go to state 42
 
 
 state 26
 
-  112 main: VOID MAIN . $@8 PIZ PDE cuerpo
+  116 main: VOID MAIN . $@12 PIZ PDE cuerpo
 
-    $default  reduce using rule 111 ($@8)
+    $default  reduce using rule 115 ($@12)
 
-    $@8  go to state 43
+    $@12  go to state 43
 
 
 state 27
@@ -799,19 +817,19 @@ state 41
 
 state 42
 
-   38 proc: VOID ID PIZ . $@2 params PDE $@3 cuerpo
-   41     | VOID ID PIZ . $@4 PDE $@5 cuerpo
+   38 proc: VOID ID PIZ . @2 params PDE $@3 cuerpo
+   41     | VOID ID PIZ . @4 PDE $@5 cuerpo
 
-    PDE       reduce using rule 39 ($@4)
-    $default  reduce using rule 36 ($@2)
+    PDE       reduce using rule 39 (@4)
+    $default  reduce using rule 36 (@2)
 
-    $@2  go to state 50
-    $@4  go to state 51
+    @2  go to state 50
+    @4  go to state 51
 
 
 state 43
 
-  112 main: VOID MAIN $@8 . PIZ PDE cuerpo
+  116 main: VOID MAIN $@12 . PIZ PDE cuerpo
 
     PIZ  shift, and go to state 52
 
@@ -865,7 +883,7 @@ state 49
 
 state 50
 
-   38 proc: VOID ID PIZ $@2 . params PDE $@3 cuerpo
+   38 proc: VOID ID PIZ @2 . params PDE $@3 cuerpo
 
     ID      shift, and go to state 1
     INT     shift, and go to state 2
@@ -881,14 +899,14 @@ state 50
 
 state 51
 
-   41 proc: VOID ID PIZ $@4 . PDE $@5 cuerpo
+   41 proc: VOID ID PIZ @4 . PDE $@5 cuerpo
 
     PDE  shift, and go to state 58
 
 
 state 52
 
-  112 main: VOID MAIN $@8 PIZ . PDE cuerpo
+  116 main: VOID MAIN $@12 PIZ . PDE cuerpo
 
     PDE  shift, and go to state 59
 
@@ -944,7 +962,7 @@ state 56
 
 state 57
 
-   38 proc: VOID ID PIZ $@2 params . PDE $@3 cuerpo
+   38 proc: VOID ID PIZ @2 params . PDE $@3 cuerpo
    42 params: params . COMA tipo ID
 
     PDE   shift, and go to state 80
@@ -953,7 +971,7 @@ state 57
 
 state 58
 
-   41 proc: VOID ID PIZ $@4 PDE . $@5 cuerpo
+   41 proc: VOID ID PIZ @4 PDE . $@5 cuerpo
 
     $default  reduce using rule 40 ($@5)
 
@@ -962,7 +980,7 @@ state 58
 
 state 59
 
-  112 main: VOID MAIN $@8 PIZ PDE . cuerpo
+  116 main: VOID MAIN $@12 PIZ PDE . cuerpo
 
     LLIZ  shift, and go to state 83
 
@@ -978,80 +996,80 @@ state 60
 
 state 61
 
-   87 expresion: ID .
-   97          | ID . ASI expresion
+   91 expresion: ID .
+  101          | ID . ASI expresion
 
     ASI  shift, and go to state 85
-
-    $default  reduce using rule 87 (expresion)
-
-
-state 62
-
-   84 expresion: NUM .
-
-    $default  reduce using rule 84 (expresion)
-
-
-state 63
-
-   88 expresion: REAL .
-
-    $default  reduce using rule 88 (expresion)
-
-
-state 64
-
-   92 expresion: STRING .
-
-    $default  reduce using rule 92 (expresion)
-
-
-state 65
-
-   89 expresion: TRUE .
-
-    $default  reduce using rule 89 (expresion)
-
-
-state 66
-
-   90 expresion: FALSE .
-
-    $default  reduce using rule 90 (expresion)
-
-
-state 67
-
-   91 expresion: CARACTER .
 
     $default  reduce using rule 91 (expresion)
 
 
+state 62
+
+   88 expresion: NUM .
+
+    $default  reduce using rule 88 (expresion)
+
+
+state 63
+
+   92 expresion: REAL .
+
+    $default  reduce using rule 92 (expresion)
+
+
+state 64
+
+   96 expresion: STRING .
+
+    $default  reduce using rule 96 (expresion)
+
+
+state 65
+
+   93 expresion: TRUE .
+
+    $default  reduce using rule 93 (expresion)
+
+
+state 66
+
+   94 expresion: FALSE .
+
+    $default  reduce using rule 94 (expresion)
+
+
+state 67
+
+   95 expresion: CARACTER .
+
+    $default  reduce using rule 95 (expresion)
+
+
 state 68
 
-  122 llamada_sivacio: EMPTY . PIZ ID PDE
+  126 llamada_sivacio: EMPTY . PIZ ID PDE
 
     PIZ  shift, and go to state 86
 
 
 state 69
 
-  123 llamada_length: LENGTH . PIZ ID PDE
+  127 llamada_length: LENGTH . PIZ ID PDE
 
     PIZ  shift, and go to state 87
 
 
 state 70
 
-  120 crea_conjunto: CREATE . PIZ PDE
+  124 crea_conjunto: CREATE . PIZ PDE
 
     PIZ  shift, and go to state 88
 
 
 state 71
 
-   85 expresion: PIZ . expresion PDE
+   89 expresion: PIZ . expresion PDE
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1076,32 +1094,14 @@ state 71
 
 state 72
 
-  126 llamada_complementario: COMPC . expresion
+  130 llamada_complementario: COMPC . ID
 
-    ID        shift, and go to state 61
-    NUM       shift, and go to state 62
-    REAL      shift, and go to state 63
-    STRING    shift, and go to state 64
-    TRUE      shift, and go to state 65
-    FALSE     shift, and go to state 66
-    CARACTER  shift, and go to state 67
-    EMPTY     shift, and go to state 68
-    LENGTH    shift, and go to state 69
-    CREATE    shift, and go to state 70
-    PIZ       shift, and go to state 71
-    COMPC     shift, and go to state 72
-    NEGEXP    shift, and go to state 73
-
-    expresion               go to state 90
-    crea_conjunto           go to state 75
-    llamada_sivacio         go to state 76
-    llamada_length          go to state 77
-    llamada_complementario  go to state 78
+    ID  shift, and go to state 90
 
 
 state 73
 
-   86 expresion: NEGEXP . expresion
+   90 expresion: NEGEXP . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1127,18 +1127,18 @@ state 73
 state 74
 
    34 variables_s: variable ASI expresion .
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
     II       shift, and go to state 92
     DIST     shift, and go to state 93
@@ -1158,30 +1158,30 @@ state 74
 
 state 75
 
-   93 expresion: crea_conjunto .
+   97 expresion: crea_conjunto .
 
-    $default  reduce using rule 93 (expresion)
+    $default  reduce using rule 97 (expresion)
 
 
 state 76
 
-   95 expresion: llamada_sivacio .
+   99 expresion: llamada_sivacio .
 
-    $default  reduce using rule 95 (expresion)
+    $default  reduce using rule 99 (expresion)
 
 
 state 77
 
-   96 expresion: llamada_length .
+  100 expresion: llamada_length .
 
-    $default  reduce using rule 96 (expresion)
+    $default  reduce using rule 100 (expresion)
 
 
 state 78
 
-   94 expresion: llamada_complementario .
+   98 expresion: llamada_complementario .
 
-    $default  reduce using rule 94 (expresion)
+    $default  reduce using rule 98 (expresion)
 
 
 state 79
@@ -1193,7 +1193,7 @@ state 79
 
 state 80
 
-   38 proc: VOID ID PIZ $@2 params PDE . $@3 cuerpo
+   38 proc: VOID ID PIZ @2 params PDE . $@3 cuerpo
 
     $default  reduce using rule 37 ($@3)
 
@@ -1217,7 +1217,7 @@ state 81
 
 state 82
 
-   41 proc: VOID ID PIZ $@4 PDE $@5 . cuerpo
+   41 proc: VOID ID PIZ @4 PDE $@5 . cuerpo
 
     LLIZ  shift, and go to state 83
 
@@ -1226,10 +1226,10 @@ state 82
 
 state 83
 
-  113 cuerpo: LLIZ . vars_s sentencias LLDE
-  114       | LLIZ . sentencias LLDE
-  115       | LLIZ . vars_s LLDE
-  116       | LLIZ . LLDE
+  117 cuerpo: LLIZ . vars_s sentencias LLDE
+  118       | LLIZ . sentencias LLDE
+  119       | LLIZ . vars_s LLDE
+  120       | LLIZ . LLDE
 
     ID        shift, and go to state 107
     NUM       shift, and go to state 62
@@ -1283,14 +1283,14 @@ state 83
 
 state 84
 
-  112 main: VOID MAIN $@8 PIZ PDE cuerpo .
+  116 main: VOID MAIN $@12 PIZ PDE cuerpo .
 
-    $default  reduce using rule 112 (main)
+    $default  reduce using rule 116 (main)
 
 
 state 85
 
-   97 expresion: ID ASI . expresion
+  101 expresion: ID ASI . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1315,40 +1315,40 @@ state 85
 
 state 86
 
-  122 llamada_sivacio: EMPTY PIZ . ID PDE
+  126 llamada_sivacio: EMPTY PIZ . ID PDE
 
     ID  shift, and go to state 133
 
 
 state 87
 
-  123 llamada_length: LENGTH PIZ . ID PDE
+  127 llamada_length: LENGTH PIZ . ID PDE
 
     ID  shift, and go to state 134
 
 
 state 88
 
-  120 crea_conjunto: CREATE PIZ . PDE
+  124 crea_conjunto: CREATE PIZ . PDE
 
     PDE  shift, and go to state 135
 
 
 state 89
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-   85          | PIZ expresion . PDE
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+   89          | PIZ expresion . PDE
 
     PDE      shift, and go to state 136
     II       shift, and go to state 92
@@ -1367,45 +1367,33 @@ state 89
 
 state 90
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-  126 llamada_complementario: COMPC expresion .
+  130 llamada_complementario: COMPC ID .
 
-    $default  reduce using rule 126 (llamada_complementario)
+    $default  reduce using rule 130 (llamada_complementario)
 
 
 state 91
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-   86          | NEGEXP expresion .
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+   90          | NEGEXP expresion .
 
-    $default  reduce using rule 86 (expresion)
+    $default  reduce using rule 90 (expresion)
 
 
 state 92
 
-   83 expresion: expresion II . expresion
+   87 expresion: expresion II . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1430,7 +1418,7 @@ state 92
 
 state 93
 
-   82 expresion: expresion DIST . expresion
+   86 expresion: expresion DIST . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1455,7 +1443,7 @@ state 93
 
 state 94
 
-   81 expresion: expresion MENORQ . expresion
+   85 expresion: expresion MENORQ . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1480,7 +1468,7 @@ state 94
 
 state 95
 
-   80 expresion: expresion MAYORQ . expresion
+   84 expresion: expresion MAYORQ . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1505,7 +1493,7 @@ state 95
 
 state 96
 
-   79 expresion: expresion MENORIQ . expresion
+   83 expresion: expresion MENORIQ . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1530,7 +1518,7 @@ state 96
 
 state 97
 
-   78 expresion: expresion MAYORIQ . expresion
+   82 expresion: expresion MAYORIQ . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1555,7 +1543,7 @@ state 97
 
 state 98
 
-   73 expresion: expresion RES . expresion
+   77 expresion: expresion RES . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1580,7 +1568,7 @@ state 98
 
 state 99
 
-   72 expresion: expresion SUM . expresion
+   76 expresion: expresion SUM . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1605,7 +1593,7 @@ state 99
 
 state 100
 
-   75 expresion: expresion DIV . expresion
+   79 expresion: expresion DIV . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1630,7 +1618,7 @@ state 100
 
 state 101
 
-   74 expresion: expresion MUL . expresion
+   78 expresion: expresion MUL . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1655,7 +1643,7 @@ state 101
 
 state 102
 
-   77 expresion: expresion OR . expresion
+   81 expresion: expresion OR . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1680,7 +1668,7 @@ state 102
 
 state 103
 
-   76 expresion: expresion AND . expresion
+   80 expresion: expresion AND . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1705,7 +1693,7 @@ state 103
 
 state 104
 
-   38 proc: VOID ID PIZ $@2 params PDE $@3 . cuerpo
+   38 proc: VOID ID PIZ @2 params PDE $@3 . cuerpo
 
     LLIZ  shift, and go to state 83
 
@@ -1721,7 +1709,7 @@ state 105
 
 state 106
 
-   41 proc: VOID ID PIZ $@4 PDE $@5 cuerpo .
+   41 proc: VOID ID PIZ @4 PDE $@5 cuerpo .
 
     $default  reduce using rule 41 (proc)
 
@@ -1729,31 +1717,35 @@ state 106
 state 107
 
    26 tipo: ID .
-   87 expresion: ID .
-   97          | ID . ASI expresion
-  107 llamada_proc: ID . PIZ $@6 params_llamada $@7 PDE PYC
-  108             | ID . PIZ PDE PYC
+   91 expresion: ID .
+  101          | ID . ASI expresion
+  111 llamada_proc: ID . PIZ @10 params_llamada @11 PDE PYC
+  112             | ID . PIZ PDE PYC
+  128 inserta_conjunto: ID . ADDC expresion
+  129 saca_conjunto: ID . MINC expresion
 
-    PIZ  shift, and go to state 151
-    ASI  shift, and go to state 85
+    PIZ   shift, and go to state 151
+    ASI   shift, and go to state 85
+    MINC  shift, and go to state 152
+    ADDC  shift, and go to state 153
 
     ID        reduce using rule 26 (tipo)
-    $default  reduce using rule 87 (expresion)
+    $default  reduce using rule 91 (expresion)
 
 
 state 108
 
    28 tipo: STRING .
-   92 expresion: STRING .
+   96 expresion: STRING .
 
     ID        reduce using rule 28 (tipo)
-    $default  reduce using rule 92 (expresion)
+    $default  reduce using rule 96 (expresion)
 
 
 state 109
 
-   38 proc: VOID . ID PIZ $@2 params PDE $@3 cuerpo
-   41     | VOID . ID PIZ $@4 PDE $@5 cuerpo
+   38 proc: VOID . ID PIZ @2 params PDE $@3 cuerpo
+   41     | VOID . ID PIZ @4 PDE $@5 cuerpo
 
     ID  shift, and go to state 25
 
@@ -1765,21 +1757,21 @@ state 110
    55       | SWITCH . PIZ ID PDE LLIZ casos_s LLDE
    56       | SWITCH . PIZ ID PDE LLIZ LLDE
 
-    PIZ  shift, and go to state 152
+    PIZ  shift, and go to state 154
 
 
 state 111
 
-   98 while: WHILE . PIZ expresion PDE bloque
-   99      | WHILE . PIZ expresion PDE PYC
+  102 while: WHILE . PIZ expresion PDE bloque
+  103      | WHILE . PIZ expresion PDE PYC
 
-    PIZ  shift, and go to state 153
+    PIZ  shift, and go to state 155
 
 
 state 112
 
-   70 if: IF . expresion bloque ELSE bloque
-   71   | IF . expresion bloque
+   74 if: IF . expresion bloque ELSE $@9 bloque
+   75   | IF . expresion bloque
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -1795,7 +1787,7 @@ state 112
     COMPC     shift, and go to state 72
     NEGEXP    shift, and go to state 73
 
-    expresion               go to state 154
+    expresion               go to state 156
     crea_conjunto           go to state 75
     llamada_sivacio         go to state 76
     llamada_length          go to state 77
@@ -1804,38 +1796,38 @@ state 112
 
 state 113
 
-  104 in: IN . PIZ OP_INOUT COMA ID PDE PYC
-
-    PIZ  shift, and go to state 155
-
-
-state 114
-
-  100 out: OUT . PIZ STRING COMA ids PDE PYC
-  101    | OUT . PIZ STRING PDE PYC
-
-    PIZ  shift, and go to state 156
-
-
-state 115
-
-  121 destruye_conjunto: DELETE . PIZ ID PDE
+  108 in: IN . PIZ OP_INOUT COMA ID PDE PYC
 
     PIZ  shift, and go to state 157
 
 
+state 114
+
+  104 out: OUT . PIZ STRING COMA ids PDE PYC
+  105    | OUT . PIZ STRING PDE PYC
+
+    PIZ  shift, and go to state 158
+
+
+state 115
+
+  125 destruye_conjunto: DELETE . PIZ ID PDE
+
+    PIZ  shift, and go to state 159
+
+
 state 116
 
-  116 cuerpo: LLIZ LLDE .
+  120 cuerpo: LLIZ LLDE .
 
-    $default  reduce using rule 116 (cuerpo)
+    $default  reduce using rule 120 (cuerpo)
 
 
 state 117
 
    14 vars_s: vars_s . vars
-  113 cuerpo: LLIZ vars_s . sentencias LLDE
-  115       | LLIZ vars_s . LLDE
+  117 cuerpo: LLIZ vars_s . sentencias LLDE
+  119       | LLIZ vars_s . LLDE
 
     ID        shift, and go to state 107
     NUM       shift, and go to state 62
@@ -1860,7 +1852,7 @@ state 117
     CREATE    shift, and go to state 70
     DELETE    shift, and go to state 115
     PIZ       shift, and go to state 71
-    LLDE      shift, and go to state 158
+    LLDE      shift, and go to state 160
     COMPC     shift, and go to state 72
     NEGEXP    shift, and go to state 73
 
@@ -1869,7 +1861,7 @@ state 117
     proc                    go to state 118
     sentencia               go to state 119
     switch                  go to state 120
-    sentencias              go to state 159
+    sentencias              go to state 161
     if                      go to state 122
     expresion               go to state 123
     while                   go to state 124
@@ -1910,9 +1902,9 @@ state 120
 state 121
 
    63 sentencias: sentencias . sentencia
-  114 cuerpo: LLIZ sentencias . LLDE
+  118 cuerpo: LLIZ sentencias . LLDE
 
-    ID        shift, and go to state 160
+    ID        shift, and go to state 162
     NUM       shift, and go to state 62
     REAL      shift, and go to state 63
     STRING    shift, and go to state 64
@@ -1930,12 +1922,12 @@ state 121
     CREATE    shift, and go to state 70
     DELETE    shift, and go to state 115
     PIZ       shift, and go to state 71
-    LLDE      shift, and go to state 161
+    LLDE      shift, and go to state 163
     COMPC     shift, and go to state 72
     NEGEXP    shift, and go to state 73
 
     proc                    go to state 118
-    sentencia               go to state 162
+    sentencia               go to state 164
     switch                  go to state 120
     if                      go to state 122
     expresion               go to state 123
@@ -1963,22 +1955,20 @@ state 122
 state 123
 
    52 sentencia: expresion . PYC
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-  124 inserta_conjunto: expresion . ADDC ID
-  125 saca_conjunto: expresion . MINC ID
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
-    PYC      shift, and go to state 163
+    PYC      shift, and go to state 165
     II       shift, and go to state 92
     DIST     shift, and go to state 93
     MENORQ   shift, and go to state 94
@@ -1991,8 +1981,6 @@ state 123
     MUL      shift, and go to state 101
     OR       shift, and go to state 102
     AND      shift, and go to state 103
-    MINC     shift, and go to state 164
-    ADDC     shift, and go to state 165
 
 
 state 124
@@ -2032,40 +2020,40 @@ state 128
 
 state 129
 
-  119 llamada_conjunto: destruye_conjunto .
+  123 llamada_conjunto: destruye_conjunto .
 
-    $default  reduce using rule 119 (llamada_conjunto)
+    $default  reduce using rule 123 (llamada_conjunto)
 
 
 state 130
 
-  117 llamada_conjunto: inserta_conjunto .
+  121 llamada_conjunto: inserta_conjunto .
 
-    $default  reduce using rule 117 (llamada_conjunto)
+    $default  reduce using rule 121 (llamada_conjunto)
 
 
 state 131
 
-  118 llamada_conjunto: saca_conjunto .
+  122 llamada_conjunto: saca_conjunto .
 
-    $default  reduce using rule 118 (llamada_conjunto)
+    $default  reduce using rule 122 (llamada_conjunto)
 
 
 state 132
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-   97          | ID ASI expresion .
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+  101          | ID ASI expresion .
 
     II       shift, and go to state 92
     DIST     shift, and go to state 93
@@ -2080,52 +2068,156 @@ state 132
     OR       shift, and go to state 102
     AND      shift, and go to state 103
 
-    $default  reduce using rule 97 (expresion)
+    $default  reduce using rule 101 (expresion)
 
 
 state 133
 
-  122 llamada_sivacio: EMPTY PIZ ID . PDE
+  126 llamada_sivacio: EMPTY PIZ ID . PDE
 
     PDE  shift, and go to state 167
 
 
 state 134
 
-  123 llamada_length: LENGTH PIZ ID . PDE
+  127 llamada_length: LENGTH PIZ ID . PDE
 
     PDE  shift, and go to state 168
 
 
 state 135
 
-  120 crea_conjunto: CREATE PIZ PDE .
+  124 crea_conjunto: CREATE PIZ PDE .
 
-    $default  reduce using rule 120 (crea_conjunto)
+    $default  reduce using rule 124 (crea_conjunto)
 
 
 state 136
 
-   85 expresion: PIZ expresion PDE .
+   89 expresion: PIZ expresion PDE .
 
-    $default  reduce using rule 85 (expresion)
+    $default  reduce using rule 89 (expresion)
 
 
 state 137
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-   83          | expresion II expresion .
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+   87          | expresion II expresion .
+
+    RES  shift, and go to state 98
+    SUM  shift, and go to state 99
+    DIV  shift, and go to state 100
+    MUL  shift, and go to state 101
+    OR   shift, and go to state 102
+    AND  shift, and go to state 103
+
+    $default  reduce using rule 87 (expresion)
+
+
+state 138
+
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   86          | expresion DIST expresion .
+   87          | expresion . II expresion
+
+    RES  shift, and go to state 98
+    SUM  shift, and go to state 99
+    DIV  shift, and go to state 100
+    MUL  shift, and go to state 101
+    OR   shift, and go to state 102
+    AND  shift, and go to state 103
+
+    $default  reduce using rule 86 (expresion)
+
+
+state 139
+
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   85          | expresion MENORQ expresion .
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+
+    RES  shift, and go to state 98
+    SUM  shift, and go to state 99
+    DIV  shift, and go to state 100
+    MUL  shift, and go to state 101
+    OR   shift, and go to state 102
+    AND  shift, and go to state 103
+
+    $default  reduce using rule 85 (expresion)
+
+
+state 140
+
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   84          | expresion MAYORQ expresion .
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+
+    RES  shift, and go to state 98
+    SUM  shift, and go to state 99
+    DIV  shift, and go to state 100
+    MUL  shift, and go to state 101
+    OR   shift, and go to state 102
+    AND  shift, and go to state 103
+
+    $default  reduce using rule 84 (expresion)
+
+
+state 141
+
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   83          | expresion MENORIQ expresion .
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
     RES  shift, and go to state 98
     SUM  shift, and go to state 99
@@ -2137,21 +2229,21 @@ state 137
     $default  reduce using rule 83 (expresion)
 
 
-state 138
+state 142
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   82          | expresion DIST expresion .
-   83          | expresion . II expresion
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   82          | expresion MAYORIQ expresion .
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
     RES  shift, and go to state 98
     SUM  shift, and go to state 99
@@ -2163,243 +2255,139 @@ state 138
     $default  reduce using rule 82 (expresion)
 
 
-state 139
+state 143
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   81          | expresion MENORQ expresion .
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   77          | expresion RES expresion .
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
-    RES  shift, and go to state 98
-    SUM  shift, and go to state 99
     DIV  shift, and go to state 100
     MUL  shift, and go to state 101
     OR   shift, and go to state 102
     AND  shift, and go to state 103
 
-    $default  reduce using rule 81 (expresion)
+    $default  reduce using rule 77 (expresion)
 
 
-state 140
+state 144
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   80          | expresion MAYORQ expresion .
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
+   76 expresion: expresion . SUM expresion
+   76          | expresion SUM expresion .
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
-    RES  shift, and go to state 98
-    SUM  shift, and go to state 99
     DIV  shift, and go to state 100
     MUL  shift, and go to state 101
     OR   shift, and go to state 102
     AND  shift, and go to state 103
 
-    $default  reduce using rule 80 (expresion)
+    $default  reduce using rule 76 (expresion)
 
 
-state 141
+state 145
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   79          | expresion MENORIQ expresion .
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   79          | expresion DIV expresion .
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
-    RES  shift, and go to state 98
-    SUM  shift, and go to state 99
-    DIV  shift, and go to state 100
-    MUL  shift, and go to state 101
     OR   shift, and go to state 102
     AND  shift, and go to state 103
 
     $default  reduce using rule 79 (expresion)
 
 
-state 142
+state 146
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   78          | expresion MAYORIQ expresion .
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   78          | expresion MUL expresion .
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
-    RES  shift, and go to state 98
-    SUM  shift, and go to state 99
-    DIV  shift, and go to state 100
-    MUL  shift, and go to state 101
     OR   shift, and go to state 102
     AND  shift, and go to state 103
 
     $default  reduce using rule 78 (expresion)
 
 
-state 143
-
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   73          | expresion RES expresion .
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-
-    DIV  shift, and go to state 100
-    MUL  shift, and go to state 101
-    OR   shift, and go to state 102
-    AND  shift, and go to state 103
-
-    $default  reduce using rule 73 (expresion)
-
-
-state 144
-
-   72 expresion: expresion . SUM expresion
-   72          | expresion SUM expresion .
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-
-    DIV  shift, and go to state 100
-    MUL  shift, and go to state 101
-    OR   shift, and go to state 102
-    AND  shift, and go to state 103
-
-    $default  reduce using rule 72 (expresion)
-
-
-state 145
-
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   75          | expresion DIV expresion .
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-
-    OR   shift, and go to state 102
-    AND  shift, and go to state 103
-
-    $default  reduce using rule 75 (expresion)
-
-
-state 146
-
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   74          | expresion MUL expresion .
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-
-    OR   shift, and go to state 102
-    AND  shift, and go to state 103
-
-    $default  reduce using rule 74 (expresion)
-
-
 state 147
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   77          | expresion OR expresion .
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   81          | expresion OR expresion .
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
-    $default  reduce using rule 77 (expresion)
+    $default  reduce using rule 81 (expresion)
 
 
 state 148
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   76          | expresion AND expresion .
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   80          | expresion AND expresion .
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
-    $default  reduce using rule 76 (expresion)
+    $default  reduce using rule 80 (expresion)
 
 
 state 149
 
-   38 proc: VOID ID PIZ $@2 params PDE $@3 cuerpo .
+   38 proc: VOID ID PIZ @2 params PDE $@3 cuerpo .
 
     $default  reduce using rule 38 (proc)
 
@@ -2413,30 +2401,44 @@ state 150
 
 state 151
 
-  107 llamada_proc: ID PIZ . $@6 params_llamada $@7 PDE PYC
-  108             | ID PIZ . PDE PYC
+  111 llamada_proc: ID PIZ . @10 params_llamada @11 PDE PYC
+  112             | ID PIZ . PDE PYC
 
     PDE  shift, and go to state 169
 
-    $default  reduce using rule 105 ($@6)
+    $default  reduce using rule 109 (@10)
 
-    $@6  go to state 170
+    @10  go to state 170
 
 
 state 152
 
-   53 switch: SWITCH PIZ . ID PDE LLIZ casos_s caso_defecto LLDE
-   54       | SWITCH PIZ . ID PDE LLIZ caso_defecto LLDE
-   55       | SWITCH PIZ . ID PDE LLIZ casos_s LLDE
-   56       | SWITCH PIZ . ID PDE LLIZ LLDE
+  129 saca_conjunto: ID MINC . expresion
 
-    ID  shift, and go to state 171
+    ID        shift, and go to state 61
+    NUM       shift, and go to state 62
+    REAL      shift, and go to state 63
+    STRING    shift, and go to state 64
+    TRUE      shift, and go to state 65
+    FALSE     shift, and go to state 66
+    CARACTER  shift, and go to state 67
+    EMPTY     shift, and go to state 68
+    LENGTH    shift, and go to state 69
+    CREATE    shift, and go to state 70
+    PIZ       shift, and go to state 71
+    COMPC     shift, and go to state 72
+    NEGEXP    shift, and go to state 73
+
+    expresion               go to state 171
+    crea_conjunto           go to state 75
+    llamada_sivacio         go to state 76
+    llamada_length          go to state 77
+    llamada_complementario  go to state 78
 
 
 state 153
 
-   98 while: WHILE PIZ . expresion PDE bloque
-   99      | WHILE PIZ . expresion PDE PYC
+  128 inserta_conjunto: ID ADDC . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -2461,110 +2463,112 @@ state 153
 
 state 154
 
-   70 if: IF expresion . bloque ELSE bloque
-   71   | IF expresion . bloque
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
+   53 switch: SWITCH PIZ . ID PDE LLIZ casos_s caso_defecto LLDE
+   54       | SWITCH PIZ . ID PDE LLIZ caso_defecto LLDE
+   55       | SWITCH PIZ . ID PDE LLIZ casos_s LLDE
+   56       | SWITCH PIZ . ID PDE LLIZ LLDE
 
-    ID        shift, and go to state 160
-    NUM       shift, and go to state 62
-    REAL      shift, and go to state 63
-    STRING    shift, and go to state 64
-    TRUE      shift, and go to state 65
-    FALSE     shift, and go to state 66
-    CARACTER  shift, and go to state 67
-    EMPTY     shift, and go to state 68
-    LENGTH    shift, and go to state 69
-    VOID      shift, and go to state 109
-    SWITCH    shift, and go to state 110
-    WHILE     shift, and go to state 111
-    IF        shift, and go to state 112
-    IN        shift, and go to state 113
-    OUT       shift, and go to state 114
-    CREATE    shift, and go to state 70
-    DELETE    shift, and go to state 115
-    PIZ       shift, and go to state 71
-    LLIZ      shift, and go to state 173
-    II        shift, and go to state 92
-    DIST      shift, and go to state 93
-    MENORQ    shift, and go to state 94
-    MAYORQ    shift, and go to state 95
-    MENORIQ   shift, and go to state 96
-    MAYORIQ   shift, and go to state 97
-    RES       shift, and go to state 98
-    SUM       shift, and go to state 99
-    DIV       shift, and go to state 100
-    MUL       shift, and go to state 101
-    OR        shift, and go to state 102
-    AND       shift, and go to state 103
-    COMPC     shift, and go to state 72
-    NEGEXP    shift, and go to state 73
-
-    proc                    go to state 118
-    sentencia               go to state 174
-    switch                  go to state 120
-    bloque                  go to state 175
-    if                      go to state 122
-    expresion               go to state 123
-    while                   go to state 124
-    out                     go to state 125
-    in                      go to state 126
-    llamada_proc            go to state 127
-    llamada_conjunto        go to state 128
-    crea_conjunto           go to state 75
-    destruye_conjunto       go to state 129
-    llamada_sivacio         go to state 76
-    llamada_length          go to state 77
-    inserta_conjunto        go to state 130
-    saca_conjunto           go to state 131
-    llamada_complementario  go to state 78
+    ID  shift, and go to state 173
 
 
 state 155
 
-  104 in: IN PIZ . OP_INOUT COMA ID PDE PYC
+  102 while: WHILE PIZ . expresion PDE bloque
+  103      | WHILE PIZ . expresion PDE PYC
 
-    OP_INOUT  shift, and go to state 176
+    ID        shift, and go to state 61
+    NUM       shift, and go to state 62
+    REAL      shift, and go to state 63
+    STRING    shift, and go to state 64
+    TRUE      shift, and go to state 65
+    FALSE     shift, and go to state 66
+    CARACTER  shift, and go to state 67
+    EMPTY     shift, and go to state 68
+    LENGTH    shift, and go to state 69
+    CREATE    shift, and go to state 70
+    PIZ       shift, and go to state 71
+    COMPC     shift, and go to state 72
+    NEGEXP    shift, and go to state 73
+
+    expresion               go to state 174
+    crea_conjunto           go to state 75
+    llamada_sivacio         go to state 76
+    llamada_length          go to state 77
+    llamada_complementario  go to state 78
 
 
 state 156
 
-  100 out: OUT PIZ . STRING COMA ids PDE PYC
-  101    | OUT PIZ . STRING PDE PYC
+   74 if: IF expresion . bloque ELSE $@9 bloque
+   75   | IF expresion . bloque
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
 
-    STRING  shift, and go to state 177
+    LLIZ     shift, and go to state 175
+    II       shift, and go to state 92
+    DIST     shift, and go to state 93
+    MENORQ   shift, and go to state 94
+    MAYORQ   shift, and go to state 95
+    MENORIQ  shift, and go to state 96
+    MAYORIQ  shift, and go to state 97
+    RES      shift, and go to state 98
+    SUM      shift, and go to state 99
+    DIV      shift, and go to state 100
+    MUL      shift, and go to state 101
+    OR       shift, and go to state 102
+    AND      shift, and go to state 103
+
+    $default  reduce using rule 69 ($@7)
+
+    bloque  go to state 176
+    $@7     go to state 177
 
 
 state 157
 
-  121 destruye_conjunto: DELETE PIZ . ID PDE
+  108 in: IN PIZ . OP_INOUT COMA ID PDE PYC
 
-    ID  shift, and go to state 178
+    OP_INOUT  shift, and go to state 178
 
 
 state 158
 
-  115 cuerpo: LLIZ vars_s LLDE .
+  104 out: OUT PIZ . STRING COMA ids PDE PYC
+  105    | OUT PIZ . STRING PDE PYC
 
-    $default  reduce using rule 115 (cuerpo)
+    STRING  shift, and go to state 179
 
 
 state 159
 
-   63 sentencias: sentencias . sentencia
-  113 cuerpo: LLIZ vars_s sentencias . LLDE
+  125 destruye_conjunto: DELETE PIZ . ID PDE
 
-    ID        shift, and go to state 160
+    ID  shift, and go to state 180
+
+
+state 160
+
+  119 cuerpo: LLIZ vars_s LLDE .
+
+    $default  reduce using rule 119 (cuerpo)
+
+
+state 161
+
+   63 sentencias: sentencias . sentencia
+  117 cuerpo: LLIZ vars_s sentencias . LLDE
+
+    ID        shift, and go to state 162
     NUM       shift, and go to state 62
     REAL      shift, and go to state 63
     STRING    shift, and go to state 64
@@ -2582,12 +2586,12 @@ state 159
     CREATE    shift, and go to state 70
     DELETE    shift, and go to state 115
     PIZ       shift, and go to state 71
-    LLDE      shift, and go to state 179
+    LLDE      shift, and go to state 181
     COMPC     shift, and go to state 72
     NEGEXP    shift, and go to state 73
 
     proc                    go to state 118
-    sentencia               go to state 162
+    sentencia               go to state 164
     switch                  go to state 120
     if                      go to state 122
     expresion               go to state 123
@@ -2605,52 +2609,42 @@ state 159
     llamada_complementario  go to state 78
 
 
-state 160
-
-   87 expresion: ID .
-   97          | ID . ASI expresion
-  107 llamada_proc: ID . PIZ $@6 params_llamada $@7 PDE PYC
-  108             | ID . PIZ PDE PYC
-
-    PIZ  shift, and go to state 151
-    ASI  shift, and go to state 85
-
-    $default  reduce using rule 87 (expresion)
-
-
-state 161
-
-  114 cuerpo: LLIZ sentencias LLDE .
-
-    $default  reduce using rule 114 (cuerpo)
-
-
 state 162
+
+   91 expresion: ID .
+  101          | ID . ASI expresion
+  111 llamada_proc: ID . PIZ @10 params_llamada @11 PDE PYC
+  112             | ID . PIZ PDE PYC
+  128 inserta_conjunto: ID . ADDC expresion
+  129 saca_conjunto: ID . MINC expresion
+
+    PIZ   shift, and go to state 151
+    ASI   shift, and go to state 85
+    MINC  shift, and go to state 152
+    ADDC  shift, and go to state 153
+
+    $default  reduce using rule 91 (expresion)
+
+
+state 163
+
+  118 cuerpo: LLIZ sentencias LLDE .
+
+    $default  reduce using rule 118 (cuerpo)
+
+
+state 164
 
    63 sentencias: sentencias sentencia .
 
     $default  reduce using rule 63 (sentencias)
 
 
-state 163
+state 165
 
    52 sentencia: expresion PYC .
 
     $default  reduce using rule 52 (sentencia)
-
-
-state 164
-
-  125 saca_conjunto: expresion MINC . ID
-
-    ID  shift, and go to state 180
-
-
-state 165
-
-  124 inserta_conjunto: expresion ADDC . ID
-
-    ID  shift, and go to state 181
 
 
 state 166
@@ -2662,28 +2656,28 @@ state 166
 
 state 167
 
-  122 llamada_sivacio: EMPTY PIZ ID PDE .
+  126 llamada_sivacio: EMPTY PIZ ID PDE .
 
-    $default  reduce using rule 122 (llamada_sivacio)
+    $default  reduce using rule 126 (llamada_sivacio)
 
 
 state 168
 
-  123 llamada_length: LENGTH PIZ ID PDE .
+  127 llamada_length: LENGTH PIZ ID PDE .
 
-    $default  reduce using rule 123 (llamada_length)
+    $default  reduce using rule 127 (llamada_length)
 
 
 state 169
 
-  108 llamada_proc: ID PIZ PDE . PYC
+  112 llamada_proc: ID PIZ PDE . PYC
 
     PYC  shift, and go to state 182
 
 
 state 170
 
-  107 llamada_proc: ID PIZ $@6 . params_llamada $@7 PDE PYC
+  111 llamada_proc: ID PIZ @10 . params_llamada @11 PDE PYC
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -2709,6 +2703,70 @@ state 170
 
 state 171
 
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+  129 saca_conjunto: ID MINC expresion .
+
+    II       shift, and go to state 92
+    DIST     shift, and go to state 93
+    MENORQ   shift, and go to state 94
+    MAYORQ   shift, and go to state 95
+    MENORIQ  shift, and go to state 96
+    MAYORIQ  shift, and go to state 97
+    RES      shift, and go to state 98
+    SUM      shift, and go to state 99
+    DIV      shift, and go to state 100
+    MUL      shift, and go to state 101
+    OR       shift, and go to state 102
+    AND      shift, and go to state 103
+
+    $default  reduce using rule 129 (saca_conjunto)
+
+
+state 172
+
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+  128 inserta_conjunto: ID ADDC expresion .
+
+    II       shift, and go to state 92
+    DIST     shift, and go to state 93
+    MENORQ   shift, and go to state 94
+    MAYORQ   shift, and go to state 95
+    MENORIQ  shift, and go to state 96
+    MAYORIQ  shift, and go to state 97
+    RES      shift, and go to state 98
+    SUM      shift, and go to state 99
+    DIV      shift, and go to state 100
+    MUL      shift, and go to state 101
+    OR       shift, and go to state 102
+    AND      shift, and go to state 103
+
+    $default  reduce using rule 128 (inserta_conjunto)
+
+
+state 173
+
    53 switch: SWITCH PIZ ID . PDE LLIZ casos_s caso_defecto LLDE
    54       | SWITCH PIZ ID . PDE LLIZ caso_defecto LLDE
    55       | SWITCH PIZ ID . PDE LLIZ casos_s LLDE
@@ -2717,22 +2775,22 @@ state 171
     PDE  shift, and go to state 185
 
 
-state 172
+state 174
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-   98 while: WHILE PIZ expresion . PDE bloque
-   99      | WHILE PIZ expresion . PDE PYC
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+  102 while: WHILE PIZ expresion . PDE bloque
+  103      | WHILE PIZ expresion . PDE PYC
 
     PDE      shift, and go to state 186
     II       shift, and go to state 92
@@ -2749,12 +2807,34 @@ state 172
     AND      shift, and go to state 103
 
 
-state 173
+state 175
 
-   67 bloque: LLIZ . sentencias LLDE
-   69       | LLIZ . LLDE
+   68 bloque: LLIZ . $@6 sentencias LLDE
+   72       | LLIZ . $@8 LLDE
 
-    ID        shift, and go to state 160
+    LLDE      reduce using rule 71 ($@8)
+    $default  reduce using rule 67 ($@6)
+
+    $@6  go to state 187
+    $@8  go to state 188
+
+
+state 176
+
+   74 if: IF expresion bloque . ELSE $@9 bloque
+   75   | IF expresion bloque .
+
+    ELSE  shift, and go to state 189
+
+    ELSE      [reduce using rule 75 (if)]
+    $default  reduce using rule 75 (if)
+
+
+state 177
+
+   70 bloque: $@7 . sentencia
+
+    ID        shift, and go to state 162
     NUM       shift, and go to state 62
     REAL      shift, and go to state 63
     STRING    shift, and go to state 64
@@ -2772,14 +2852,12 @@ state 173
     CREATE    shift, and go to state 70
     DELETE    shift, and go to state 115
     PIZ       shift, and go to state 71
-    LLDE      shift, and go to state 187
     COMPC     shift, and go to state 72
     NEGEXP    shift, and go to state 73
 
     proc                    go to state 118
-    sentencia               go to state 119
+    sentencia               go to state 190
     switch                  go to state 120
-    sentencias              go to state 188
     if                      go to state 122
     expresion               go to state 123
     while                   go to state 124
@@ -2796,90 +2874,58 @@ state 173
     llamada_complementario  go to state 78
 
 
-state 174
-
-   68 bloque: sentencia .
-
-    $default  reduce using rule 68 (bloque)
-
-
-state 175
-
-   70 if: IF expresion bloque . ELSE bloque
-   71   | IF expresion bloque .
-
-    ELSE  shift, and go to state 189
-
-    ELSE      [reduce using rule 71 (if)]
-    $default  reduce using rule 71 (if)
-
-
-state 176
-
-  104 in: IN PIZ OP_INOUT . COMA ID PDE PYC
-
-    COMA  shift, and go to state 190
-
-
-state 177
-
-  100 out: OUT PIZ STRING . COMA ids PDE PYC
-  101    | OUT PIZ STRING . PDE PYC
-
-    PDE   shift, and go to state 191
-    COMA  shift, and go to state 192
-
-
 state 178
 
-  121 destruye_conjunto: DELETE PIZ ID . PDE
+  108 in: IN PIZ OP_INOUT . COMA ID PDE PYC
 
-    PDE  shift, and go to state 193
+    COMA  shift, and go to state 191
 
 
 state 179
 
-  113 cuerpo: LLIZ vars_s sentencias LLDE .
+  104 out: OUT PIZ STRING . COMA ids PDE PYC
+  105    | OUT PIZ STRING . PDE PYC
 
-    $default  reduce using rule 113 (cuerpo)
+    PDE   shift, and go to state 192
+    COMA  shift, and go to state 193
 
 
 state 180
 
-  125 saca_conjunto: expresion MINC ID .
+  125 destruye_conjunto: DELETE PIZ ID . PDE
 
-    $default  reduce using rule 125 (saca_conjunto)
+    PDE  shift, and go to state 194
 
 
 state 181
 
-  124 inserta_conjunto: expresion ADDC ID .
+  117 cuerpo: LLIZ vars_s sentencias LLDE .
 
-    $default  reduce using rule 124 (inserta_conjunto)
+    $default  reduce using rule 117 (cuerpo)
 
 
 state 182
 
-  108 llamada_proc: ID PIZ PDE PYC .
+  112 llamada_proc: ID PIZ PDE PYC .
 
-    $default  reduce using rule 108 (llamada_proc)
+    $default  reduce using rule 112 (llamada_proc)
 
 
 state 183
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-  110 params_llamada: expresion .
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+  114 params_llamada: expresion .
 
     II       shift, and go to state 92
     DIST     shift, and go to state 93
@@ -2894,19 +2940,19 @@ state 183
     OR       shift, and go to state 102
     AND      shift, and go to state 103
 
-    $default  reduce using rule 110 (params_llamada)
+    $default  reduce using rule 114 (params_llamada)
 
 
 state 184
 
-  107 llamada_proc: ID PIZ $@6 params_llamada . $@7 PDE PYC
-  109 params_llamada: params_llamada . COMA expresion
+  111 llamada_proc: ID PIZ @10 params_llamada . @11 PDE PYC
+  113 params_llamada: params_llamada . COMA expresion
 
-    COMA  shift, and go to state 194
+    COMA  shift, and go to state 195
 
-    $default  reduce using rule 106 ($@7)
+    $default  reduce using rule 110 (@11)
 
-    $@7  go to state 195
+    @11  go to state 196
 
 
 state 185
@@ -2916,189 +2962,124 @@ state 185
    55       | SWITCH PIZ ID PDE . LLIZ casos_s LLDE
    56       | SWITCH PIZ ID PDE . LLIZ LLDE
 
-    LLIZ  shift, and go to state 196
+    LLIZ  shift, and go to state 197
 
 
 state 186
 
-   98 while: WHILE PIZ expresion PDE . bloque
-   99      | WHILE PIZ expresion PDE . PYC
+  102 while: WHILE PIZ expresion PDE . bloque
+  103      | WHILE PIZ expresion PDE . PYC
 
-    ID        shift, and go to state 160
-    NUM       shift, and go to state 62
-    REAL      shift, and go to state 63
-    STRING    shift, and go to state 64
-    TRUE      shift, and go to state 65
-    FALSE     shift, and go to state 66
-    CARACTER  shift, and go to state 67
-    EMPTY     shift, and go to state 68
-    LENGTH    shift, and go to state 69
-    VOID      shift, and go to state 109
-    SWITCH    shift, and go to state 110
-    WHILE     shift, and go to state 111
-    IF        shift, and go to state 112
-    IN        shift, and go to state 113
-    OUT       shift, and go to state 114
-    CREATE    shift, and go to state 70
-    DELETE    shift, and go to state 115
-    PIZ       shift, and go to state 71
-    LLIZ      shift, and go to state 173
-    PYC       shift, and go to state 197
-    COMPC     shift, and go to state 72
-    NEGEXP    shift, and go to state 73
+    LLIZ  shift, and go to state 175
+    PYC   shift, and go to state 198
 
-    proc                    go to state 118
-    sentencia               go to state 174
-    switch                  go to state 120
-    bloque                  go to state 198
-    if                      go to state 122
-    expresion               go to state 123
-    while                   go to state 124
-    out                     go to state 125
-    in                      go to state 126
-    llamada_proc            go to state 127
-    llamada_conjunto        go to state 128
-    crea_conjunto           go to state 75
-    destruye_conjunto       go to state 129
-    llamada_sivacio         go to state 76
-    llamada_length          go to state 77
-    inserta_conjunto        go to state 130
-    saca_conjunto           go to state 131
-    llamada_complementario  go to state 78
+    $default  reduce using rule 69 ($@7)
+
+    bloque  go to state 199
+    $@7     go to state 177
 
 
 state 187
 
-   69 bloque: LLIZ LLDE .
+   68 bloque: LLIZ $@6 . sentencias LLDE
 
-    $default  reduce using rule 69 (bloque)
+    ID        shift, and go to state 162
+    NUM       shift, and go to state 62
+    REAL      shift, and go to state 63
+    STRING    shift, and go to state 64
+    TRUE      shift, and go to state 65
+    FALSE     shift, and go to state 66
+    CARACTER  shift, and go to state 67
+    EMPTY     shift, and go to state 68
+    LENGTH    shift, and go to state 69
+    VOID      shift, and go to state 109
+    SWITCH    shift, and go to state 110
+    WHILE     shift, and go to state 111
+    IF        shift, and go to state 112
+    IN        shift, and go to state 113
+    OUT       shift, and go to state 114
+    CREATE    shift, and go to state 70
+    DELETE    shift, and go to state 115
+    PIZ       shift, and go to state 71
+    COMPC     shift, and go to state 72
+    NEGEXP    shift, and go to state 73
+
+    proc                    go to state 118
+    sentencia               go to state 119
+    switch                  go to state 120
+    sentencias              go to state 200
+    if                      go to state 122
+    expresion               go to state 123
+    while                   go to state 124
+    out                     go to state 125
+    in                      go to state 126
+    llamada_proc            go to state 127
+    llamada_conjunto        go to state 128
+    crea_conjunto           go to state 75
+    destruye_conjunto       go to state 129
+    llamada_sivacio         go to state 76
+    llamada_length          go to state 77
+    inserta_conjunto        go to state 130
+    saca_conjunto           go to state 131
+    llamada_complementario  go to state 78
 
 
 state 188
 
-   63 sentencias: sentencias . sentencia
-   67 bloque: LLIZ sentencias . LLDE
+   72 bloque: LLIZ $@8 . LLDE
 
-    ID        shift, and go to state 160
-    NUM       shift, and go to state 62
-    REAL      shift, and go to state 63
-    STRING    shift, and go to state 64
-    TRUE      shift, and go to state 65
-    FALSE     shift, and go to state 66
-    CARACTER  shift, and go to state 67
-    EMPTY     shift, and go to state 68
-    LENGTH    shift, and go to state 69
-    VOID      shift, and go to state 109
-    SWITCH    shift, and go to state 110
-    WHILE     shift, and go to state 111
-    IF        shift, and go to state 112
-    IN        shift, and go to state 113
-    OUT       shift, and go to state 114
-    CREATE    shift, and go to state 70
-    DELETE    shift, and go to state 115
-    PIZ       shift, and go to state 71
-    LLDE      shift, and go to state 199
-    COMPC     shift, and go to state 72
-    NEGEXP    shift, and go to state 73
-
-    proc                    go to state 118
-    sentencia               go to state 162
-    switch                  go to state 120
-    if                      go to state 122
-    expresion               go to state 123
-    while                   go to state 124
-    out                     go to state 125
-    in                      go to state 126
-    llamada_proc            go to state 127
-    llamada_conjunto        go to state 128
-    crea_conjunto           go to state 75
-    destruye_conjunto       go to state 129
-    llamada_sivacio         go to state 76
-    llamada_length          go to state 77
-    inserta_conjunto        go to state 130
-    saca_conjunto           go to state 131
-    llamada_complementario  go to state 78
+    LLDE  shift, and go to state 201
 
 
 state 189
 
-   70 if: IF expresion bloque ELSE . bloque
+   74 if: IF expresion bloque ELSE . $@9 bloque
 
-    ID        shift, and go to state 160
-    NUM       shift, and go to state 62
-    REAL      shift, and go to state 63
-    STRING    shift, and go to state 64
-    TRUE      shift, and go to state 65
-    FALSE     shift, and go to state 66
-    CARACTER  shift, and go to state 67
-    EMPTY     shift, and go to state 68
-    LENGTH    shift, and go to state 69
-    VOID      shift, and go to state 109
-    SWITCH    shift, and go to state 110
-    WHILE     shift, and go to state 111
-    IF        shift, and go to state 112
-    IN        shift, and go to state 113
-    OUT       shift, and go to state 114
-    CREATE    shift, and go to state 70
-    DELETE    shift, and go to state 115
-    PIZ       shift, and go to state 71
-    LLIZ      shift, and go to state 173
-    COMPC     shift, and go to state 72
-    NEGEXP    shift, and go to state 73
+    $default  reduce using rule 73 ($@9)
 
-    proc                    go to state 118
-    sentencia               go to state 174
-    switch                  go to state 120
-    bloque                  go to state 200
-    if                      go to state 122
-    expresion               go to state 123
-    while                   go to state 124
-    out                     go to state 125
-    in                      go to state 126
-    llamada_proc            go to state 127
-    llamada_conjunto        go to state 128
-    crea_conjunto           go to state 75
-    destruye_conjunto       go to state 129
-    llamada_sivacio         go to state 76
-    llamada_length          go to state 77
-    inserta_conjunto        go to state 130
-    saca_conjunto           go to state 131
-    llamada_complementario  go to state 78
+    $@9  go to state 202
 
 
 state 190
 
-  104 in: IN PIZ OP_INOUT COMA . ID PDE PYC
+   70 bloque: $@7 sentencia .
 
-    ID  shift, and go to state 201
+    $default  reduce using rule 70 (bloque)
 
 
 state 191
 
-  101 out: OUT PIZ STRING PDE . PYC
+  108 in: IN PIZ OP_INOUT COMA . ID PDE PYC
 
-    PYC  shift, and go to state 202
+    ID  shift, and go to state 203
 
 
 state 192
 
-  100 out: OUT PIZ STRING COMA . ids PDE PYC
+  105 out: OUT PIZ STRING PDE . PYC
 
-    ID  shift, and go to state 203
-
-    ids  go to state 204
+    PYC  shift, and go to state 204
 
 
 state 193
 
-  121 destruye_conjunto: DELETE PIZ ID PDE .
+  104 out: OUT PIZ STRING COMA . ids PDE PYC
 
-    $default  reduce using rule 121 (destruye_conjunto)
+    ID  shift, and go to state 205
+
+    ids  go to state 206
 
 
 state 194
 
-  109 params_llamada: params_llamada COMA . expresion
+  125 destruye_conjunto: DELETE PIZ ID PDE .
+
+    $default  reduce using rule 125 (destruye_conjunto)
+
+
+state 195
+
+  113 params_llamada: params_llamada COMA . expresion
 
     ID        shift, and go to state 61
     NUM       shift, and go to state 62
@@ -3114,108 +3095,159 @@ state 194
     COMPC     shift, and go to state 72
     NEGEXP    shift, and go to state 73
 
-    expresion               go to state 205
+    expresion               go to state 207
     crea_conjunto           go to state 75
     llamada_sivacio         go to state 76
     llamada_length          go to state 77
     llamada_complementario  go to state 78
 
 
-state 195
-
-  107 llamada_proc: ID PIZ $@6 params_llamada $@7 . PDE PYC
-
-    PDE  shift, and go to state 206
-
-
 state 196
+
+  111 llamada_proc: ID PIZ @10 params_llamada @11 . PDE PYC
+
+    PDE  shift, and go to state 208
+
+
+state 197
 
    53 switch: SWITCH PIZ ID PDE LLIZ . casos_s caso_defecto LLDE
    54       | SWITCH PIZ ID PDE LLIZ . caso_defecto LLDE
    55       | SWITCH PIZ ID PDE LLIZ . casos_s LLDE
    56       | SWITCH PIZ ID PDE LLIZ . LLDE
 
-    CASE     shift, and go to state 207
-    DEFAULT  shift, and go to state 208
-    LLDE     shift, and go to state 209
+    CASE     shift, and go to state 209
+    DEFAULT  shift, and go to state 210
+    LLDE     shift, and go to state 211
 
-    casos_s       go to state 210
-    caso_defecto  go to state 211
-
-
-state 197
-
-   99 while: WHILE PIZ expresion PDE PYC .
-
-    $default  reduce using rule 99 (while)
+    casos_s       go to state 212
+    caso_defecto  go to state 213
 
 
 state 198
 
-   98 while: WHILE PIZ expresion PDE bloque .
+  103 while: WHILE PIZ expresion PDE PYC .
 
-    $default  reduce using rule 98 (while)
+    $default  reduce using rule 103 (while)
 
 
 state 199
 
-   67 bloque: LLIZ sentencias LLDE .
+  102 while: WHILE PIZ expresion PDE bloque .
 
-    $default  reduce using rule 67 (bloque)
+    $default  reduce using rule 102 (while)
 
 
 state 200
 
-   70 if: IF expresion bloque ELSE bloque .
+   63 sentencias: sentencias . sentencia
+   68 bloque: LLIZ $@6 sentencias . LLDE
 
-    $default  reduce using rule 70 (if)
+    ID        shift, and go to state 162
+    NUM       shift, and go to state 62
+    REAL      shift, and go to state 63
+    STRING    shift, and go to state 64
+    TRUE      shift, and go to state 65
+    FALSE     shift, and go to state 66
+    CARACTER  shift, and go to state 67
+    EMPTY     shift, and go to state 68
+    LENGTH    shift, and go to state 69
+    VOID      shift, and go to state 109
+    SWITCH    shift, and go to state 110
+    WHILE     shift, and go to state 111
+    IF        shift, and go to state 112
+    IN        shift, and go to state 113
+    OUT       shift, and go to state 114
+    CREATE    shift, and go to state 70
+    DELETE    shift, and go to state 115
+    PIZ       shift, and go to state 71
+    LLDE      shift, and go to state 214
+    COMPC     shift, and go to state 72
+    NEGEXP    shift, and go to state 73
+
+    proc                    go to state 118
+    sentencia               go to state 164
+    switch                  go to state 120
+    if                      go to state 122
+    expresion               go to state 123
+    while                   go to state 124
+    out                     go to state 125
+    in                      go to state 126
+    llamada_proc            go to state 127
+    llamada_conjunto        go to state 128
+    crea_conjunto           go to state 75
+    destruye_conjunto       go to state 129
+    llamada_sivacio         go to state 76
+    llamada_length          go to state 77
+    inserta_conjunto        go to state 130
+    saca_conjunto           go to state 131
+    llamada_complementario  go to state 78
 
 
 state 201
 
-  104 in: IN PIZ OP_INOUT COMA ID . PDE PYC
+   72 bloque: LLIZ $@8 LLDE .
 
-    PDE  shift, and go to state 212
+    $default  reduce using rule 72 (bloque)
 
 
 state 202
 
-  101 out: OUT PIZ STRING PDE PYC .
+   74 if: IF expresion bloque ELSE $@9 . bloque
 
-    $default  reduce using rule 101 (out)
+    LLIZ  shift, and go to state 175
+
+    $default  reduce using rule 69 ($@7)
+
+    bloque  go to state 215
+    $@7     go to state 177
 
 
 state 203
 
-  103 ids: ID .
+  108 in: IN PIZ OP_INOUT COMA ID . PDE PYC
 
-    $default  reduce using rule 103 (ids)
+    PDE  shift, and go to state 216
 
 
 state 204
 
-  100 out: OUT PIZ STRING COMA ids . PDE PYC
-  102 ids: ids . COMA ID
+  105 out: OUT PIZ STRING PDE PYC .
 
-    PDE   shift, and go to state 213
-    COMA  shift, and go to state 214
+    $default  reduce using rule 105 (out)
 
 
 state 205
 
-   72 expresion: expresion . SUM expresion
-   73          | expresion . RES expresion
-   74          | expresion . MUL expresion
-   75          | expresion . DIV expresion
-   76          | expresion . AND expresion
-   77          | expresion . OR expresion
-   78          | expresion . MAYORIQ expresion
-   79          | expresion . MENORIQ expresion
-   80          | expresion . MAYORQ expresion
-   81          | expresion . MENORQ expresion
-   82          | expresion . DIST expresion
-   83          | expresion . II expresion
-  109 params_llamada: params_llamada COMA expresion .
+  107 ids: ID .
+
+    $default  reduce using rule 107 (ids)
+
+
+state 206
+
+  104 out: OUT PIZ STRING COMA ids . PDE PYC
+  106 ids: ids . COMA ID
+
+    PDE   shift, and go to state 217
+    COMA  shift, and go to state 218
+
+
+state 207
+
+   76 expresion: expresion . SUM expresion
+   77          | expresion . RES expresion
+   78          | expresion . MUL expresion
+   79          | expresion . DIV expresion
+   80          | expresion . AND expresion
+   81          | expresion . OR expresion
+   82          | expresion . MAYORIQ expresion
+   83          | expresion . MENORIQ expresion
+   84          | expresion . MAYORQ expresion
+   85          | expresion . MENORQ expresion
+   86          | expresion . DIST expresion
+   87          | expresion . II expresion
+  113 params_llamada: params_llamada COMA expresion .
 
     II       shift, and go to state 92
     DIST     shift, and go to state 93
@@ -3230,119 +3262,133 @@ state 205
     OR       shift, and go to state 102
     AND      shift, and go to state 103
 
-    $default  reduce using rule 109 (params_llamada)
-
-
-state 206
-
-  107 llamada_proc: ID PIZ $@6 params_llamada $@7 PDE . PYC
-
-    PYC  shift, and go to state 215
-
-
-state 207
-
-   58 casos_s: CASE . literal PUNTOS sentencias BREAK PYC
-   60        | CASE . literal PUNTOS BREAK PYC
-
-    NUM       shift, and go to state 216
-    CARACTER  shift, and go to state 217
-
-    literal  go to state 218
+    $default  reduce using rule 113 (params_llamada)
 
 
 state 208
 
-   65 caso_defecto: DEFAULT . PUNTOS sentencias
-   66             | DEFAULT . PUNTOS
+  111 llamada_proc: ID PIZ @10 params_llamada @11 PDE . PYC
 
-    PUNTOS  shift, and go to state 219
+    PYC  shift, and go to state 219
 
 
 state 209
+
+   58 casos_s: CASE . literal PUNTOS sentencias BREAK PYC
+   60        | CASE . literal PUNTOS BREAK PYC
+
+    NUM       shift, and go to state 220
+    CARACTER  shift, and go to state 221
+
+    literal  go to state 222
+
+
+state 210
+
+   65 caso_defecto: DEFAULT . PUNTOS sentencias
+   66             | DEFAULT . PUNTOS
+
+    PUNTOS  shift, and go to state 223
+
+
+state 211
 
    56 switch: SWITCH PIZ ID PDE LLIZ LLDE .
 
     $default  reduce using rule 56 (switch)
 
 
-state 210
+state 212
 
    53 switch: SWITCH PIZ ID PDE LLIZ casos_s . caso_defecto LLDE
    55       | SWITCH PIZ ID PDE LLIZ casos_s . LLDE
    57 casos_s: casos_s . CASE literal PUNTOS sentencias BREAK PYC
    59        | casos_s . CASE literal PUNTOS BREAK PYC
 
-    CASE     shift, and go to state 220
-    DEFAULT  shift, and go to state 208
-    LLDE     shift, and go to state 221
+    CASE     shift, and go to state 224
+    DEFAULT  shift, and go to state 210
+    LLDE     shift, and go to state 225
 
-    caso_defecto  go to state 222
-
-
-state 211
-
-   54 switch: SWITCH PIZ ID PDE LLIZ caso_defecto . LLDE
-
-    LLDE  shift, and go to state 223
-
-
-state 212
-
-  104 in: IN PIZ OP_INOUT COMA ID PDE . PYC
-
-    PYC  shift, and go to state 224
+    caso_defecto  go to state 226
 
 
 state 213
 
-  100 out: OUT PIZ STRING COMA ids PDE . PYC
+   54 switch: SWITCH PIZ ID PDE LLIZ caso_defecto . LLDE
 
-    PYC  shift, and go to state 225
+    LLDE  shift, and go to state 227
 
 
 state 214
 
-  102 ids: ids COMA . ID
+   68 bloque: LLIZ $@6 sentencias LLDE .
 
-    ID  shift, and go to state 226
+    $default  reduce using rule 68 (bloque)
 
 
 state 215
 
-  107 llamada_proc: ID PIZ $@6 params_llamada $@7 PDE PYC .
+   74 if: IF expresion bloque ELSE $@9 bloque .
 
-    $default  reduce using rule 107 (llamada_proc)
+    $default  reduce using rule 74 (if)
 
 
 state 216
+
+  108 in: IN PIZ OP_INOUT COMA ID PDE . PYC
+
+    PYC  shift, and go to state 228
+
+
+state 217
+
+  104 out: OUT PIZ STRING COMA ids PDE . PYC
+
+    PYC  shift, and go to state 229
+
+
+state 218
+
+  106 ids: ids COMA . ID
+
+    ID  shift, and go to state 230
+
+
+state 219
+
+  111 llamada_proc: ID PIZ @10 params_llamada @11 PDE PYC .
+
+    $default  reduce using rule 111 (llamada_proc)
+
+
+state 220
 
    61 literal: NUM .
 
     $default  reduce using rule 61 (literal)
 
 
-state 217
+state 221
 
    62 literal: CARACTER .
 
     $default  reduce using rule 62 (literal)
 
 
-state 218
+state 222
 
    58 casos_s: CASE literal . PUNTOS sentencias BREAK PYC
    60        | CASE literal . PUNTOS BREAK PYC
 
-    PUNTOS  shift, and go to state 227
+    PUNTOS  shift, and go to state 231
 
 
-state 219
+state 223
 
    65 caso_defecto: DEFAULT PUNTOS . sentencias
    66             | DEFAULT PUNTOS .
 
-    ID        shift, and go to state 160
+    ID        shift, and go to state 162
     NUM       shift, and go to state 62
     REAL      shift, and go to state 63
     STRING    shift, and go to state 64
@@ -3368,7 +3414,7 @@ state 219
     proc                    go to state 118
     sentencia               go to state 119
     switch                  go to state 120
-    sentencias              go to state 228
+    sentencias              go to state 232
     if                      go to state 122
     expresion               go to state 123
     while                   go to state 124
@@ -3385,67 +3431,67 @@ state 219
     llamada_complementario  go to state 78
 
 
-state 220
+state 224
 
    57 casos_s: casos_s CASE . literal PUNTOS sentencias BREAK PYC
    59        | casos_s CASE . literal PUNTOS BREAK PYC
 
-    NUM       shift, and go to state 216
-    CARACTER  shift, and go to state 217
+    NUM       shift, and go to state 220
+    CARACTER  shift, and go to state 221
 
-    literal  go to state 229
+    literal  go to state 233
 
 
-state 221
+state 225
 
    55 switch: SWITCH PIZ ID PDE LLIZ casos_s LLDE .
 
     $default  reduce using rule 55 (switch)
 
 
-state 222
+state 226
 
    53 switch: SWITCH PIZ ID PDE LLIZ casos_s caso_defecto . LLDE
 
-    LLDE  shift, and go to state 230
+    LLDE  shift, and go to state 234
 
 
-state 223
+state 227
 
    54 switch: SWITCH PIZ ID PDE LLIZ caso_defecto LLDE .
 
     $default  reduce using rule 54 (switch)
 
 
-state 224
+state 228
 
-  104 in: IN PIZ OP_INOUT COMA ID PDE PYC .
+  108 in: IN PIZ OP_INOUT COMA ID PDE PYC .
 
-    $default  reduce using rule 104 (in)
-
-
-state 225
-
-  100 out: OUT PIZ STRING COMA ids PDE PYC .
-
-    $default  reduce using rule 100 (out)
+    $default  reduce using rule 108 (in)
 
 
-state 226
+state 229
 
-  102 ids: ids COMA ID .
+  104 out: OUT PIZ STRING COMA ids PDE PYC .
 
-    $default  reduce using rule 102 (ids)
+    $default  reduce using rule 104 (out)
 
 
-state 227
+state 230
+
+  106 ids: ids COMA ID .
+
+    $default  reduce using rule 106 (ids)
+
+
+state 231
 
    58 casos_s: CASE literal PUNTOS . sentencias BREAK PYC
    60        | CASE literal PUNTOS . BREAK PYC
 
-    ID        shift, and go to state 160
+    ID        shift, and go to state 162
     NUM       shift, and go to state 62
-    BREAK     shift, and go to state 231
+    BREAK     shift, and go to state 235
     REAL      shift, and go to state 63
     STRING    shift, and go to state 64
     TRUE      shift, and go to state 65
@@ -3468,7 +3514,7 @@ state 227
     proc                    go to state 118
     sentencia               go to state 119
     switch                  go to state 120
-    sentencias              go to state 232
+    sentencias              go to state 236
     if                      go to state 122
     expresion               go to state 123
     while                   go to state 124
@@ -3485,12 +3531,12 @@ state 227
     llamada_complementario  go to state 78
 
 
-state 228
+state 232
 
    63 sentencias: sentencias . sentencia
    65 caso_defecto: DEFAULT PUNTOS sentencias .
 
-    ID        shift, and go to state 160
+    ID        shift, and go to state 162
     NUM       shift, and go to state 62
     REAL      shift, and go to state 63
     STRING    shift, and go to state 64
@@ -3514,75 +3560,7 @@ state 228
     $default  reduce using rule 65 (caso_defecto)
 
     proc                    go to state 118
-    sentencia               go to state 162
-    switch                  go to state 120
-    if                      go to state 122
-    expresion               go to state 123
-    while                   go to state 124
-    out                     go to state 125
-    in                      go to state 126
-    llamada_proc            go to state 127
-    llamada_conjunto        go to state 128
-    crea_conjunto           go to state 75
-    destruye_conjunto       go to state 129
-    llamada_sivacio         go to state 76
-    llamada_length          go to state 77
-    inserta_conjunto        go to state 130
-    saca_conjunto           go to state 131
-    llamada_complementario  go to state 78
-
-
-state 229
-
-   57 casos_s: casos_s CASE literal . PUNTOS sentencias BREAK PYC
-   59        | casos_s CASE literal . PUNTOS BREAK PYC
-
-    PUNTOS  shift, and go to state 233
-
-
-state 230
-
-   53 switch: SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE .
-
-    $default  reduce using rule 53 (switch)
-
-
-state 231
-
-   60 casos_s: CASE literal PUNTOS BREAK . PYC
-
-    PYC  shift, and go to state 234
-
-
-state 232
-
-   58 casos_s: CASE literal PUNTOS sentencias . BREAK PYC
-   63 sentencias: sentencias . sentencia
-
-    ID        shift, and go to state 160
-    NUM       shift, and go to state 62
-    BREAK     shift, and go to state 235
-    REAL      shift, and go to state 63
-    STRING    shift, and go to state 64
-    TRUE      shift, and go to state 65
-    FALSE     shift, and go to state 66
-    CARACTER  shift, and go to state 67
-    EMPTY     shift, and go to state 68
-    LENGTH    shift, and go to state 69
-    VOID      shift, and go to state 109
-    SWITCH    shift, and go to state 110
-    WHILE     shift, and go to state 111
-    IF        shift, and go to state 112
-    IN        shift, and go to state 113
-    OUT       shift, and go to state 114
-    CREATE    shift, and go to state 70
-    DELETE    shift, and go to state 115
-    PIZ       shift, and go to state 71
-    COMPC     shift, and go to state 72
-    NEGEXP    shift, and go to state 73
-
-    proc                    go to state 118
-    sentencia               go to state 162
+    sentencia               go to state 164
     switch                  go to state 120
     if                      go to state 122
     expresion               go to state 123
@@ -3602,12 +3580,34 @@ state 232
 
 state 233
 
-   57 casos_s: casos_s CASE literal PUNTOS . sentencias BREAK PYC
-   59        | casos_s CASE literal PUNTOS . BREAK PYC
+   57 casos_s: casos_s CASE literal . PUNTOS sentencias BREAK PYC
+   59        | casos_s CASE literal . PUNTOS BREAK PYC
 
-    ID        shift, and go to state 160
+    PUNTOS  shift, and go to state 237
+
+
+state 234
+
+   53 switch: SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE .
+
+    $default  reduce using rule 53 (switch)
+
+
+state 235
+
+   60 casos_s: CASE literal PUNTOS BREAK . PYC
+
+    PYC  shift, and go to state 238
+
+
+state 236
+
+   58 casos_s: CASE literal PUNTOS sentencias . BREAK PYC
+   63 sentencias: sentencias . sentencia
+
+    ID        shift, and go to state 162
     NUM       shift, and go to state 62
-    BREAK     shift, and go to state 236
+    BREAK     shift, and go to state 239
     REAL      shift, and go to state 63
     STRING    shift, and go to state 64
     TRUE      shift, and go to state 65
@@ -3628,9 +3628,8 @@ state 233
     NEGEXP    shift, and go to state 73
 
     proc                    go to state 118
-    sentencia               go to state 119
+    sentencia               go to state 164
     switch                  go to state 120
-    sentencias              go to state 237
     if                      go to state 122
     expresion               go to state 123
     while                   go to state 124
@@ -3647,33 +3646,12 @@ state 233
     llamada_complementario  go to state 78
 
 
-state 234
-
-   60 casos_s: CASE literal PUNTOS BREAK PYC .
-
-    $default  reduce using rule 60 (casos_s)
-
-
-state 235
-
-   58 casos_s: CASE literal PUNTOS sentencias BREAK . PYC
-
-    PYC  shift, and go to state 238
-
-
-state 236
-
-   59 casos_s: casos_s CASE literal PUNTOS BREAK . PYC
-
-    PYC  shift, and go to state 239
-
-
 state 237
 
-   57 casos_s: casos_s CASE literal PUNTOS sentencias . BREAK PYC
-   63 sentencias: sentencias . sentencia
+   57 casos_s: casos_s CASE literal PUNTOS . sentencias BREAK PYC
+   59        | casos_s CASE literal PUNTOS . BREAK PYC
 
-    ID        shift, and go to state 160
+    ID        shift, and go to state 162
     NUM       shift, and go to state 62
     BREAK     shift, and go to state 240
     REAL      shift, and go to state 63
@@ -3696,8 +3674,9 @@ state 237
     NEGEXP    shift, and go to state 73
 
     proc                    go to state 118
-    sentencia               go to state 162
+    sentencia               go to state 119
     switch                  go to state 120
+    sentencias              go to state 241
     if                      go to state 122
     expresion               go to state 123
     while                   go to state 124
@@ -3716,26 +3695,93 @@ state 237
 
 state 238
 
+   60 casos_s: CASE literal PUNTOS BREAK PYC .
+
+    $default  reduce using rule 60 (casos_s)
+
+
+state 239
+
+   58 casos_s: CASE literal PUNTOS sentencias BREAK . PYC
+
+    PYC  shift, and go to state 242
+
+
+state 240
+
+   59 casos_s: casos_s CASE literal PUNTOS BREAK . PYC
+
+    PYC  shift, and go to state 243
+
+
+state 241
+
+   57 casos_s: casos_s CASE literal PUNTOS sentencias . BREAK PYC
+   63 sentencias: sentencias . sentencia
+
+    ID        shift, and go to state 162
+    NUM       shift, and go to state 62
+    BREAK     shift, and go to state 244
+    REAL      shift, and go to state 63
+    STRING    shift, and go to state 64
+    TRUE      shift, and go to state 65
+    FALSE     shift, and go to state 66
+    CARACTER  shift, and go to state 67
+    EMPTY     shift, and go to state 68
+    LENGTH    shift, and go to state 69
+    VOID      shift, and go to state 109
+    SWITCH    shift, and go to state 110
+    WHILE     shift, and go to state 111
+    IF        shift, and go to state 112
+    IN        shift, and go to state 113
+    OUT       shift, and go to state 114
+    CREATE    shift, and go to state 70
+    DELETE    shift, and go to state 115
+    PIZ       shift, and go to state 71
+    COMPC     shift, and go to state 72
+    NEGEXP    shift, and go to state 73
+
+    proc                    go to state 118
+    sentencia               go to state 164
+    switch                  go to state 120
+    if                      go to state 122
+    expresion               go to state 123
+    while                   go to state 124
+    out                     go to state 125
+    in                      go to state 126
+    llamada_proc            go to state 127
+    llamada_conjunto        go to state 128
+    crea_conjunto           go to state 75
+    destruye_conjunto       go to state 129
+    llamada_sivacio         go to state 76
+    llamada_length          go to state 77
+    inserta_conjunto        go to state 130
+    saca_conjunto           go to state 131
+    llamada_complementario  go to state 78
+
+
+state 242
+
    58 casos_s: CASE literal PUNTOS sentencias BREAK PYC .
 
     $default  reduce using rule 58 (casos_s)
 
 
-state 239
+state 243
 
    59 casos_s: casos_s CASE literal PUNTOS BREAK PYC .
 
     $default  reduce using rule 59 (casos_s)
 
 
-state 240
+state 244
 
    57 casos_s: casos_s CASE literal PUNTOS sentencias BREAK . PYC
 
-    PYC  shift, and go to state 241
+    PYC  shift, and go to state 245
 
 
-state 241
+state 245
 
    57 casos_s: casos_s CASE literal PUNTOS sentencias BREAK PYC .
 

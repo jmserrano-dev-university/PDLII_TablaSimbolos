@@ -19,10 +19,12 @@ typedef struct{
 	/*Fin Declaración*/
 	int linea_actual = 1;	 /*Almacena la línea por la que vamos*/
 	tDato tipoAux; 			 /*Almacenamos el tipo para las declaraciones de VARIABLES*/
+	int compruebaParam = 0;  /*Comprueba si tenemos que validar los parámetros o no*/
 	int numParametros;		 /*Número de parámetros para los procedimientos*/
 	int linea_if;			 /*Línea que nos indica la linea de la cabecera del id*/
 	int linea_aux;			 /*Línea actual auxiliar para el if*/
 	int contadorErrores = 0; /*Contador de errores*/
+	char nombreProc[100];
 
 	/* Se debe modificar la implementación la función yyerror. En este caso simplemente se escribe el mensaje en pantalla, por lo que habrá que añadir previamente la declaración de la variable global asociada al número de línea (declarada en la práctica anterior en el fichero fuente del flex) y modificar yyerror para que se muestre dicho número de línea */
 	void yyerror (char *msg){
@@ -32,7 +34,7 @@ typedef struct{
 		fprintf(stderr,buffer);
 	}
 
-#line 36 "y_tab.c"
+#line 38 "y_tab.c"
 #define CAB1 257
 #define CAB2 258
 #define CASE 259
@@ -734,10 +736,10 @@ YYSTYPE yylval;
 short yyss[YYSTACKSIZE];
 YYSTYPE yyvs[YYSTACKSIZE];
 #define yystacksize YYSTACKSIZE
-#line 700 "lexico.y"
+#line 823 "lexico.y"
 /* Aquí incluimos el fichero generado por el Flex, que implementa la función yylex() */
 #include "lexyy.c"
-#line 741 "y_tab.c"
+#line 743 "y_tab.c"
 #define YYABORT goto yyabort
 #define YYACCEPT goto yyaccept
 #define YYERROR goto yyerrlab
@@ -878,7 +880,7 @@ yyreduce:
     switch (yyn)
     {
 case 1:
-#line 63 "lexico.y"
+#line 65 "lexico.y"
 {
 					if(contadorErrores == 0){
 						printf("\n\n-------------------------------\n");
@@ -892,7 +894,7 @@ case 1:
 				 }
 break;
 case 2:
-#line 74 "lexico.y"
+#line 76 "lexico.y"
 {
 			if(contadorErrores == 0){
 				printf("\n\n-------------------------------\n");
@@ -906,8 +908,8 @@ case 2:
 	   }
 break;
 case 27:
-#line 115 "lexico.y"
-{
+#line 117 "lexico.y"
+{	
 								if(existeEntradaLocal(yyvsp[-1].cadena) == 0){
 									pushTS(rellenaEntrada(linea_actual,yyvsp[-1].cadena,yyvsp[-2].tipo,defTipo,0));
 								}else{
@@ -918,47 +920,48 @@ case 27:
 							}
 break;
 case 28:
-#line 128 "lexico.y"
+#line 130 "lexico.y"
 {yyval.tipo = entero;}
 break;
 case 29:
-#line 129 "lexico.y"
+#line 131 "lexico.y"
 {yyval.tipo = real;}
 break;
 case 30:
-#line 130 "lexico.y"
+#line 132 "lexico.y"
 {yyval.tipo = caracter;}
 break;
 case 31:
-#line 131 "lexico.y"
+#line 133 "lexico.y"
 {yyval.tipo = conjunto;}
 break;
 case 32:
-#line 132 "lexico.y"
+#line 134 "lexico.y"
 {
 		if((tipoAux = existeEntradaDefTipo(yyvsp[0].cadena)) != 0){
 		 yyval.tipo = tipoAux;
 		}else{
 			printf("\n* Error linea: %d. Tipo \" %s \" propio no definido.\n",linea_actual, yyvsp[0].cadena);
+			tipoAux = errorTipo;
 			yyval.tipo = errorTipo;
 			contadorErrores++;
 		}
 	 }
 break;
 case 33:
-#line 141 "lexico.y"
+#line 144 "lexico.y"
 {yyval.tipo = booleano;}
 break;
 case 34:
-#line 142 "lexico.y"
+#line 145 "lexico.y"
 {yyval.tipo = cadena;}
 break;
 case 35:
-#line 145 "lexico.y"
+#line 148 "lexico.y"
 {tipoAux = yyvsp[0].tipo;}
 break;
 case 40:
-#line 153 "lexico.y"
+#line 156 "lexico.y"
 { 				   
 						   if(tipoAux != yyvsp[0].tipo && yyvsp[0].tipo != errorTipo){
 								printf("\n* Error linea: %d. Asignacion de tipo incorrecta en la declaracion de la variable \" %s\".\n",linea_actual, yyvsp[-2].cadena);
@@ -973,9 +976,10 @@ case 40:
 						 }
 break;
 case 41:
-#line 167 "lexico.y"
+#line 170 "lexico.y"
 { if(existeEntradaLocal(yyvsp[0].cadena) == 0){
 					pushTS(rellenaEntrada(linea_actual,yyvsp[0].cadena,tipoAux,var,0));
+					/*imprimirTS();*/
 			    }else{
 					printf("\n* Error linea: %d. Identificador \" %s \" declarado anteriormente.\n",linea_actual, yyvsp[0].cadena);
 					yyval.tipo = errorTipo;
@@ -984,7 +988,7 @@ case 41:
 			  }
 break;
 case 42:
-#line 179 "lexico.y"
+#line 183 "lexico.y"
 {if(existeEntradaLocal(yyvsp[-1].cadena) != 0){
 						printf("\n* Error linea: %d. Funcion \" %s \" ya declarada.\n",linea_actual, yyvsp[-1].cadena);
 						yyval.tipo = errorTipo;
@@ -995,18 +999,18 @@ case 42:
 				   }
 break;
 case 43:
-#line 186 "lexico.y"
+#line 190 "lexico.y"
 {
 									pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0));
 									copiaParametrosFormales();
 								}
 break;
 case 44:
-#line 189 "lexico.y"
+#line 193 "lexico.y"
 {borrarHastaMarcaTS();}
 break;
 case 45:
-#line 191 "lexico.y"
+#line 195 "lexico.y"
 {if(existeEntradaLocal(yyvsp[-1].cadena) != 0){
 					printf("\n* Error linea: %d. Funcion \" %s \" ya declarada.",linea_actual, yyvsp[-1].cadena);
 					yyval.tipo = errorTipo;
@@ -1017,18 +1021,18 @@ case 45:
 			   }
 break;
 case 46:
-#line 198 "lexico.y"
+#line 202 "lexico.y"
 {
 						pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0));
 						copiaParametrosFormales();
 					 }
 break;
 case 47:
-#line 201 "lexico.y"
+#line 205 "lexico.y"
 {borrarHastaMarcaTS();}
 break;
 case 48:
-#line 204 "lexico.y"
+#line 208 "lexico.y"
 {
 								if(!pushTSParametroFormal(linea_actual, yyvsp[0].cadena, yyvsp[-1].tipo)){
 									printf("\n* Error linea: %d. El parametro formal \" %s \" existente.\n",linea_actual, yyvsp[0].cadena);
@@ -1038,7 +1042,7 @@ case 48:
 							 }
 break;
 case 49:
-#line 211 "lexico.y"
+#line 215 "lexico.y"
 {
 				if(!pushTSParametroFormal(linea_actual, yyvsp[0].cadena, yyvsp[-1].tipo)){
 					printf("\n* Error linea: %d. Parametro formal \" %s \" existente.\n",linea_actual, yyvsp[0].cadena);
@@ -1048,7 +1052,7 @@ case 49:
 		  }
 break;
 case 59:
-#line 230 "lexico.y"
+#line 234 "lexico.y"
 { if((tipoAux = existeEntradaLocal(yyvsp[-5].cadena)) != 0 && tipoAux == yyvsp[-2].tipo){
 																yyval.tipo = tipoAux;
 																	if(tipoAux != entero && tipoAux != caracter){ 
@@ -1075,7 +1079,7 @@ case 59:
 															  }
 break;
 case 60:
-#line 254 "lexico.y"
+#line 258 "lexico.y"
 { if((tipoAux = existeEntradaLocal(yyvsp[-4].cadena)) != 0){
 												yyval.tipo = tipoAux;
 													if(tipoAux != entero && tipoAux != caracter){ 
@@ -1097,7 +1101,7 @@ case 60:
 											  }
 break;
 case 61:
-#line 273 "lexico.y"
+#line 277 "lexico.y"
 { 	if((tipoAux = existeEntradaLocal(yyvsp[-4].cadena)) != 0 && tipoAux == yyvsp[-1].tipo){
 											yyval.tipo = tipoAux;
 												if(tipoAux != entero && tipoAux != caracter){
@@ -1124,7 +1128,7 @@ case 61:
 										  }
 break;
 case 62:
-#line 297 "lexico.y"
+#line 301 "lexico.y"
 { if((tipoAux = existeEntradaLocal(yyvsp[-3].cadena)) != 0){
 									yyval.tipo = tipoAux;
 									if(tipoAux != entero && tipoAux != caracter){
@@ -1147,7 +1151,7 @@ case 62:
 								  }
 break;
 case 63:
-#line 319 "lexico.y"
+#line 323 "lexico.y"
 {	
 																if(yyvsp[-6].tipo != yyvsp[-4].tipo){ 
 																	printf("\n* Error linea: %d. CASEs del Switch con diferente tipo.\n",linea_actual);
@@ -1158,11 +1162,11 @@ case 63:
 														    }
 break;
 case 64:
-#line 327 "lexico.y"
+#line 331 "lexico.y"
 {yyval.tipo = yyvsp[-4].tipo;}
 break;
 case 65:
-#line 328 "lexico.y"
+#line 332 "lexico.y"
 {	if(yyvsp[-5].tipo != yyvsp[-3].tipo){
 												printf("\n* Error linea: %d. CASEs del Switch con diferente tipo.\n",linea_actual);
 												contadorErrores++;
@@ -1172,35 +1176,35 @@ case 65:
 										}
 break;
 case 66:
-#line 335 "lexico.y"
+#line 339 "lexico.y"
 {yyval.tipo = yyvsp[-3].tipo;}
 break;
 case 67:
-#line 338 "lexico.y"
+#line 342 "lexico.y"
 {yyval.tipo = yyvsp[0].tipo;}
 break;
 case 68:
-#line 339 "lexico.y"
+#line 343 "lexico.y"
 {yyval.tipo = yyvsp[0].tipo;}
 break;
 case 73:
-#line 348 "lexico.y"
+#line 352 "lexico.y"
 {linea_aux = linea_actual - 1;}
 break;
 case 75:
-#line 349 "lexico.y"
+#line 353 "lexico.y"
 {linea_aux = linea_actual - 1;}
 break;
 case 77:
-#line 350 "lexico.y"
+#line 354 "lexico.y"
 {linea_aux = linea_actual - 1;}
 break;
 case 79:
-#line 354 "lexico.y"
+#line 358 "lexico.y"
 {linea_if = linea_aux;}
 break;
 case 80:
-#line 354 "lexico.y"
+#line 358 "lexico.y"
 {
 																if(yyvsp[-4].tipo != booleano && yyvsp[-4].tipo != errorTipo){ 
 																	printf("\n* Error linea: %d. Expresion en if no es booleana.\n",linea_if);
@@ -1214,7 +1218,7 @@ case 80:
 															}
 break;
 case 81:
-#line 365 "lexico.y"
+#line 369 "lexico.y"
 {
 							if(yyvsp[-1].tipo != booleano && yyvsp[-1].tipo != errorTipo){ 
 								printf("\n* Error linea: %d. Expresion en if no es booleana.\n",linea_aux);
@@ -1228,202 +1232,281 @@ case 81:
 					  }
 break;
 case 82:
-#line 379 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == cadena || yyvsp[-2].tipo == conjunto /*UNION*/)){
-										yyval.tipo = yyvsp[-2].tipo;
+#line 383 "lexico.y"
+{ 
+									  if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+										  if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == cadena || yyvsp[-2].tipo == conjunto /*UNION*/)){
+											yyval.tipo = yyvsp[-2].tipo;
+										  }else{
+											printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion suma.\n",linea_actual);
+											yyval.tipo = errorTipo;
+											contadorErrores++;
+										  }
 									  }else{
-										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion suma.\n",linea_actual);
 										yyval.tipo = errorTipo;
-										contadorErrores++;
 									  }
 									}
 break;
 case 83:
-#line 387 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == conjunto /*DIFERENCIA*/)){
-								yyval.tipo = yyvsp[-2].tipo;
-							  }else{
-								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion resta.\n",linea_actual);
+#line 396 "lexico.y"
+{ 
+							if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+								if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == conjunto /*DIFERENCIA*/)){
+									yyval.tipo = yyvsp[-2].tipo;
+								  }else{
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion resta.\n",linea_actual);
+									yyval.tipo = errorTipo;
+									contadorErrores++;
+								  }
+							}else{
 								yyval.tipo = errorTipo;
-								contadorErrores++;
-							  }
 							}
+						 }
 break;
 case 84:
-#line 395 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
-								yyval.tipo = yyvsp[-2].tipo;
-							  }else{
-								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion de multiplicacion.\n",linea_actual);
+#line 409 "lexico.y"
+{ 
+							if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+								  if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
+									yyval.tipo = yyvsp[-2].tipo;
+								  }else{
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion de multiplicacion.\n",linea_actual);
+									yyval.tipo = errorTipo;
+									contadorErrores++;
+								  }
+							}else{
 								yyval.tipo = errorTipo;
-								contadorErrores++;
-							  }
 							}
+						  }
 break;
 case 85:
-#line 403 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == conjunto /*INTERSECCION*/)){
-								yyval.tipo = yyvsp[-2].tipo;
+#line 422 "lexico.y"
+{ 
+							if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+								  if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == conjunto /*INTERSECCION*/)){
+									yyval.tipo = yyvsp[-2].tipo;
+								  }else{
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la  operacion de dividir.\n",linea_actual);
+									yyval.tipo = errorTipo;
+									contadorErrores++;
+								  }
 							  }else{
-								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la  operacion de dividir.\n",linea_actual);
 								yyval.tipo = errorTipo;
-								contadorErrores++;
 							  }
 							}
 break;
 case 86:
-#line 411 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && yyvsp[-2].tipo == booleano){
-								yyval.tipo = yyvsp[-2].tipo;
+#line 435 "lexico.y"
+{ 
+							  if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+								  if(yyvsp[-2].tipo == yyvsp[0].tipo && yyvsp[-2].tipo == booleano){
+									yyval.tipo = yyvsp[-2].tipo;
+								  }else{
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion booleana AND.\n",linea_actual);
+									yyval.tipo = errorTipo;
+									contadorErrores++;
+								  }
 							  }else{
-								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion booleana AND.\n",linea_actual);
 								yyval.tipo = errorTipo;
-								contadorErrores++;
 							  }
 							}
 break;
 case 87:
-#line 419 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && yyvsp[-2].tipo == booleano){
-									yyval.tipo = yyvsp[-2].tipo;
+#line 448 "lexico.y"
+{ 
+							   if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+								   if(yyvsp[-2].tipo == yyvsp[0].tipo && yyvsp[-2].tipo == booleano){
+										yyval.tipo = yyvsp[-2].tipo;
+								   }else{
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion booleana OR.\n",linea_actual);
+										yyval.tipo = errorTipo;
+										contadorErrores++;
+								   }
 							   }else{
-									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion booleana OR.\n",linea_actual);
 									yyval.tipo = errorTipo;
-									contadorErrores++;
 							   }
 							}
 break;
 case 88:
-#line 427 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
-									yyval.tipo = booleano;
-								  }else{
-									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
-									yyval.tipo = errorTipo;
-									contadorErrores++;
-								  }
+#line 461 "lexico.y"
+{ 
+								  if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+									  if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
+										yyval.tipo = booleano;
+									  }else{
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+										yyval.tipo = errorTipo;
+										contadorErrores++;
+									  }
+								   }else{
+										yyval.tipo = errorTipo;
+								   }
 								}
 break;
 case 89:
-#line 435 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
-									yyval.tipo = booleano;
-								  }else{
-									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
-									yyval.tipo = errorTipo;
-									contadorErrores++;
-								  }
+#line 474 "lexico.y"
+{ 
+								  if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+									  if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
+										yyval.tipo = booleano;
+									  }else{
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+										yyval.tipo = errorTipo;
+										contadorErrores++;
+									  }
+								   }else{
+										yyval.tipo = errorTipo;
+								   }
 								}
 break;
 case 90:
-#line 443 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
-									yyval.tipo = booleano;
+#line 487 "lexico.y"
+{ 
+								  if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+									  if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
+										yyval.tipo = booleano;
+									  }else{
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+										yyval.tipo = errorTipo;
+										contadorErrores++;
+									  }
 								  }else{
-									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
 									yyval.tipo = errorTipo;
-									contadorErrores++;
 								  }
 								}
 break;
 case 91:
-#line 451 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
+#line 500 "lexico.y"
+{ 
+								  if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+									  if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real)){
+										yyval.tipo = booleano;
+									  }else{
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+										yyval.tipo = errorTipo;
+										contadorErrores++;
+									  }
+								  }else{
+									yyval.tipo = errorTipo;
+								  }
+								}
+break;
+case 92:
+#line 513 "lexico.y"
+{ 
+							  if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+								  if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == booleano)){
 									yyval.tipo = booleano;
 								  }else{
 									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
 									yyval.tipo = errorTipo;
 									contadorErrores++;
 								  }
-								}
-break;
-case 92:
-#line 459 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == booleano)){
-								yyval.tipo = booleano;
 							  }else{
-								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
-								yyval.tipo = errorTipo;
-								contadorErrores++;
+									yyval.tipo = errorTipo;
 							  }
 							}
 break;
 case 93:
-#line 467 "lexico.y"
-{ if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == booleano)){
-								yyval.tipo = booleano;
+#line 526 "lexico.y"
+{ 
+							  if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+								  if(yyvsp[-2].tipo == yyvsp[0].tipo && (yyvsp[-2].tipo == entero || yyvsp[-2].tipo == real || yyvsp[-2].tipo == booleano)){
+									yyval.tipo = booleano;
+								  }else{
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+									yyval.tipo = errorTipo;
+									contadorErrores++;
+								  }
 							  }else{
-								printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
-								yyval.tipo = errorTipo;
-								contadorErrores++;
+									yyval.tipo = errorTipo;
 							  }
 							}
 break;
 case 95:
-#line 476 "lexico.y"
+#line 540 "lexico.y"
 {yyval.tipo = yyvsp[-1].tipo;}
 break;
 case 96:
-#line 477 "lexico.y"
-{ if(yyvsp[0].tipo == booleano){
-							yyval.tipo = booleano;
-					   }else{
-							printf("\n* Error linea: %d. Expresion con tipos distintos en el operador booleano de negacion.\n",linea_actual);
+#line 541 "lexico.y"
+{ 
+					   if(yyvsp[0].tipo != errorTipo){
+						   if(yyvsp[0].tipo == booleano){
+								yyval.tipo = booleano;
+						   }else{
+								printf("\n* Error linea: %d. Expresion con tipos distintos en el operador booleano de negacion.\n",linea_actual);
+								yyval.tipo = errorTipo;
+								contadorErrores++;
+						   }
+					    }else{
 							yyval.tipo = errorTipo;
-							contadorErrores++;
-					   }
+						}
 					}
 break;
 case 97:
-#line 485 "lexico.y"
-{ if((tipoAux = existeEntradaLocal(yyvsp[0].cadena)) != 0){
-		yyval.tipo = tipoAux;
-	   }else{
-		if((tipoAux = existeEntrada(yyvsp[0].cadena)) != 0){
+#line 554 "lexico.y"
+{ 
+	   if(yyvsp[0].tipo != errorTipo){
+		   if((tipoAux = existeEntradaLocal(yyvsp[0].cadena)) != 0){
 			yyval.tipo = tipoAux;
-		}else{
-			printf("\n* Error linea: %d. La variable \" %s \" no declarada.\n",linea_actual,yyvsp[0].cadena);
-			yyval.tipo = errorTipo;
-			contadorErrores++;
-		}
+		   }else{
+			if((tipoAux = existeEntrada(yyvsp[0].cadena)) != 0){
+				yyval.tipo = tipoAux;
+			}else{
+				printf("\n* Error linea: %d. La variable \" %s \" no declarada.\n",linea_actual,yyvsp[0].cadena);
+				yyval.tipo = errorTipo;
+				contadorErrores++;
+			}
+		   }
+	   }else{
+		 yyval.tipo = errorTipo;
 	   }
      }
 break;
 case 103:
-#line 502 "lexico.y"
+#line 576 "lexico.y"
 {yyval.tipo = yyvsp[0].tipo;}
 break;
 case 105:
-#line 504 "lexico.y"
+#line 578 "lexico.y"
 {yyval.tipo = yyvsp[0].tipo;}
 break;
 case 106:
-#line 505 "lexico.y"
+#line 579 "lexico.y"
 {yyval.tipo = yyvsp[0].tipo;}
 break;
 case 107:
-#line 506 "lexico.y"
-{ if((tipoAux = existeEntradaLocal(yyvsp[-2].cadena)) != 0){
-						yyval.tipo = tipoAux;
-					   }else{
-						if((tipoAux = existeEntrada(yyvsp[-2].cadena)) != 0){
-						 yyval.tipo = tipoAux;
-						}else{
-							printf("\n* Error linea: %d. Variable \" %s \" no declarada.\n",linea_actual,yyvsp[-2].cadena);
+#line 580 "lexico.y"
+{ 
+						 if(yyvsp[0].tipo != errorTipo){
+							 if((tipoAux = existeEntradaLocal(yyvsp[-2].cadena)) != 0){
+								yyval.tipo = tipoAux;
+							   }else{
+								if((tipoAux = existeEntrada(yyvsp[-2].cadena)) != 0){
+								 yyval.tipo = tipoAux;
+								}else{
+									printf("\n* Error linea: %d. Variable \" %s \" no declarada.\n",linea_actual,yyvsp[-2].cadena);
+									yyval.tipo = errorTipo;
+									contadorErrores++;
+								}
+							 }
+							   
+							   if(tipoAux != yyvsp[0].tipo && tipoAux != errorTipo){
+									printf("\n* Error linea: %d. Asignacion de tipo incorrecto.\n",linea_actual);
+									yyval.tipo = errorTipo;
+									contadorErrores++;
+							   }
+							   
+							   if(tipoAux == errorTipo){
+								 yyval.tipo = errorTipo;
+							   }
+						 }else{
 							yyval.tipo = errorTipo;
-							contadorErrores++;
-						}
-				    }
-					   
-					   if(tipoAux != yyvsp[0].tipo){
-							printf("\n* Error linea: %d. Asignacion de tipo incorrecta.\n",linea_actual);
-							yyval.tipo = errorTipo;
-							contadorErrores++;
-					   }
-					 }
+						 }
+					}
 break;
 case 108:
-#line 526 "lexico.y"
+#line 609 "lexico.y"
 { 
 											if(yyvsp[-2].tipo != booleano && yyvsp[-2].tipo != errorTipo){ 
 												printf("\n* Error linea: %d. Expresion en while no es booleana.\n",linea_actual);
@@ -1437,7 +1520,7 @@ case 108:
 									   }
 break;
 case 109:
-#line 537 "lexico.y"
+#line 620 "lexico.y"
 {
 								if(yyvsp[-2].tipo != booleano && yyvsp[-2].tipo != errorTipo){
 									printf("\n* Error linea: %d. Expresion en while no es booleana.\n",linea_actual);
@@ -1451,8 +1534,8 @@ case 109:
 							  }
 break;
 case 115:
-#line 560 "lexico.y"
-{  if(existeEntrada(yyvsp[-1].cadena) != sinTipo){
+#line 643 "lexico.y"
+{  if((compruebaParam = existeEntrada(yyvsp[-1].cadena)) != sinTipo){
 							printf("\n* Error linea: %d. Llamada a procedimiento no declarada con anterioridad.\n",linea_actual);
 							yyval.tipo = errorTipo;
 							contadorErrores++;
@@ -1461,16 +1544,21 @@ case 115:
 					  }
 break;
 case 116:
-#line 566 "lexico.y"
-{	if(compruebaNumeroParametros(yyvsp[-3].cadena, numParametros) == 0){ /*Error en tipo*/
-												printf("\n* Error linea: %d. El numero de parametros no coindicen en la llamada al procedimiento.\n", linea_actual);
+#line 649 "lexico.y"
+{	
+											if(compruebaParam != 0){
+												if(compruebaNumeroParametros(yyvsp[-3].cadena, numParametros) == 0){ /*Error en tipo*/
+													printf("\n* Error linea: %d. El numero de parametros no coindicen en la llamada al procedimiento.\n", linea_actual);
+													yyval.tipo = errorTipo;
+													contadorErrores++;
+												}
+											}else{
 												yyval.tipo = errorTipo;
-												contadorErrores++;
-											}		
+											}
 									   }
 break;
 case 118:
-#line 573 "lexico.y"
+#line 661 "lexico.y"
 { if(existeEntrada(yyvsp[-3].cadena) != sinTipo){
 					  printf("\n* Error linea: %d. Llamada a procedimiento \" %s \" no declarada con anterioridad.\n",linea_actual, yyvsp[-3].cadena);
 					  yyval.tipo = errorTipo;
@@ -1479,9 +1567,9 @@ case 118:
 				 }
 break;
 case 119:
-#line 581 "lexico.y"
+#line 669 "lexico.y"
 { 	
-													if(yyvsp[0].tipo != errorTipo){
+													if(yyvsp[0].tipo != errorTipo && compruebaParam != 0){
 														numParametros++;
 														if(compruebaParametroProcedimiento(yyvsp[-4].cadena, yyvsp[0].tipo, numParametros) == 0){
 															printf("\n* Error linea: %d. Parametro del procedimiento no coinciden en tipo.\n", linea_actual);
@@ -1500,9 +1588,9 @@ case 119:
 												}
 break;
 case 120:
-#line 599 "lexico.y"
+#line 687 "lexico.y"
 {	
-				if(yyvsp[0].tipo != errorTipo){
+				if(yyvsp[0].tipo != errorTipo && compruebaParam != 0){
 					numParametros = 1;
 					if(compruebaParametroProcedimiento(yyvsp[-2].cadena, yyvsp[0].tipo, numParametros) == 0){
 						printf("\n* Error linea: %d. Parametro del procedimiento no coinciden en tipo.\n", linea_actual);
@@ -1515,59 +1603,82 @@ case 120:
 			}
 break;
 case 121:
-#line 613 "lexico.y"
+#line 701 "lexico.y"
 {
 					pushTS(rellenaEntrada(linea_actual,"marca",sinTipo,marca,0));
 				 }
 break;
 case 122:
-#line 615 "lexico.y"
+#line 703 "lexico.y"
 {borrarHastaMarcaTS();}
 break;
 case 130:
-#line 629 "lexico.y"
+#line 717 "lexico.y"
 {
 									yyval.tipo = conjunto;
 							   }
 break;
 case 131:
-#line 633 "lexico.y"
-{ if( existeEntradaLocal(yyvsp[-1].cadena) != conjunto && existeEntrada(yyvsp[-1].cadena) != conjunto){
-											printf("\n* Error linea: %d. Identificador \" %s \" no declarado.\n",linea_actual, yyvsp[-1].cadena);
-											contadorErrores++;
+#line 721 "lexico.y"
+{ 
+										if(yyvsp[-1].tipo != errorTipo){
+											if( existeEntradaLocal(yyvsp[-1].cadena) != conjunto && existeEntrada(yyvsp[-1].cadena) != conjunto){
+												printf("\n* Error linea: %d. Identificador \" %s \" no declarado.\n",linea_actual, yyvsp[-1].cadena);
+												contadorErrores++;
+											}
 										}
 									  }
 break;
 case 132:
-#line 639 "lexico.y"
+#line 730 "lexico.y"
 {  	
-										if( existeEntradaLocal(yyvsp[-1].cadena) != conjunto && existeEntrada(yyvsp[-1].cadena) != conjunto){
-											printf("\n* Error linea. %d. Identificador \" %s \" no declarado",linea_actual, yyvsp[-1].cadena);
-											yyval.tipo = errorTipo;
-											contadorErrores++;
+										if(yyvsp[-1].tipo != errorTipo){
+											if( (tipoAux = existeEntradaLocal(yyvsp[-1].cadena)) != conjunto && (tipoAux = existeEntrada(yyvsp[-1].cadena)) != conjunto){
+												if(tipoAux == 0){
+													printf("\n* Error linea. %d. Identificador \" %s \" no declarado",linea_actual, yyvsp[-1].cadena);
+												}else{
+													printf("\n* Error linea. %d. El identificador \" %s \" no es de tipo SET (conjunto).\n",linea_actual, yyvsp[-1].cadena);
+												}
+												yyval.tipo = errorTipo;
+												contadorErrores++;
+											}else{
+												yyval.tipo = booleano;
+											}
 										}else{
-											yyval.tipo = booleano;
+											yyval.tipo = errorTipo;
 										}
 								   }
 break;
 case 133:
-#line 650 "lexico.y"
+#line 749 "lexico.y"
 {
-									if( existeEntradaLocal(yyvsp[-1].cadena) != conjunto && existeEntrada(yyvsp[-1].cadena) != conjunto){
-										printf("\n* Error linea. %d. Identificador \" %s \" no declarado.\n",linea_actual, yyvsp[-1].cadena);
-										yyval.tipo = errorTipo;
-										contadorErrores++;
+									if(yyvsp[-1].tipo != errorTipo){
+										if( (tipoAux = existeEntradaLocal(yyvsp[-1].cadena)) != conjunto && (tipoAux = existeEntrada(yyvsp[-1].cadena)) != conjunto){
+											if(tipoAux == 0){
+												printf("\n* Error linea. %d. Identificador \" %s \" no declarado.\n",linea_actual, yyvsp[-1].cadena);
+											}else{
+												printf("\n* Error linea. %d. El identificador \" %s \" no es de tipo SET (conjunto).\n",linea_actual, yyvsp[-1].cadena);
+											}
+											yyval.tipo = errorTipo;
+											contadorErrores++;
+										}else{
+											yyval.tipo = entero;
+										}
 									}else{
-										yyval.tipo = entero;
+										yyval.tipo = errorTipo;
 									}
 								  }
 break;
 case 134:
-#line 661 "lexico.y"
+#line 768 "lexico.y"
 {
-										if(yyvsp[0].tipo != errorTipo){
-											if( existeEntradaLocal(yyvsp[-2].cadena) != conjunto && existeEntrada(yyvsp[-2].cadena) != conjunto){
-												printf("\n* Error linea: %d. Identificador \" %s \" no declarado.\n",linea_actual, yyvsp[-2].cadena);
+										if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+											if( (tipoAux = existeEntradaLocal(yyvsp[-2].cadena)) != conjunto && (tipoAux = existeEntrada(yyvsp[-2].cadena)) != conjunto){
+												if(tipoAux == 0){
+													printf("\n* Error linea: %d. Identificador \" %s \" no declarado.\n",linea_actual, yyvsp[-2].cadena);
+												}else{
+													printf("\n* Error linea. %d. El identificador \" %s \" no es de tipo SET (conjunto).\n",linea_actual, yyvsp[-2].cadena);
+												}
 												yyval.tipo = errorTipo;
 												contadorErrores++;
 											}
@@ -1577,11 +1688,15 @@ case 134:
 									 }
 break;
 case 135:
-#line 674 "lexico.y"
+#line 785 "lexico.y"
 {
-									if(yyvsp[0].tipo != errorTipo){
-										if( existeEntradaLocal(yyvsp[-2].cadena) != conjunto && existeEntrada(yyvsp[-2].cadena) != conjunto){
-											printf("\n* Error linea: %d. Identificador \" %s \" no declarado",linea_actual, yyvsp[-2].cadena);
+									if(yyvsp[-2].tipo != errorTipo && yyvsp[0].tipo != errorTipo){
+										if( (tipoAux = existeEntradaLocal(yyvsp[-2].cadena)) != conjunto && (tipoAux = existeEntrada(yyvsp[-2].cadena)) != conjunto){
+											if(tipoAux == 0){
+												printf("\n* Error linea: %d. Identificador \" %s \" no declarado",linea_actual, yyvsp[-2].cadena);
+											}else{
+												printf("\n* Error linea. %d. El identificador \" %s \" no es de tipo SET (conjunto).\n",linea_actual, yyvsp[-2].cadena);
+											}
 											yyval.tipo = errorTipo;
 											contadorErrores++;
 										}
@@ -1591,18 +1706,26 @@ case 135:
 								 }
 break;
 case 136:
-#line 688 "lexico.y"
+#line 803 "lexico.y"
 {
-									if( existeEntradaLocal(yyvsp[0].cadena) != conjunto && existeEntrada(yyvsp[0].cadena) != conjunto){
-										printf("\n* Error linea: %d. Identificador \" %s \" no declarado",linea_actual, yyvsp[0].cadena);
-										yyval.tipo = errorTipo;
-										contadorErrores++;
+									if(yyvsp[0].tipo != errorTipo){
+										if( (tipoAux = existeEntradaLocal(yyvsp[0].cadena)) != conjunto && (tipoAux = existeEntrada(yyvsp[0].cadena)) != conjunto){
+											if(tipoAux == 0){
+												printf("\n* Error linea: %d. Identificador \" %s \" no declarado",linea_actual, yyvsp[0].cadena);
+											}else{
+												printf("\n* Error linea. %d. El identificador \" %s \" no es de tipo SET (conjunto).\n",linea_actual, yyvsp[0].cadena);
+											}
+											yyval.tipo = errorTipo;
+											contadorErrores++;
+										}else{
+											yyval.tipo = conjunto;
+										}
 									}else{
-										yyval.tipo = conjunto;
+										yyval.tipo = errorTipo;
 									}
 								  }
 break;
-#line 1606 "y_tab.c"
+#line 1729 "y_tab.c"
     }
     yyssp -= yym;
     yystate = *yyssp;

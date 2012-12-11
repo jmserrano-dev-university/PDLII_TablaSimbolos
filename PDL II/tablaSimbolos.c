@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include "tablaSimbolos.h"
 
-int topeTS = 0;
 
 /**
- * Constructor de la tabla de simbolos
+ * Inicializador de la tabla de simbolos
  */
 void createTS(){
     topeTS = 0;
@@ -40,6 +39,8 @@ void borrarHastaMarcaTS(){
 /**
  * Función que comprueba si existe una entrada en la tabla de simbolos por nombre
  * @param nombre Nombre de la entrada a comprobar
+ * @return 0 si no exite la entrada en la tabla de simbolos o el tipo del dato 
+ * en caso de existir
  */
 int existeEntrada(char * nombre){
     int tope = topeTS - 1;
@@ -58,6 +59,8 @@ int existeEntrada(char * nombre){
 /**
  * Función que comprueba si existe un TIPO DE DEFINICIÓN PROPIA en la tabla de simbolos
  * @param nombre Nombre de la entrada a comprobar
+ * @return 0 si no exite la entrada en la tabla de simbolos o el tipo del dato 
+ * en caso de existir
  */
 int existeEntradaDefTipo(char * nombre){
     int tope = topeTS - 1;
@@ -82,6 +85,8 @@ int existeEntradaDefTipo(char * nombre){
 /**
  * Función que comprueba si existe una entrada hasta una MARCA (LOCAL)
  * @param nombre Nombre Nombre de la entrada a comprobar
+ * @return 0 si no exite la entrada en la tabla de simbolos o el tipo del dato 
+ * en caso de existir
  */
 int existeEntradaLocal(char * nombre){
     int tope = topeTS - 1;

@@ -10,7 +10,7 @@ void main(){
 	real r;
 	entero a=2,b,c;
 	bool h,f;
-	float ca;
+	loat ca; /*Error 1: Error léxico en un tipo generando error semántico*/
 	
 	/*CONJUNTOS*/
 	set conj,uni,inter,dif;
@@ -21,7 +21,7 @@ void main(){
 	
 	}
 	
-	a = length(conj);
+	a = length(h); /*Error 5: Error en expresiones complejas del tipo SET (conjunto)*/
 	
 	/*Insertamos en conjunto*/
 	conj <-- conj;
@@ -41,29 +41,33 @@ void main(){
 	
 	void procedimiento(int a, int b, int c){
 		int y,e,f;
-
+		
 		void proc1(){
 			int tr;
 			int ert;
 			int rt;
+			real realo;
+			
+			procedimient(tr,ert,rt); /*Error 3c: Llamada a procedimiento fuera de ambito*/
 			
 			void procedimient(int d, int e, int s){
-				
+				int d; 	/*Error 2: Declaramos una variable igual a el argumento de la función*/
 			}
 			
-			procedimient(tr,ert,tr);
+			procedimient(tr,ert,realo); /*Error 3a: Llamada a una función con tipo de argumentos erroneos*/
+			procedimient(tr,ert);		/*Error 3b: Llamada a una función con número de parámetros erroneos*/
 		}
 	}
 	
 	
 	
-	if( 2 < 3.0){
+	if( 2 < 3){
 		printf("HOLA QUE TAL");
 	}else{
 		printf("ADIOS");
 	}
 	
-	while(a < 3.0){
+	while(a < h){ /*Error 4a: Error en tipo de expresión lógica | "a" es entero y "h" es booleano */
 		if(3.0 < ca){
 			printf("ERROR, XD!");
 		}
@@ -71,7 +75,7 @@ void main(){
 	
 	switch(a){
 		case 1:
-			ca = 5.3213 + 5.123;
+			ca = 5 + 5.123; /*Error 4b: Error en tipo de expresiones aritméticas*/
 		break;
 		
 		case 2:
