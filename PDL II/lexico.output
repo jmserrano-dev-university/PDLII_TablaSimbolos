@@ -15,6 +15,7 @@ Terminals unused in grammar
    NEG
    COMEN
    ERR
+   IMPRIMIR_TABLA
    CORI
    CORD
 
@@ -276,145 +277,146 @@ PDE (298) 38 41 53 54 55 56 89 102 103 104 105 108 111 112 116 124
     125 126 127
 COMEN (299)
 ERR (300)
-CORI (301)
-CORD (302)
-PUNTOS (303) 57 58 59 60 65 66
-LLIZ (304) 53 54 55 56 68 72 117 118 119 120
-LLDE (305) 53 54 55 56 68 72 117 118 119 120
-PYC (306) 21 30 51 52 57 58 59 60 103 104 105 108 111 112
-COMA (307) 31 42 104 106 108 113
-ASI (308) 34 101
-II (309) 87
-DIST (310) 86
-MENORQ (311) 85
-MAYORQ (312) 84
-MENORIQ (313) 83
-MAYORIQ (314) 82
-RES (315) 77
-SUM (316) 76
-DIV (317) 79
-MUL (318) 78
-OR (319) 81
-AND (320) 80
-COMPC (321) 130
-MINC (322) 129
-ADDC (323) 128
-NEGEXP (324) 90
+IMPRIMIR_TABLA (301)
+CORI (302)
+CORD (303)
+PUNTOS (304) 57 58 59 60 65 66
+LLIZ (305) 53 54 55 56 68 72 117 118 119 120
+LLDE (306) 53 54 55 56 68 72 117 118 119 120
+PYC (307) 21 30 51 52 57 58 59 60 103 104 105 108 111 112
+COMA (308) 31 42 104 106 108 113
+ASI (309) 34 101
+II (310) 87
+DIST (311) 86
+MENORQ (312) 85
+MAYORQ (313) 84
+MENORIQ (314) 83
+MAYORIQ (315) 82
+RES (316) 77
+SUM (317) 76
+DIV (318) 79
+MUL (319) 78
+OR (320) 81
+AND (321) 80
+COMPC (322) 130
+MINC (323) 129
+ADDC (324) 128
+NEGEXP (325) 90
 
 
 Nonterminals, with rules where they appear
 
-$accept (70)
+$accept (71)
     on left: 0
-prog (71)
+prog (72)
     on left: 1 2, on right: 0
-dec1 (72)
+dec1 (73)
     on left: 3 4 5, on right: 1
-dec2 (73)
+dec2 (74)
     on left: 6 7 8 9, on right: 1 2
-incs_s (74)
+incs_s (75)
     on left: 10 11, on right: 3 4 10
-tipos_s (75)
+tipos_s (76)
     on left: 12 13, on right: 3 5 12
-vars_s (76)
+vars_s (77)
     on left: 14 15, on right: 6 7 14 117 119
-procs_s (77)
+procs_s (78)
     on left: 16 17, on right: 6 8 16
-incs (78)
+incs (79)
     on left: 18, on right: 10 11
-cabeceras (79)
+cabeceras (80)
     on left: 19 20, on right: 18
-tipos (80)
+tipos (81)
     on left: 21, on right: 12 13
-tipo (81)
+tipo (82)
     on left: 22 23 24 25 26 27 28, on right: 21 30 42 43
-vars (82)
+vars (83)
     on left: 30, on right: 14 15
-$@1 (83)
+$@1 (84)
     on left: 29, on right: 30
-variables (84)
+variables (85)
     on left: 31 32, on right: 30 31
-variables_s (85)
+variables_s (86)
     on left: 33 34, on right: 31 32
-variable (86)
+variable (87)
     on left: 35, on right: 33 34
-proc (87)
+proc (88)
     on left: 38 41, on right: 16 17 49
-@2 (88)
+@2 (89)
     on left: 36, on right: 38
-$@3 (89)
+$@3 (90)
     on left: 37, on right: 38
-@4 (90)
+@4 (91)
     on left: 39, on right: 41
-$@5 (91)
+$@5 (92)
     on left: 40, on right: 41
-params (92)
+params (93)
     on left: 42 43, on right: 38 42
-sentencia (93)
+sentencia (94)
     on left: 44 45 46 47 48 49 50 51 52, on right: 63 64 70
-switch (94)
+switch (95)
     on left: 53 54 55 56, on right: 44
-casos_s (95)
+casos_s (96)
     on left: 57 58 59 60, on right: 53 55 57 59
-literal (96)
+literal (97)
     on left: 61 62, on right: 57 58 59 60
-sentencias (97)
+sentencias (98)
     on left: 63 64, on right: 57 58 63 65 68 117 118
-caso_defecto (98)
+caso_defecto (99)
     on left: 65 66, on right: 53 54
-bloque (99)
+bloque (100)
     on left: 68 70 72, on right: 74 75 102
-$@6 (100)
+$@6 (101)
     on left: 67, on right: 68
-$@7 (101)
+$@7 (102)
     on left: 69, on right: 70
-$@8 (102)
+$@8 (103)
     on left: 71, on right: 72
-if (103)
+if (104)
     on left: 74 75, on right: 45
-$@9 (104)
+$@9 (105)
     on left: 73, on right: 74
-expresion (105)
+expresion (106)
     on left: 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93
     94 95 96 97 98 99 100 101, on right: 34 52 74 75 76 77 78 79 80
     81 82 83 84 85 86 87 89 90 101 102 103 113 114 128 129
-while (106)
+while (107)
     on left: 102 103, on right: 46
-out (107)
+out (108)
     on left: 104 105, on right: 48
-ids (108)
+ids (109)
     on left: 106 107, on right: 104 106
-in (109)
+in (110)
     on left: 108, on right: 47
-llamada_proc (110)
+llamada_proc (111)
     on left: 111 112, on right: 50
-@10 (111)
+@10 (112)
     on left: 109, on right: 111
-@11 (112)
+@11 (113)
     on left: 110, on right: 111
-params_llamada (113)
+params_llamada (114)
     on left: 113 114, on right: 111 113
-main (114)
+main (115)
     on left: 116, on right: 6 7 8 9
-$@12 (115)
+$@12 (116)
     on left: 115, on right: 116
-cuerpo (116)
+cuerpo (117)
     on left: 117 118 119 120, on right: 38 41 116
-llamada_conjunto (117)
+llamada_conjunto (118)
     on left: 121 122 123, on right: 51
-crea_conjunto (118)
+crea_conjunto (119)
     on left: 124, on right: 97
-destruye_conjunto (119)
+destruye_conjunto (120)
     on left: 125, on right: 123
-llamada_sivacio (120)
+llamada_sivacio (121)
     on left: 126, on right: 99
-llamada_length (121)
+llamada_length (122)
     on left: 127, on right: 100
-inserta_conjunto (122)
+inserta_conjunto (123)
     on left: 128, on right: 121
-saca_conjunto (123)
+saca_conjunto (124)
     on left: 129, on right: 122
-llamada_complementario (124)
+llamada_complementario (125)
     on left: 130, on right: 98
 
 

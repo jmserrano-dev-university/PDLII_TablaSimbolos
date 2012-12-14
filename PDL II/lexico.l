@@ -65,7 +65,7 @@ todos .
 "-->" return MINC;
 "~" return COMPC;
 
-
+"imprimir_tabla" return IMPRIMIR_TABLA;
 
 
 "typedef" return TYPEDEF;
@@ -107,6 +107,6 @@ todos .
 			         return ID;
 				   }
 
-. yyerror("Error en la línea: ");
+. yyerror("Error en la linea: ");
 
 %%

@@ -20,7 +20,9 @@ typedef struct{
 	int linea_if;			 //Línea que nos indica la linea de la cabecera del id
 	int linea_aux;			 //Línea actual auxiliar para el if
 	int contadorErrores = 0; //Contador de errores
-	char nombreProc[100];
+	char cad[250];
+	char cad1[250];
+	char n_f[250];
 
 	/* Se debe modificar la implementación la función yyerror. En este caso simplemente se escribe el mensaje en pantalla, por lo que habrá que añadir previamente la declaración de la variable global asociada al número de línea (declarada en la práctica anterior en el fichero fuente del flex) y modificar yyerror para que se muestre dicho número de línea */
 	void yyerror (char *msg){
@@ -46,7 +48,7 @@ typedef struct{
 %token CREATE INSERT MAIN EXTRACT DELETE
 %token MINUS UNION INTERSECTION NEG
 
-%token PIZ PDE COMEN ERR
+%token PIZ PDE COMEN ERR IMPRIMIR_TABLA
 
 %token CORI CORD PUNTOS LLIZ LLDE PYC COMA
 
@@ -76,7 +78,7 @@ prog : dec1 dec2 {
 | dec2 {
 			if(contadorErrores == 0){
 				printf("\n\n-------------------------------\n");
-				printf(" -- Generacion correcta.\n\n");
+				printf(" -- Generacion correcta.\n");
 				printf("\n-------------------------------\n\n");
 			}else{
 				printf("\n\n-------------------------------\n");
@@ -125,8 +127,6 @@ tipos : TYPEDEF tipo ID PYC {
 							}
 ;
 
-
-
 tipo : INT {$$.tipo = entero;}
 | FLOAT {$$.tipo = real;}
 | CHAR {$$.tipo = caracter;}
@@ -155,7 +155,7 @@ variables : variables COMA variables_s
 variables_s : variable
 | variable ASI expresion { 				   
 						   if(tipoAux != $3.tipo && $3.tipo != errorTipo){
-								printf("\n* Error linea: %d. Asignacion de tipo incorrecta en la declaracion de la variable \" %s\".\n",linea_actual, $1.cadena);
+								printf("\n* Error linea: %d. Asignacion de tipo incorrecta en la declaracion de la variable \" %s\". Variable de tipo %s y asignacion de tipo %s.\n",linea_actual, $1.cadena, $1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 								$$.tipo = errorTipo;
 								contadorErrores++;
 						   }
@@ -169,14 +169,13 @@ variables_s : variable
 
 variable : ID { if(existeEntradaLocal($1.cadena) == 0){
 					pushTS(rellenaEntrada(linea_actual,$1.cadena,tipoAux,var,0));
-					//imprimirTS();
+					$$.tipo = tipoAux;
 			    }else{
 					printf("\n* Error linea: %d. Identificador \" %s \" declarado anteriormente.\n",linea_actual, $1.cadena);
 					$$.tipo = errorTipo;
 					contadorErrores++;
 				}
 			  }
-/*| ID CORI NUM CORD ¿ESTO SE PONE?*/
 ;
 
 
@@ -230,7 +229,12 @@ sentencia : switch
 | llamada_proc 
 | llamada_conjunto PYC 
 | expresion PYC
+| imprimir_tabla
 ;
+
+imprimir_tabla: IMPRIMIR_TABLA PYC {imprimirTS();}
+;
+
 switch : SWITCH PIZ ID PDE LLIZ casos_s caso_defecto LLDE { if((tipoAux = existeEntradaLocal($3.cadena)) != 0 && tipoAux == $6.tipo){
 																$$.tipo = tipoAux;
 																	if(tipoAux != entero && tipoAux != caracter){ 
@@ -385,7 +389,7 @@ expresion : expresion SUM expresion {
 										  if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == cadena || $1.tipo == conjunto /*UNION*/)){
 											$$.tipo = $1.tipo;
 										  }else{
-											printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion suma.\n",linea_actual);
+											printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion suma. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 											$$.tipo = errorTipo;
 											contadorErrores++;
 										  }
@@ -398,7 +402,7 @@ expresion : expresion SUM expresion {
 								if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == conjunto /*DIFERENCIA*/)){
 									$$.tipo = $1.tipo;
 								  }else{
-									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion resta.\n",linea_actual);
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion resta. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 									$$.tipo = errorTipo;
 									contadorErrores++;
 								  }
@@ -411,7 +415,7 @@ expresion : expresion SUM expresion {
 								  if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 									$$.tipo = $1.tipo;
 								  }else{
-									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion de multiplicacion.\n",linea_actual);
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion de multiplicacion. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 									$$.tipo = errorTipo;
 									contadorErrores++;
 								  }
@@ -424,7 +428,7 @@ expresion : expresion SUM expresion {
 								  if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == conjunto /*INTERSECCION*/)){
 									$$.tipo = $1.tipo;
 								  }else{
-									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la  operacion de dividir.\n",linea_actual);
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la  operacion de dividir. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 									$$.tipo = errorTipo;
 									contadorErrores++;
 								  }
@@ -437,7 +441,7 @@ expresion : expresion SUM expresion {
 								  if($1.tipo == $3.tipo && $1.tipo == booleano){
 									$$.tipo = $1.tipo;
 								  }else{
-									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion booleana AND.\n",linea_actual);
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion booleana AND. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 									$$.tipo = errorTipo;
 									contadorErrores++;
 								  }
@@ -450,7 +454,7 @@ expresion : expresion SUM expresion {
 								   if($1.tipo == $3.tipo && $1.tipo == booleano){
 										$$.tipo = $1.tipo;
 								   }else{
-										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion booleana OR.\n",linea_actual);
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la operacion booleana OR. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 										$$.tipo = errorTipo;
 										contadorErrores++;
 								   }
@@ -463,7 +467,7 @@ expresion : expresion SUM expresion {
 									  if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 										$$.tipo = booleano;
 									  }else{
-										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 										$$.tipo = errorTipo;
 										contadorErrores++;
 									  }
@@ -476,7 +480,7 @@ expresion : expresion SUM expresion {
 									  if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 										$$.tipo = booleano;
 									  }else{
-										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 										$$.tipo = errorTipo;
 										contadorErrores++;
 									  }
@@ -489,7 +493,7 @@ expresion : expresion SUM expresion {
 									  if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 										$$.tipo = booleano;
 									  }else{
-										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 										$$.tipo = errorTipo;
 										contadorErrores++;
 									  }
@@ -502,7 +506,7 @@ expresion : expresion SUM expresion {
 									  if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real)){
 										$$.tipo = booleano;
 									  }else{
-										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+										printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 										$$.tipo = errorTipo;
 										contadorErrores++;
 									  }
@@ -515,7 +519,7 @@ expresion : expresion SUM expresion {
 								  if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == booleano)){
 									$$.tipo = booleano;
 								  }else{
-									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 									$$.tipo = errorTipo;
 									contadorErrores++;
 								  }
@@ -528,7 +532,7 @@ expresion : expresion SUM expresion {
 								  if($1.tipo == $3.tipo && ($1.tipo == entero || $1.tipo == real || $1.tipo == booleano)){
 									$$.tipo = booleano;
 								  }else{
-									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion.\n",linea_actual);
+									printf("\n* Error en la linea: %d. Expresion con tipos distintos en la comparacion. %s - %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 									$$.tipo = errorTipo;
 									contadorErrores++;
 								  }
@@ -543,7 +547,7 @@ expresion : expresion SUM expresion {
 						   if($2.tipo == booleano){
 								$$.tipo = booleano;
 						   }else{
-								printf("\n* Error linea: %d. Expresion con tipos distintos en el operador booleano de negacion.\n",linea_actual);
+								printf("\n* Error linea: %d. Expresion con tipos distintos en el operador booleano de negacion. %s - %s\n",linea_actual,$2.tipo==1?"entero":$2.tipo==2?"real":$2.tipo==3?"booleano":$2.tipo==4?"caracter":$2.tipo==5?"cadena":"conjunto");
 								$$.tipo = errorTipo;
 								contadorErrores++;
 						   }
@@ -578,21 +582,22 @@ expresion : expresion SUM expresion {
 | llamada_sivacio {$$.tipo = $1.tipo;}
 | llamada_length {$$.tipo = $1.tipo;}
 | ID ASI expresion { 
-						 if($3.tipo != errorTipo){
-							 if((tipoAux = existeEntradaLocal($1.cadena)) != 0){
-								$$.tipo = tipoAux;
-							   }else{
-								if((tipoAux = existeEntrada($1.cadena)) != 0){
-								 $$.tipo = tipoAux;
-								}else{
-									printf("\n* Error linea: %d. Variable \" %s \" no declarada.\n",linea_actual,$1.cadena);
-									$$.tipo = errorTipo;
-									contadorErrores++;
-								}
-							 }
-							   
+						 
+						 if((tipoAux = existeEntradaLocal($1.cadena)) != 0){
+							$$.tipo = tipoAux;
+						   }else{
+							if((tipoAux = existeEntrada($1.cadena)) != 0){
+							 $$.tipo = tipoAux;
+							}else{
+								printf("\n* Error linea: %d. Variable \" %s \" no declarada.\n",linea_actual,$1.cadena);
+								$$.tipo = errorTipo;
+								contadorErrores++;
+							}
+						 }
+							 
+						if($3.tipo != errorTipo){
 							   if(tipoAux != $3.tipo && tipoAux != errorTipo){
-									printf("\n* Error linea: %d. Asignacion de tipo incorrecto.\n",linea_actual);
+									printf("\n* Error linea: %d. Asignacion de tipo incorrecto. ID con tipo %s y asignacion con tipo %s\n",linea_actual,$1.tipo==1?"entero":$1.tipo==2?"real":$1.tipo==3?"booleano":$1.tipo==4?"caracter":$1.tipo==5?"cadena":"conjunto",$3.tipo==1?"entero":$3.tipo==2?"real":$3.tipo==3?"booleano":$3.tipo==4?"caracter":$3.tipo==5?"cadena":"conjunto");
 									$$.tipo = errorTipo;
 									contadorErrores++;
 							   }
